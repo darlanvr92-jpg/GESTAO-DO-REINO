@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gestão do Reino — Gestão completa para igrejas</title>
+<meta name="description" content="Gestão do Reino: plataforma para administrar membros, congregações, departamentos, finanças, tesouraria e prestação de contas da sua igreja. No computador e no celular.">
+<meta name="theme-color" content="#0B1F3A">
+<meta property="og:title" content="Gestão do Reino — Gestão completa para igrejas">
+<meta property="og:description" content="Membros, congregações, finanças, tesouraria e prestação de contas em um só lugar, com segurança e transparência.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1F3A'/%3E%3Cpath d='M16 42h32v5H16zM18 40l4-16 7 8 3-12 3 12 7-8 4 16z' fill='%23C9A24B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1F3A; --navy-2:#132D52; --royal:#2453D6; --royal-2:#1C43B3;
+  --gold:#C9A24B; --gold-soft:#F4ECD8; --green:#15935B; --red:#D2453B;
+  --bg:#F4F6FA; --surface:#FFFFFF; --text:#14213A; --muted:#5B6782; --line:#E2E7F0;
+  --radius:16px; --shadow:0 10px 30px -12px rgba(11,31,58,.18);
+}
+[data-theme="dark"]{
+  --bg:#0A1424; --surface:#111E33; --text:#E8EDF6; --muted:#9AA8C2; --line:#22324D;
+  --gold-soft:#2A2617; --shadow:0 10px 30px -12px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+a{color:inherit;text-decoration:none}
+img,svg{display:block}
+.wrap{width:min(1160px,92%);margin-inline:auto}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.15;letter-spacing:-.01em}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.eyebrow::before{content:"";width:22px;height:2px;background:var(--gold);border-radius:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:12px;font-weight:600;font-size:.98rem;border:1px solid transparent;cursor:pointer;transition:transform .15s,background .2s,box-shadow .2s;font-family:inherit}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--royal);color:#fff;box-shadow:0 8px 20px -8px rgba(36,83,214,.7)}
+.btn-primary:hover{background:var(--royal-2)}
+.btn-ghost{background:transparent;border-color:var(--line);color:var(--text)}
+.btn-ghost:hover{border-color:var(--royal);color:var(--royal)}
+.btn-gold{background:var(--gold);color:var(--navy)}
+.btn-gold:hover{filter:brightness(1.05)}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+
+/* Header */
+header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;font-family:Fraunces,serif;font-weight:700;font-size:1.25rem}
+.brand-mark{width:38px;height:38px;border-radius:10px;background:var(--navy);display:grid;place-items:center}
+[data-theme="dark"] .brand-mark{background:#1A3460}
+.nav-links{display:flex;gap:28px;font-size:.95rem;color:var(--muted);font-weight:500}
+.nav-links a:hover{color:var(--royal)}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--text);display:grid;place-items:center;cursor:pointer}
+.icon-btn:hover{border-color:var(--royal)}
+.menu-btn{display:none}
+.mobile-menu{display:none;flex-direction:column;gap:4px;padding:12px 0 18px;border-top:1px solid var(--line)}
+.mobile-menu a{padding:12px 4px;font-weight:500}
+.mobile-menu.open{display:flex}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;background:radial-gradient(1200px 500px at 85% -10%,rgba(36,83,214,.35),transparent 60%),linear-gradient(160deg,#0B1F3A 0%,#10294D 60%,#0B1F3A 100%);color:#fff;padding:88px 0 110px}
+.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
+.hero h1{font-size:clamp(2.3rem,4.6vw,3.6rem);margin:18px 0 20px}
+.hero h1 em{font-style:normal;color:var(--gold)}
+.hero p.lead{font-size:1.12rem;color:#C9D4EA;max-width:540px}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.hero .btn-ghost{color:#fff;border-color:rgba(255,255,255,.25)}
+.hero .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
+.hero-notes{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;font-size:.88rem;color:#AFC0DE}
+.hero-notes span{display:inline-flex;align-items:center;gap:6px}
+
+/* Dashboard mock */
+.mock{background:#fff;color:#14213A;border-radius:20px;box-shadow:0 40px 80px -30px rgba(0,0,0,.55);overflow:hidden;border:1px solid rgba(255,255,255,.1)}
+.mock-top{display:flex;align-items:center;gap:6px;padding:12px 16px;background:#EEF2F8;border-bottom:1px solid #E2E7F0}
+.mock-top i{width:10px;height:10px;border-radius:50%;background:#CDD5E3}
+.mock-top b{margin-left:10px;font-size:.75rem;color:#5B6782;font-weight:500}
+.mock-body{display:grid;grid-template-columns:56px 1fr}
+.mock-side{background:#0B1F3A;padding:14px 0;display:flex;flex-direction:column;align-items:center;gap:14px}
+.mock-side span{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.12)}
+.mock-side span.on{background:#2453D6}
+.mock-main{padding:18px;display:grid;gap:14px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{border:1px solid #E2E7F0;border-radius:12px;padding:10px 12px}
+.kpi small{display:block;font-size:.66rem;color:#5B6782;text-transform:uppercase;letter-spacing:.06em}
+.kpi strong{font-size:1rem}
+.kpi .up{color:#15935B}.kpi .down{color:#D2453B}
+.chart{border:1px solid #E2E7F0;border-radius:12px;padding:12px}
+.chart small{font-size:.7rem;color:#5B6782}
+.bars{display:flex;align-items:flex-end;gap:8px;height:110px;margin-top:10px}
+.bars div{flex:1;display:flex;gap:3px;align-items:flex-end;height:100%}
+.bars i{flex:1;border-radius:4px 4px 0 0}
+.bars i:first-child{background:#15935B}.bars i:last-child{background:#E8A39E}
+.rows{border:1px solid #E2E7F0;border-radius:12px;font-size:.76rem}
+.rows div{display:flex;justify-content:space-between;padding:8px 12px;border-top:1px solid #EEF2F8}
+.rows div:first-child{border-top:0}
+.demo-tag{display:inline-block;margin-top:12px;font-size:.75rem;color:#AFC0DE}
+
+/* Sections */
+section{padding:96px 0}
+.section-head{max-width:720px;margin-bottom:52px}
+.section-head h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin:14px 0 14px}
+.section-head p{color:var(--muted);font-size:1.06rem}
+.center{text-align:center;margin-inline:auto}
+.center .eyebrow{justify-content:center}
+
+.strip{padding:28px 0;background:var(--surface);border-bottom:1px solid var(--line)}
+.strip-grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;color:var(--muted);font-weight:500;font-size:.95rem}
+.strip-grid span{display:inline-flex;align-items:center;gap:10px}
+.strip-grid svg{color:var(--royal)}
+
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;transition:transform .2s,box-shadow .2s,border-color .2s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--royal) 35%,var(--line))}
+.card .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--royal) 12%,transparent);color:var(--royal);margin-bottom:18px}
+.card h3{font-size:1.22rem;margin-bottom:8px}
+.card p{color:var(--muted);font-size:.96rem}
+.card ul{margin-top:14px;list-style:none;display:grid;gap:6px;font-size:.92rem;color:var(--muted)}
+.card li{display:flex;gap:8px}
+.card li::before{content:"";flex:none;width:6px;height:6px;margin-top:9px;border-radius:50%;background:var(--gold)}
+
+/* Finance split */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.checklist{list-style:none;display:grid;gap:16px;margin-top:26px}
+.checklist li{display:flex;gap:14px}
+.checklist .tick{flex:none;width:28px;height:28px;border-radius:8px;background:color-mix(in srgb,var(--green) 14%,transparent);color:var(--green);display:grid;place-items:center}
+.checklist b{display:block}
+.checklist span{color:var(--muted);font-size:.95rem}
+.ledger{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow)}
+.ledger h4{font-family:Fraunces,serif;font-size:1.1rem;margin-bottom:4px}
+.ledger .sub{color:var(--muted);font-size:.85rem;margin-bottom:18px}
+.fund{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:14px 0;border-top:1px solid var(--line)}
+.fund:first-of-type{border-top:0}
+.fund .name{font-weight:600}
+.fund .val{font-variant-numeric:tabular-nums;font-weight:600}
+.meter{grid-column:1/-1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--royal),#5B83F0)}
+.ledger .note{margin-top:14px;font-size:.8rem;color:var(--muted)}
+
+/* Security */
+.security{background:var(--navy);color:#fff}
+.security .section-head p{color:#B5C3DD}
+.security .card{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+.security .card p{color:#B5C3DD}
+.security .card .ic{background:rgba(201,162,75,.15);color:var(--gold)}
+.security .card:hover{border-color:rgba(201,162,75,.5)}
+
+/* App */
+.app-box{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--royal) 6%,var(--surface)));border:1px solid var(--line);border-radius:28px;padding:56px}
+.phone{width:230px;height:460px;margin-inline:auto;border-radius:36px;background:#0B1F3A;padding:12px;box-shadow:var(--shadow)}
+.phone-screen{height:100%;border-radius:26px;background:#F4F6FA;padding:18px 14px;display:grid;align-content:start;gap:10px;color:#14213A}
+.phone-screen .hi{font-size:.72rem;color:#5B6782}
+.phone-screen .bal{background:#0B1F3A;color:#fff;border-radius:16px;padding:14px}
+.phone-screen .bal small{font-size:.65rem;color:#AFC0DE}
+.phone-screen .bal strong{display:block;font-size:1.15rem}
+.phone-screen .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.phone-screen .tiles div{background:#fff;border:1px solid #E2E7F0;border-radius:12px;padding:10px;font-size:.68rem;font-weight:600}
+.phone-screen .tiles i{display:block;width:20px;height:20px;border-radius:6px;background:#E4EBFB;margin-bottom:6px}
+.badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+.badge{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:var(--navy);color:#fff;font-size:.82rem;line-height:1.2}
+.badge small{display:block;font-size:.66rem;color:#AFC0DE}
+[data-theme="dark"] .badge{background:#1A3460}
+
+/* Plans */
+.billing{display:inline-flex;gap:4px;padding:4px;border-radius:12px;background:var(--surface);border:1px solid var(--line);margin-top:22px}
+.billing button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;font-size:.9rem;padding:10px 18px;border-radius:9px;cursor:pointer}
+.billing button.on{background:var(--navy);color:#fff}
+[data-theme="dark"] .billing button.on{background:var(--royal)}
+.billing em{font-style:normal;color:var(--green);font-size:.78rem;margin-left:4px}
+.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.plan{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:32px;position:relative}
+.plan.featured{border:2px solid var(--royal);box-shadow:var(--shadow)}
+.plan .tag{position:absolute;top:-13px;left:32px;background:var(--gold);color:var(--navy);font-size:.74rem;font-weight:700;padding:4px 12px;border-radius:99px;letter-spacing:.04em}
+.plan h3{font-size:1.4rem}
+.plan .desc{color:var(--muted);font-size:.93rem;margin:6px 0 20px;min-height:48px}
+.price{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
+.price .cur{font-weight:600;color:var(--muted)}
+.price .amt{font-family:Fraunces,serif;font-size:2.7rem;font-weight:700;font-variant-numeric:tabular-nums}
+.price .per{color:var(--muted)}
+.price-note{font-size:.82rem;color:var(--muted);min-height:20px;margin-bottom:22px}
+.plan ul{list-style:none;display:grid;gap:10px;margin-bottom:28px;font-size:.95rem;flex:1}
+.plan li{display:flex;gap:10px}
+.plan li svg{flex:none;margin-top:4px;color:var(--green)}
+.plan .btn{width:100%}
+.plans-foot{text-align:center;color:var(--muted);font-size:.9rem;margin-top:26px}
+
+/* FAQ */
+.faq{max-width:820px;margin-inline:auto;display:grid;gap:12px}
+details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 22px}
+summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:600;display:flex;justify-content:space-between;gap:16px;align-items:center}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";font-size:1.4rem;color:var(--royal);transition:transform .2s;line-height:1}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);padding-bottom:20px}
+
+/* Contact */
+.cta{background:linear-gradient(150deg,#0B1F3A,#16366A);color:#fff;border-radius:28px;padding:56px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.cta h2{font-size:clamp(1.8rem,3vw,2.4rem);margin:14px 0}
+.cta p{color:#C3CFE6}
+form{display:grid;gap:12px}
+.field{display:grid;gap:6px}
+.field label{font-size:.85rem;font-weight:600;color:#DDE5F3}
+.field input,.field select{min-height:48px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;font:inherit}
+.field select option{color:#14213A}
+.field input::placeholder{color:#8FA0BF}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-msg{font-size:.88rem;min-height:22px}
+.form-msg.err{color:#FFB4AE}.form-msg.ok{color:#9BE3BF}
+.consent{display:flex;gap:10px;font-size:.82rem;color:#B5C3DD;align-items:flex-start}
+.consent input{margin-top:4px;width:18px;height:18px;accent-color:var(--gold)}
+
+footer{padding:56px 0 36px;border-top:1px solid var(--line);margin-top:96px;background:var(--surface)}
+.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
+.foot h5{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;color:var(--muted)}
+.foot a{display:block;padding:4px 0;color:var(--text);font-size:.95rem}
+.foot a:hover{color:var(--royal)}
+.foot p{color:var(--muted);font-size:.92rem;margin-top:12px;max-width:320px}
+.copy{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+@media (max-width:980px){
+  .hero-grid,.split,.app-box,.cta{grid-template-columns:1fr}
+  .grid-3,.plans{grid-template-columns:1fr 1fr}
+  .foot{grid-template-columns:1fr 1fr}
+  .nav-links,.nav-actions .btn-ghost{display:none}
+  .menu-btn{display:grid}
+  .app-box,.cta{padding:36px}
+}
+@media (max-width:640px){
+  section{padding:72px 0}
+  .hero{padding:56px 0 80px}
+  .grid-3,.plans,.row2,.foot{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .nav-actions .btn-primary{display:none}
+  .app-box,.cta{padding:26px;border-radius:22px}
+  .strip-grid{justify-content:flex-start}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#topo" class="brand" aria-label="Gestão do Reino — início">
+      <span class="brand-mark"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 50h48v6H8zM11 46l6-26 11 13 4-19 4 19 11-13 6 26z" fill="#C9A24B"/></svg></span>
+      Gestão do Reino
+    </a>
+    <nav class="nav-links" aria-label="Principal">
+      <a href="#recursos">Recursos</a>
+      <a href="#financeiro">Financeiro</a>
+      <a href="#seguranca">Segurança</a>
+      <a href="#planos">Planos</a>
+      <a href="#duvidas">Dúvidas</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeBtn" aria-label="Alternar modo escuro">
+        <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+      </button>
+      <a href="#" class="btn btn-ghost js-login">Entrar</a>
+      <a href="#contato" class="btn btn-primary">Teste grátis</a>
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobileMenu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="wrap mobile-menu" id="mobileMenu">
+    <a href="#recursos">Recursos</a>
+    <a href="#financeiro">Financeiro</a>
+    <a href="#seguranca">Segurança</a>
+    <a href="#planos">Planos</a>
+    <a href="#duvidas">Dúvidas</a>
+    <a href="#" class="js-login">Entrar no sistema</a>
+    <a href="#contato" class="btn btn-primary" style="margin-top:8px">Começar teste grátis</a>
+  </div>
+</header>
+
+<main id="topo">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Gestão para igrejas e ministérios</span>
+        <h1>Administre sua igreja com <em>ordem, transparência</em> e tranquilidade.</h1>
+        <p class="lead">Membros, congregações, departamentos, finanças, tesouraria e prestação de contas em um só lugar. Funciona no computador, no tablet e no celular.</p>
+        <div class="hero-ctas">
+          <a href="#contato" class="btn btn-gold">Começar teste grátis</a>
+          <a href="#recursos" class="btn btn-ghost">Conhecer os recursos</a>
+        </div>
+        <div class="hero-notes">
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A24B" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg>Sem cartão para testar</span>
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A24B" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg>Dados isolados por igreja</span>
+          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A24B" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg>Adequado à LGPD</span>
+        </div>
+      </div>
+      <div>
+        <div class="mock" aria-hidden="true">
+          <div class="mock-top"><i></i><i></i><i></i><b>Painel — Gestão do Reino</b></div>
+          <div class="mock-body">
+            <div class="mock-side"><span class="on"></span><span></span><span></span><span></span><span></span></div>
+            <div class="mock-main">
+              <div class="kpis">
+                <div class="kpi"><small>Membros</small><strong>—</strong></div>
+                <div class="kpi"><small>Receitas</small><strong class="up">▲ R$</strong></div>
+                <div class="kpi"><small>Despesas</small><strong class="down">▼ R$</strong></div>
+              </div>
+              <div class="chart">
+                <small>Receitas × Despesas</small>
+                <div class="bars">
+                  <div><i style="height:55%"></i><i style="height:38%"></i></div>
+                  <div><i style="height:68%"></i><i style="height:44%"></i></div>
+                  <div><i style="height:60%"></i><i style="height:52%"></i></div>
+                  <div><i style="height:78%"></i><i style="height:47%"></i></div>
+                  <div><i style="height:72%"></i><i style="height:50%"></i></div>
+                  <div><i style="height:88%"></i><i style="height:55%"></i></div>
+                </div>
+              </div>
+              <div class="rows">
+                <div><span>Fundo geral</span><b>saldo</b></div>
+                <div><span>Fundo missionário</span><b>saldo</b></div>
+                <div><span>Contas a vencer (7 dias)</span><b>alertas</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span class="demo-tag">Ilustração do painel. No sistema, todos os números vêm dos dados da sua igreja.</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <div class="wrap strip-grid">
+      <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Acesso por perfil e permissão</span>
+      <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>Web, celular e app Android</span>
+      <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 15l3-3 2 2 3-4"/></svg>Relatórios em PDF e Excel</span>
+      <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>Histórico de todas as alterações</span>
+    </div>
+  </div>
+
+  <!-- RECURSOS -->
+  <section id="recursos">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <span class="eyebrow">Tudo integrado</span>
+        <h2>Um sistema completo para a vida administrativa da igreja</h2>
+        <p>Os módulos conversam entre si: o membro cadastrado aparece no departamento, o pagamento de uma conta vira movimentação no caixa e tudo chega aos relatórios.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card reveal">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 9M22 21a7 7 0 0 0-4-6.3"/></svg></div>
+          <h3>Membros</h3>
+          <p>Ficha completa com foto, família, histórico, visitantes e transferências.</p>
+          <ul><li>Aniversariantes do mês</li><li>Ativos e inativos</li><li>Impressão de fichas</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V10l7-6 7 6v11M10 21v-6h4v6"/></svg></div>
+          <h3>Congregações</h3>
+          <p>Administre várias congregações com visão consolidada para a sede.</p>
+          <ul><li>Membros por congregação</li><li>Financeiro por unidade</li><li>Responsáveis e situação</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
+          <h3>Departamentos</h3>
+          <p>Louvor, jovens, crianças, missões, escola bíblica e quantos mais precisar.</p>
+          <ul><li>Líderes e participantes</li><li>Vínculo de membros</li><li>Relatórios por ministério</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <h3>Financeiro</h3>
+          <p>Dízimos, ofertas, doações e despesas com comprovantes anexados.</p>
+          <ul><li>Caixa e contas bancárias</li><li>Transferências entre contas</li><li>Fechamento e conciliação</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 14h3"/></svg></div>
+          <h3>Contas a pagar e a receber</h3>
+          <p>Vencimentos, parcelamentos, pagamentos parciais e alertas automáticos.</p>
+          <ul><li>Baixa gera o lançamento</li><li>Sem duplicidade</li><li>Previsto separado do recebido</li></ul>
+        </article>
+        <article class="card reveal">
+          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></div>
+          <h3>Relatórios e prestação de contas</h3>
+          <p>Extratos por conta, fundo e congregação, prontos para a assembleia.</p>
+          <ul><li>Fluxo de revisão e aprovação</li><li>PDF e Excel</li><li>Saldo inicial e final</li></ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINANCEIRO -->
+  <section id="financeiro" style="padding-top:0">
+    <div class="wrap split">
+      <div class="reveal">
+        <span class="eyebrow">Tesouraria por fundos</span>
+        <h2 style="font-size:clamp(1.9rem,3.4vw,2.6rem);margin:14px 0">Cada real no seu lugar, com quem autorizou e quando</h2>
+        <p style="color:var(--muted);font-size:1.06rem">Separe o dinheiro de missões, construção, ação social e eventos. Defina limites e exija aprovação para movimentações acima deles.</p>
+        <ul class="checklist">
+          <li><span class="tick"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Saldos calculados pelas movimentações</b><span>Nada de saldo digitado à mão: o sistema soma entradas e saídas registradas.</span></div></li>
+          <li><span class="tick"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Regras de aprovação</b><span>Movimentações acima do limite ficam pendentes até um responsável autorizar.</span></div></li>
+          <li><span class="tick"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Rastreabilidade total</b><span>Lançamentos efetivados não somem: estornos ficam registrados no histórico.</span></div></li>
+          <li><span class="tick"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Transferências internas corretas</b><span>Mover dinheiro entre caixa e banco não é contado como receita nem despesa.</span></div></li>
+        </ul>
+      </div>
+      <div class="ledger reveal" aria-hidden="true">
+        <h4>Fundos da tesouraria</h4>
+        <div class="sub">Uso do orçamento no período</div>
+        <div class="fund"><span class="name">Fundo geral</span><span class="val">62%</span><div class="meter"><i style="width:62%"></i></div></div>
+        <div class="fund"><span class="name">Fundo missionário</span><span class="val">41%</span><div class="meter"><i style="width:41%"></i></div></div>
+        <div class="fund"><span class="name">Fundo de construção</span><span class="val">78%</span><div class="meter"><i style="width:78%"></i></div></div>
+        <div class="fund"><span class="name">Fundo social</span><span class="val">29%</span><div class="meter"><i style="width:29%"></i></div></div>
+        <div class="note">Ilustração. Os valores reais vêm das movimentações da sua igreja.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEGURANÇA -->
+  <section id="seguranca" class="security">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Segurança e LGPD</span>
+        <h2>Os dados da sua igreja pertencem só à sua igreja</h2>
+        <p>Informações de membros revelam convicção religiosa, que a LGPD classifica como dado pessoal sensível. Por isso a proteção vem antes de tudo.</p>
+      </div>
+      <div class="grid-3">
+        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg></div><h3>Isolamento entre igrejas</h3><p>Cada organização tem um ambiente próprio, separado no banco de dados por regras de acesso em cada tabela.</p></article>
+        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h3>Perfis e permissões</h3><p>Pastor, tesoureiro, secretário, líder ou visualizador: cada pessoa vê apenas o que precisa.</p></article>
+        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg></div><h3>Auditoria completa</h3><p>Quem criou, alterou ou aprovou cada registro fica guardado em um histórico de auditoria.</p></article>
+        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h3>Acesso protegido</h3><p>Login seguro, recuperação de senha, controle de sessões e bloqueio de usuários.</p></article>
+        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></div><h3>Backups</h3><p>Banco de dados em nuvem com cópias de segurança e conexão sempre criptografada (HTTPS).</p></article>
+        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h3>Coleta mínima</h3><p>CPF e outros dados só quando houver finalidade. Direitos dos titulares respeitados.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- APP -->
+  <section id="app">
+    <div class="wrap">
+      <div class="app-box reveal">
+        <div>
+          <span class="eyebrow">No bolso do pastor e do tesoureiro</span>
+          <h2 style="font-size:clamp(1.8rem,3vw,2.4rem);margin:14px 0">Consulte membros, lance ofertas e veja saldos pelo celular</h2>
+          <p style="color:var(--muted)">O Gestão do Reino funciona no navegador de qualquer aparelho e também como aplicativo Android. No iPhone, basta adicionar à tela de início.</p>
+          <div class="badges">
+            <span class="badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M3.6 2.2 13.4 12l-9.8 9.8c-.4-.2-.6-.6-.6-1.1V3.3c0-.5.2-.9.6-1.1zm11 11 2.6 2.6-11 6.3 8.4-8.9zm3.8-3.8 2.6 1.5c.8.5.8 1.6 0 2.1l-2.6 1.5-2.9-2.6 2.9-2.5zM6.2 2l11 6.3-2.6 2.6L6.2 2z"/></svg><span><small>Em breve no</small>Google Play</span></span>
+            <span class="badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg><span><small>iPhone e computador</small>Instale pelo navegador</span></span>
+          </div>
+        </div>
+        <div class="phone" aria-hidden="true">
+          <div class="phone-screen">
+            <span class="hi">Olá, tesoureiro</span>
+            <div class="bal"><small>Saldo consolidado</small><strong>R$ ••••••</strong></div>
+            <div class="tiles">
+              <div><i></i>Nova receita</div>
+              <div><i></i>Nova despesa</div>
+              <div><i></i>Membros</div>
+              <div><i></i>Relatórios</div>
+              <div><i></i>A pagar</div>
+              <div><i></i>Fundos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANOS -->
+  <section id="planos" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <span class="eyebrow">Planos</span>
+        <h2>Escolha o plano do tamanho da sua igreja</h2>
+        <p>Comece com o teste grátis. Troque de plano ou cancele quando quiser.</p>
+        <div class="billing" role="group" aria-label="Período de cobrança">
+          <button type="button" class="on" data-cycle="mensal">Mensal</button>
+          <button type="button" data-cycle="anual">Anual <em>2 meses grátis</em></button>
+        </div>
+      </div>
+      <div class="plans">
+        <article class="plan reveal">
+          <h3>Básico</h3>
+          <p class="desc">Para igrejas com uma congregação que querem organizar membros e finanças.</p>
+          <div class="price"><span class="cur">R$</span><span class="amt" data-monthly="79">79</span><span class="per">/mês</span></div>
+          <div class="price-note"></div>
+          <ul>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>1 congregação</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Cadastro de membros e departamentos</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Controle financeiro</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Relatórios básicos</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Até 3 usuários</li>
+          </ul>
+          <a href="#contato" class="btn btn-ghost" data-plan="Básico">Começar teste grátis</a>
+        </article>
+        <article class="plan featured reveal">
+          <span class="tag">MAIS ESCOLHIDO</span>
+          <h3>Profissional</h3>
+          <p class="desc">Para igrejas com várias congregações e tesouraria organizada por fundos.</p>
+          <div class="price"><span class="cur">R$</span><span class="amt" data-monthly="149">149</span><span class="per">/mês</span></div>
+          <div class="price-note"></div>
+          <ul>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Múltiplas congregações</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Até 10 usuários</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Tesouraria com fundos e aprovações</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Contas a pagar e a receber</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Relatórios completos e prestação de contas</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Permissões avançadas</li>
+          </ul>
+          <a href="#contato" class="btn btn-primary" data-plan="Profissional">Começar teste grátis</a>
+        </article>
+        <article class="plan reveal">
+          <h3>Enterprise</h3>
+          <p class="desc">Para ministérios e convenções com muitas unidades e gestão centralizada.</p>
+          <div class="price"><span class="cur">R$</span><span class="amt" data-monthly="349">349</span><span class="per">/mês</span></div>
+          <div class="price-note"></div>
+          <ul>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Unidades e usuários ampliados</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Administração centralizada</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Relatórios gerenciais consolidados</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Configurações personalizadas</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Implantação assistida</li>
+          </ul>
+          <a href="#contato" class="btn btn-ghost" data-plan="Enterprise">Falar com a equipe</a>
+        </article>
+      </div>
+      <p class="plans-foot">Pagamento por Pix, boleto ou cartão via Mercado Pago. Não armazenamos dados de cartão.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="duvidas" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head center reveal">
+        <span class="eyebrow">Dúvidas frequentes</span>
+        <h2>Perguntas que as igrejas costumam fazer</h2>
+      </div>
+      <div class="faq">
+        <details class="reveal"><summary>Preciso instalar alguma coisa?</summary><p>Não. O Gestão do Reino funciona pelo navegador em computador, tablet e celular. Se preferir, instale o aplicativo Android ou adicione o sistema à tela de início do iPhone.</p></details>
+        <details class="reveal"><summary>Outra igreja consegue ver os nossos dados?</summary><p>Não. Cada igreja tem um ambiente separado, e o banco de dados aplica regras de acesso em cada tabela para impedir que uma organização veja os dados de outra.</p></details>
+        <details class="reveal"><summary>Posso controlar várias congregações?</summary><p>Sim, nos planos Profissional e Enterprise. A sede acompanha tudo de forma consolidada e cada congregação vê apenas o que lhe cabe, conforme as permissões.</p></details>
+        <details class="reveal"><summary>Quem da igreja pode acessar o sistema?</summary><p>O administrador da igreja convida os usuários e define o perfil de cada um: pastor, tesoureiro, secretário, líder de departamento ou apenas visualização.</p></details>
+        <details class="reveal"><summary>Como funciona o teste grátis?</summary><p>Você cadastra a igreja e usa o sistema sem informar cartão. Ao final do período de teste, escolhe o plano para continuar. Seus dados ficam guardados.</p></details>
+        <details class="reveal"><summary>Consigo levar os relatórios para a assembleia?</summary><p>Sim. Os relatórios e a prestação de contas podem ser exportados em PDF e Excel, com nome da igreja, período, responsável, totais e saldos inicial e final.</p></details>
+        <details class="reveal"><summary>E se eu quiser cancelar?</summary><p>Você pode cancelar quando quiser, sem multa. Antes do encerramento, é possível exportar os dados da sua igreja.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section id="contato" style="padding-top:0;padding-bottom:0">
+    <div class="wrap">
+      <div class="cta reveal">
+        <div>
+          <span class="eyebrow">Comece hoje</span>
+          <h2>Coloque a administração da sua igreja em ordem</h2>
+          <p>Preencha os dados e nossa equipe libera o seu teste grátis e ajuda na implantação.</p>
+        </div>
+        <form id="leadForm" novalidate>
+          <div class="field"><label for="f-nome">Seu nome</label><input id="f-nome" name="nome" autocomplete="name" placeholder="Nome completo" required></div>
+          <div class="field"><label for="f-igreja">Nome da igreja</label><input id="f-igreja" name="igreja" placeholder="Igreja ..." required></div>
+          <div class="row2">
+            <div class="field"><label for="f-tel">WhatsApp</label><input id="f-tel" name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(00) 00000-0000" required></div>
+            <div class="field"><label for="f-plano">Plano de interesse</label>
+              <select id="f-plano" name="plano"><option>Básico</option><option selected>Profissional</option><option>Enterprise</option><option>Ainda não sei</option></select>
+            </div>
+          </div>
+          <label class="consent"><input type="checkbox" id="f-ok" required><span>Concordo em ser contatado pela equipe do Gestão do Reino sobre o teste grátis. Meus dados não serão compartilhados.</span></label>
+          <button class="btn btn-gold" type="submit">Quero meu teste grátis</button>
+          <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#topo" class="brand"><span class="brand-mark"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 50h48v6H8zM11 46l6-26 11 13 4-19 4 19 11-13 6 26z" fill="#C9A24B"/></svg></span>Gestão do Reino</a>
+        <p>Plataforma de gestão administrativa e financeira para igrejas, congregações e ministérios.</p>
+      </div>
+      <div><h5>Produto</h5><a href="#recursos">Recursos</a><a href="#financeiro">Tesouraria</a><a href="#planos">Planos</a><a href="#app">Aplicativo</a></div>
+      <div><h5>Suporte</h5><a href="#duvidas">Dúvidas frequentes</a><a href="#contato">Fale conosco</a><a href="#" class="js-login">Entrar no sistema</a></div>
+      <div><h5>Legal</h5><a href="#seguranca">Segurança e LGPD</a><a href="#" id="privacyLink">Política de privacidade</a><a href="#" id="termsLink">Termos de uso</a></div>
+    </div>
+    <div class="copy"><span>© <span id="year"></span> Gestão do Reino. Todos os direitos reservados.</span><span>Feito para servir à igreja.</span></div>
+  </div>
+</footer>
+
+<script>
+/* ===== CONFIGURAÇÃO — ajuste antes de publicar ===== */
+const CONFIG = {
+  appUrl: "",                  // endereço do sistema, ex.: "https://app.gestaodoreino.com.br/login"
+  whatsapp: "",                // número com DDI e DDD, só dígitos, ex.: "5511999999999"
+  email: "",                   // e-mail de contato comercial, ex.: "contato@gestaodoreino.com.br"
+  privacyUrl: "",              // link da política de privacidade
+  termsUrl: ""                 // link dos termos de uso
+};
+/* ==================================================== */
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Links "Entrar"
+document.querySelectorAll('.js-login').forEach(a => {
+  if (CONFIG.appUrl) a.href = CONFIG.appUrl;
+  else a.addEventListener('click', e => { e.preventDefault(); location.hash = 'contato'; });
+});
+[['privacyLink','privacyUrl'],['termsLink','termsUrl']].forEach(([id,key]) => {
+  const el = document.getElementById(id);
+  if (CONFIG[key]) el.href = CONFIG[key]; else el.addEventListener('click', e => { e.preventDefault(); location.hash = 'contato'; });
+});
+
+// Tema
+const root = document.documentElement;
+const moon = '<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>';
+const sun = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+function setTheme(t){ root.dataset.theme = t; document.getElementById('themeIcon').innerHTML = t === 'dark' ? sun : moon; try{localStorage.setItem('gr-theme', t)}catch(e){} }
+let saved = null; try{ saved = localStorage.getItem('gr-theme') }catch(e){}
+setTheme(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+document.getElementById('themeBtn').addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
+
+// Menu mobile
+const menuBtn = document.getElementById('menuBtn'), menu = document.getElementById('mobileMenu');
+menuBtn.addEventListener('click', () => { const o = menu.classList.toggle('open'); menuBtn.setAttribute('aria-expanded', o); });
+menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded', false); }));
+
+// Mensal / anual (anual = 10x a mensalidade)
+const fmt = n => n.toLocaleString('pt-BR');
+document.querySelectorAll('.billing button').forEach(b => b.addEventListener('click', () => {
+  document.querySelectorAll('.billing button').forEach(x => x.classList.toggle('on', x === b));
+  const anual = b.dataset.cycle === 'anual';
+  document.querySelectorAll('.plan').forEach(p => {
+    const amt = p.querySelector('.amt'), m = +amt.dataset.monthly;
+    const note = p.querySelector('.price-note');
+    if (anual) { amt.textContent = fmt(Math.round(m*10/12)); note.textContent = 'R$ ' + fmt(m*10) + ' cobrados por ano'; }
+    else { amt.textContent = fmt(m); note.textContent = ''; }
+  });
+}));
+
+// Botões de plano preenchem o formulário
+document.querySelectorAll('[data-plan]').forEach(a => a.addEventListener('click', () => { document.getElementById('f-plano').value = a.dataset.plan; }));
+
+// Máscara de telefone
+const tel = document.getElementById('f-tel');
+tel.addEventListener('input', () => {
+  let d = tel.value.replace(/\D/g,'').slice(0,11);
+  tel.value = d.length > 10 ? d.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3')
+            : d.length > 6 ? d.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3')
+            : d.length > 2 ? d.replace(/(\d{2})(\d{0,5})/,'($1) $2') : d;
+});
+
+// Formulário → WhatsApp ou e-mail
+document.getElementById('leadForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const msg = document.getElementById('formMsg');
+  const nome = e.target.nome.value.trim(), igreja = e.target.igreja.value.trim();
+  const fone = tel.value.replace(/\D/g,''), plano = e.target.plano.value;
+  msg.className = 'form-msg err';
+  if (nome.length < 3) return msg.textContent = 'Informe seu nome.';
+  if (igreja.length < 3) return msg.textContent = 'Informe o nome da igreja.';
+  if (fone.length < 10) return msg.textContent = 'Informe um WhatsApp válido com DDD.';
+  if (!document.getElementById('f-ok').checked) return msg.textContent = 'Marque a autorização de contato para continuar.';
+  const texto = `Olá! Quero testar o Gestão do Reino.\nNome: ${nome}\nIgreja: ${igreja}\nWhatsApp: ${tel.value}\nPlano de interesse: ${plano}`;
+  if (CONFIG.whatsapp) window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
+  else if (CONFIG.email) location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Teste grátis — ' + igreja) + '&body=' + encodeURIComponent(texto);
+  else { msg.textContent = 'Canal de contato ainda não configurado. Tente novamente em breve.'; return; }
+  msg.className = 'form-msg ok'; msg.textContent = 'Pronto! Finalize o envio na janela que abriu. Retornaremos em breve.';
+  e.target.reset(); document.getElementById('f-plano').value = plano;
+});
+
+// Animação ao rolar
+const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target); } }), {threshold:.12}) : null;
+document.querySelectorAll('.reveal').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+</script>
+</body>
+</html>

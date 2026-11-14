@@ -593,25 +593,29 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);margin-top:96px;back
 <script>
 /* ===== CONFIGURAÇÃO — ajuste antes de publicar ===== */
 const CONFIG = {
-  appUrl: "",                  // endereço do sistema, ex.: "https://app.gestaodoreino.com.br/login"
-  whatsapp: "",                // número com DDI e DDD, só dígitos, ex.: "5511999999999"
-  email: "",                   // e-mail de contato comercial, ex.: "contato@gestaodoreino.com.br"
+  appUrl: "app.html",          // painel do sistema (fica na mesma pasta do site)
+  whatsapp: "",                // opcional: número com DDI e DDD, só dígitos, ex.: "5511999999999"
   privacyUrl: "",              // link da política de privacidade
   termsUrl: ""                 // link dos termos de uso
 };
+const SUPABASE_URL = "https://ifttmkpmwcjsyoxofmry.supabase.co";
+const SUPABASE_KEY = "sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd"; // chave pública (somente leitura dos planos)
 /* ==================================================== */
 
+const signupUrl = (params = {}) => CONFIG.appUrl + "#cadastro" + (Object.keys(params).length ? "?" + new URLSearchParams(params) : "");
 document.getElementById('year').textContent = new Date().getFullYear();
 
-// Links "Entrar"
-document.querySelectorAll('.js-login').forEach(a => {
-  if (CONFIG.appUrl) a.href = CONFIG.appUrl;
-  else a.addEventListener('click', e => { e.preventDefault(); location.hash = 'contato'; });
-});
+// Entrar / Teste grátis
+document.querySelectorAll('.js-login').forEach(a => a.href = CONFIG.appUrl + "#entrar");
+document.querySelectorAll('a[href="#contato"].btn').forEach(a => a.href = signupUrl());
 [['privacyLink','privacyUrl'],['termsLink','termsUrl']].forEach(([id,key]) => {
   const el = document.getElementById(id);
-  if (CONFIG[key]) el.href = CONFIG[key]; else el.addEventListener('click', e => { e.preventDefault(); location.hash = 'contato'; });
+  if (CONFIG[key]) el.href = CONFIG[key]; else el.addEventListener('click', e => { e.preventDefault(); location.hash = 'seguranca'; });
 });
+if (CONFIG.whatsapp) {
+  document.getElementById('waLine').style.display = 'block';
+  document.getElementById('waLink').href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent('Olá! Quero saber mais sobre o Gestão do Reino.');
+}
 
 // Tema
 const root = document.documentElement;
@@ -627,48 +631,70 @@ const menuBtn = document.getElementById('menuBtn'), menu = document.getElementBy
 menuBtn.addEventListener('click', () => { const o = menu.classList.toggle('open'); menuBtn.setAttribute('aria-expanded', o); });
 menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded', false); }));
 
-// Mensal / anual (anual = 10x a mensalidade)
-const fmt = n => n.toLocaleString('pt-BR');
+// ===== Planos (carregados do banco; se falhar, mantém os planos do HTML) =====
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = n => Number(n).toLocaleString('pt-BR', { minimumFractionDigits: Number(n) % 1 ? 2 : 0, maximumFractionDigits: 2 });
+const tick = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>';
+let cycle = 'mensal';
+let PLANS = null;
+
+function bindPlanButtons() {
+  document.querySelectorAll('[data-plan]').forEach(a => {
+    const code = a.dataset.code || ({'Básico':'basico','Profissional':'profissional','Enterprise':'enterprise'}[a.dataset.plan] || 'profissional');
+    a.href = signupUrl({ plano: code });
+  });
+}
+function renderPlans() {
+  if (!PLANS) return applyStaticCycle();
+  const grid = document.getElementById('plansGrid');
+  grid.innerHTML = PLANS.map(p => {
+    const yearly = p.price_yearly != null ? Number(p.price_yearly) : Number(p.price_monthly) * 10;
+    const amt = cycle === 'anual' ? yearly / 12 : Number(p.price_monthly);
+    return `<article class="plan reveal in ${p.is_featured ? 'featured' : ''}">
+      ${p.is_featured ? '<span class="tag">MAIS ESCOLHIDO</span>' : ''}
+      <h3>${esc(p.name)}</h3><p class="desc">${esc(p.description)}</p>
+      <div class="price"><span class="cur">R$</span><span class="amt">${money(Math.round(amt * 100) / 100)}</span><span class="per">/mês</span></div>
+      <div class="price-note">${cycle === 'anual' ? 'R$ ' + money(yearly) + ' cobrados por ano' : ''}</div>
+      <ul>${(p.features || []).map(f => `<li>${tick}${esc(f)}</li>`).join('')}</ul>
+      <a href="#" class="btn ${p.is_featured ? 'btn-primary' : 'btn-ghost'}" data-plan="${esc(p.name)}" data-code="${esc(p.code)}">${esc(p.cta_label || 'Começar teste grátis')}</a>
+    </article>`;
+  }).join('');
+  const sel = document.getElementById('f-plano');
+  const cur = sel.value;
+  sel.innerHTML = PLANS.map(p => `<option value="${esc(p.code)}">${esc(p.name)}</option>`).join('');
+  sel.value = PLANS.some(p => p.code === cur) ? cur : (PLANS.find(p => p.is_featured) || PLANS[0]).code;
+  bindPlanButtons();
+}
+function applyStaticCycle() {
+  document.querySelectorAll('.plan').forEach(p => {
+    const amt = p.querySelector('.amt'); if (!amt || !amt.dataset.monthly) return;
+    const m = +amt.dataset.monthly, note = p.querySelector('.price-note');
+    if (cycle === 'anual') { amt.textContent = money(Math.round(m * 10 / 12)); note.textContent = 'R$ ' + money(m * 10) + ' cobrados por ano'; }
+    else { amt.textContent = money(m); note.textContent = ''; }
+  });
+}
 document.querySelectorAll('.billing button').forEach(b => b.addEventListener('click', () => {
   document.querySelectorAll('.billing button').forEach(x => x.classList.toggle('on', x === b));
-  const anual = b.dataset.cycle === 'anual';
-  document.querySelectorAll('.plan').forEach(p => {
-    const amt = p.querySelector('.amt'), m = +amt.dataset.monthly;
-    const note = p.querySelector('.price-note');
-    if (anual) { amt.textContent = fmt(Math.round(m*10/12)); note.textContent = 'R$ ' + fmt(m*10) + ' cobrados por ano'; }
-    else { amt.textContent = fmt(m); note.textContent = ''; }
-  });
+  cycle = b.dataset.cycle; renderPlans();
 }));
+bindPlanButtons();
+fetch(SUPABASE_URL + '/rest/v1/plans?select=code,name,description,price_monthly,price_yearly,features,is_featured,cta_label&is_active=eq.true&order=sort_order', {
+  headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
+}).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(d => { if (Array.isArray(d) && d.length) { PLANS = d; renderPlans(); } }).catch(() => {});
+fetch(SUPABASE_URL + '/rest/v1/platform_settings?select=value&key=eq.trial_days', { headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY } })
+  .then(r => r.ok ? r.json() : null).then(d => { const n = d && d[0] && Number(d[0].value); if (n) document.querySelectorAll('.js-trial-days').forEach(el => el.textContent = n); }).catch(() => {});
 
-// Botões de plano preenchem o formulário
-document.querySelectorAll('[data-plan]').forEach(a => a.addEventListener('click', () => { document.getElementById('f-plano').value = a.dataset.plan; }));
-
-// Máscara de telefone
-const tel = document.getElementById('f-tel');
-tel.addEventListener('input', () => {
-  let d = tel.value.replace(/\D/g,'').slice(0,11);
-  tel.value = d.length > 10 ? d.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3')
-            : d.length > 6 ? d.replace(/(\d{2})(\d{4})(\d{0,4})/,'($1) $2-$3')
-            : d.length > 2 ? d.replace(/(\d{2})(\d{0,5})/,'($1) $2') : d;
-});
-
-// Formulário → WhatsApp ou e-mail
+// Formulário → cadastro no sistema com os dados preenchidos
 document.getElementById('leadForm').addEventListener('submit', e => {
   e.preventDefault();
   const msg = document.getElementById('formMsg');
-  const nome = e.target.nome.value.trim(), igreja = e.target.igreja.value.trim();
-  const fone = tel.value.replace(/\D/g,''), plano = e.target.plano.value;
+  const nome = e.target.nome.value.trim(), igreja = e.target.igreja.value.trim(), email = e.target.email.value.trim(), plano = e.target.plano.value;
   msg.className = 'form-msg err';
   if (nome.length < 3) return msg.textContent = 'Informe seu nome.';
   if (igreja.length < 3) return msg.textContent = 'Informe o nome da igreja.';
-  if (fone.length < 10) return msg.textContent = 'Informe um WhatsApp válido com DDD.';
-  if (!document.getElementById('f-ok').checked) return msg.textContent = 'Marque a autorização de contato para continuar.';
-  const texto = `Olá! Quero testar o Gestão do Reino.\nNome: ${nome}\nIgreja: ${igreja}\nWhatsApp: ${tel.value}\nPlano de interesse: ${plano}`;
-  if (CONFIG.whatsapp) window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(texto), '_blank', 'noopener');
-  else if (CONFIG.email) location.href = 'mailto:' + CONFIG.email + '?subject=' + encodeURIComponent('Teste grátis — ' + igreja) + '&body=' + encodeURIComponent(texto);
-  else { msg.textContent = 'Canal de contato ainda não configurado. Tente novamente em breve.'; return; }
-  msg.className = 'form-msg ok'; msg.textContent = 'Pronto! Finalize o envio na janela que abriu. Retornaremos em breve.';
-  e.target.reset(); document.getElementById('f-plano').value = plano;
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return msg.textContent = 'Informe um e-mail válido.';
+  msg.className = 'form-msg ok'; msg.textContent = 'Abrindo o cadastro…';
+  location.href = signupUrl({ nome, igreja, email, plano });
 });
 
 // Animação ao rolar

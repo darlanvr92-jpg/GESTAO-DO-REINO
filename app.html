@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel — Gestão do Reino</title>
+<meta name="theme-color" content="#0B1F3A">
+<meta name="robots" content="noindex">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1F3A'/%3E%3Cpath d='M16 42h32v5H16zM18 40l4-16 7 8 3-12 3 12 7-8 4 16z' fill='%23C9A24B'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1F3A;--royal:#2453D6;--royal-2:#1C43B3;--gold:#C9A24B;--green:#15935B;--red:#D2453B;--amber:#B7791F;
+--bg:#F4F6FA;--surface:#fff;--surface-2:#F8FAFD;--text:#14213A;--muted:#5B6782;--line:#E2E7F0;--shadow:0 10px 30px -14px rgba(11,31,58,.25)}
+[data-theme="dark"]{--bg:#0A1424;--surface:#111E33;--surface-2:#0E1A2D;--text:#E8EDF6;--muted:#9AA8C2;--line:#22324D;--shadow:0 10px 30px -14px rgba(0,0,0,.6)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;letter-spacing:-.01em;line-height:1.2}
+a{color:var(--royal)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.hidden{display:none!important}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;border-radius:11px;border:1px solid transparent;font-weight:600;cursor:pointer;background:var(--royal);color:#fff;text-decoration:none;white-space:nowrap}
+.btn:hover{background:var(--royal-2)}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--text)}
+.btn.ghost:hover{border-color:var(--royal);color:var(--royal)}
+.btn.gold{background:var(--gold);color:var(--navy)}
+.btn.danger{background:var(--red)}
+.btn.sm{min-height:36px;padding:0 12px;font-size:.88rem;border-radius:9px}
+.btn.block{width:100%}
+.field{display:grid;gap:6px}
+.field label{font-size:.85rem;font-weight:600}
+.field small{color:var(--muted);font-size:.78rem}
+input,select,textarea{min-height:44px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);width:100%}
+textarea{min-height:96px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--royal);box-shadow:0 0 0 3px color-mix(in srgb,var(--royal) 18%,transparent)}
+input[type=checkbox]{width:18px;height:18px;min-height:0;accent-color:var(--royal)}
+.check{display:flex;gap:10px;align-items:center;font-size:.92rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.stack{display:grid;gap:14px}
+.muted{color:var(--muted)}
+.brand{display:flex;align-items:center;gap:10px;font-family:Fraunces,serif;font-weight:700;font-size:1.15rem;color:inherit;text-decoration:none}
+.mark{width:36px;height:36px;border-radius:10px;background:var(--navy);display:grid;place-items:center;flex:none}
+[data-theme="dark"] .mark{background:#1A3460}
+
+/* Auth */
+.auth{min-height:100vh;display:grid;grid-template-columns:1fr 1fr}
+.auth-side{background:radial-gradient(900px 400px at 90% 0,rgba(36,83,214,.35),transparent 60%),linear-gradient(160deg,#0B1F3A,#10294D);color:#fff;padding:48px;display:flex;flex-direction:column;justify-content:space-between}
+.auth-side .brand{color:#fff}
+.auth-side h1{font-size:2.3rem;margin:16px 0}
+.auth-side p{color:#C3CFE6;max-width:440px}
+.auth-side ul{list-style:none;display:grid;gap:10px;margin-top:24px;color:#DDE5F3}
+.auth-side li::before{content:"✓";color:var(--gold);font-weight:700;margin-right:10px}
+.auth-main{display:grid;place-items:center;padding:32px 20px}
+.auth-card{width:min(440px,100%)}
+.auth-card h2{font-size:1.7rem;margin-bottom:6px}
+.auth-card form{margin-top:22px}
+.auth-links{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:16px;font-size:.92rem}
+.auth-links a{cursor:pointer}
+
+/* Shell */
+.shell{display:grid;grid-template-columns:256px 1fr;min-height:100vh}
+.side{background:var(--navy);color:#C9D4EA;padding:18px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh;overflow:auto}
+.side .brand{color:#fff;padding:6px 8px 18px}
+.side .sec{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:#7F92B6;padding:14px 10px 6px}
+.side a.nav{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:#C9D4EA;text-decoration:none;font-weight:500;font-size:.95rem;min-height:44px}
+.side a.nav:hover{background:rgba(255,255,255,.06);color:#fff}
+.side a.nav.on{background:var(--royal);color:#fff}
+.side a.nav svg{flex:none;opacity:.9}
+.side .grow{flex:1}
+.side .ver{font-size:.75rem;color:#7F92B6;padding:8px 12px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 28px;border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:20}
+.top h1{font-size:1.35rem}
+.top .right{display:flex;align-items:center;gap:10px}
+.icon-btn{width:42px;height:42px;border-radius:11px;border:1px solid var(--line);background:transparent;display:grid;place-items:center;cursor:pointer}
+.user{position:relative}
+.user-btn{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:transparent;border-radius:12px;padding:4px 10px 4px 4px;cursor:pointer;min-height:42px}
+.avatar{width:32px;height:32px;border-radius:9px;background:var(--gold);color:var(--navy);display:grid;place-items:center;font-weight:700;font-size:.85rem}
+.user-btn span{font-size:.88rem;font-weight:600;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu{position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);min-width:240px;padding:6px;display:grid}
+.menu button{text-align:left;background:none;border:0;padding:10px 12px;border-radius:8px;cursor:pointer;font-size:.92rem}
+.menu button:hover{background:var(--surface-2)}
+.menu .who{padding:10px 12px;font-size:.8rem;color:var(--muted);border-bottom:1px solid var(--line);margin-bottom:4px;word-break:break-all}
+.menu-toggle{display:none}
+main.content{padding:28px;max-width:1240px;width:100%}
+.banner{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:14px 18px;border-radius:14px;margin-bottom:22px;border:1px solid}
+.banner.info{background:color-mix(in srgb,var(--royal) 8%,var(--surface));border-color:color-mix(in srgb,var(--royal) 30%,var(--line))}
+.banner.warn{background:color-mix(in srgb,var(--amber) 10%,var(--surface));border-color:color-mix(in srgb,var(--amber) 40%,var(--line))}
+.banner.err{background:color-mix(in srgb,var(--red) 8%,var(--surface));border-color:color-mix(in srgb,var(--red) 35%,var(--line))}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.kpi small{display:block;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.kpi strong{display:block;font-size:1.8rem;font-family:Fraunces,serif;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi em{font-style:normal;font-size:.82rem;color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
+.card h3{font-size:1.15rem;margin-bottom:4px}
+.card-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.toolbar input{flex:1;min-width:200px}
+.toolbar select{width:auto;min-width:150px}
+table{width:100%;border-collapse:collapse;font-size:.93rem}
+th{text-align:left;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line)}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.table-wrap{overflow-x:auto}
+.pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;font-size:.76rem;font-weight:600;background:var(--surface-2);border:1px solid var(--line);white-space:nowrap}
+.pill.green{color:var(--green);border-color:color-mix(in srgb,var(--green) 35%,transparent);background:color-mix(in srgb,var(--green) 10%,transparent)}
+.pill.red{color:var(--red);border-color:color-mix(in srgb,var(--red) 35%,transparent);background:color-mix(in srgb,var(--red) 10%,transparent)}
+.pill.blue{color:var(--royal);border-color:color-mix(in srgb,var(--royal) 35%,transparent);background:color-mix(in srgb,var(--royal) 10%,transparent)}
+.pill.amber{color:var(--amber);border-color:color-mix(in srgb,var(--amber) 40%,transparent);background:color-mix(in srgb,var(--amber) 12%,transparent)}
+.empty{text-align:center;padding:40px 16px;color:var(--muted)}
+.row-actions{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap}
+.plans-edit{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+.plan-card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:12px}
+.plan-card.featured{border:2px solid var(--royal)}
+.plan-card header{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.money{position:relative;align-self:start}
+.money span{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:.9rem}
+.money input{padding-left:38px;font-variant-numeric:tabular-nums}
+.timeline{display:grid;gap:16px}
+.rel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;position:relative}
+.rel.current{border-color:color-mix(in srgb,var(--gold) 70%,var(--line))}
+.rel header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.rel .v{font-family:Fraunces,serif;font-size:1.3rem;font-weight:700}
+.rel ul{padding-left:20px;display:grid;gap:5px;color:var(--text)}
+.rel ul li::marker{color:var(--gold)}
+/* Modal & toast */
+.overlay{position:fixed;inset:0;background:rgba(6,14,28,.55);display:grid;place-items:center;padding:16px;z-index:100}
+.modal{background:var(--surface);border-radius:18px;width:min(640px,100%);max-height:92vh;overflow:auto;box-shadow:0 30px 60px -20px rgba(0,0,0,.5)}
+.modal header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--surface)}
+.modal .body{padding:22px}
+.modal footer{display:flex;justify-content:flex-end;gap:10px;padding:16px 22px;border-top:1px solid var(--line)}
+.toasts{position:fixed;right:16px;bottom:16px;display:grid;gap:10px;z-index:200;max-width:min(380px,calc(100vw - 32px))}
+.toast{padding:12px 16px;border-radius:12px;color:#fff;box-shadow:var(--shadow);font-size:.92rem;animation:in .2s ease}
+.toast.ok{background:var(--green)}.toast.err{background:var(--red)}.toast.info{background:var(--navy)}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.loading{display:grid;place-items:center;min-height:60vh;color:var(--muted)}
+.spinner{width:32px;height:32px;border-radius:50%;border:3px solid var(--line);border-top-color:var(--royal);animation:spin .8s linear infinite;margin:0 auto 12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.form-err{color:var(--red);font-size:.88rem;min-height:20px}
+.mobile-only{display:none}
+@media (max-width:1000px){.kpis{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr 1fr}}
+@media (max-width:860px){
+  .auth{grid-template-columns:1fr}.auth-side{display:none}
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;bottom:0;width:270px;z-index:60;transform:translateX(-100%);transition:transform .2s}
+  .side.open{transform:none;box-shadow:0 0 0 100vmax rgba(6,14,28,.5)}
+  .menu-toggle{display:grid}
+  .top{padding:12px 16px}.top h1{font-size:1.1rem}
+  main.content{padding:18px 14px}
+  .user-btn span{display:none}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .hide-sm{display:none}
+  .mobile-only{display:block}
+}
+</style>
+</head>
+<body>
+<div id="root"><div class="loading"><div><div class="spinner"></div>Carregando…</div></div></div>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+/* ===== Conexão com o banco (chave pública; a segurança fica nas políticas RLS) ===== */
+const SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd';
+const APP_VERSION = '0.2.0';
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+
+/* ===== Utilidades ===== */
+const $ = (s, el = document) => el.querySelector(s);
+const root = $('#root');
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const brl = n => Number(n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const dateBR = d => d ? new Date(d.length === 10 ? d + 'T12:00:00' : d).toLocaleDateString('pt-BR') : '—';
+const daysLeft = d => Math.ceil((new Date(d) - new Date()) / 86400000);
+const errMsg = e => {
+  const m = e?.message || String(e);
+  const map = {
+    'Invalid login credentials': 'E-mail ou senha incorretos.',
+    'Email not confirmed': 'Confirme seu e-mail pelo link que enviamos antes de entrar.',
+    'User already registered': 'Já existe uma conta com este e-mail. Use "Entrar".',
+    'Password should be at least 6 characters': 'A senha precisa ter pelo menos 6 caracteres.',
+  };
+  for (const k in map) if (m.includes(k)) return map[k];
+  if (/rate limit/i.test(m)) return 'Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.';
+  if (/row-level security|permission denied/i.test(m)) return 'Você não tem permissão para esta ação, ou o período de teste da igreja terminou.';
+  return m;
+};
+function toast(msg, type = 'ok') {
+  const t = document.createElement('div'); t.className = 'toast ' + type; t.textContent = msg;
+  $('#toasts').appendChild(t); setTimeout(() => t.remove(), type === 'err' ? 6000 : 3500);
+}
+function confirmBox(title, text, okLabel = 'Confirmar', danger = false) {
+  return new Promise(res => {
+    const o = document.createElement('div'); o.className = 'overlay';
+    o.innerHTML = `<div class="modal" role="dialog" aria-modal="true" style="width:min(440px,100%)"><header><h3>${esc(title)}</h3></header>
+      <div class="body"><p class="muted">${esc(text)}</p></div>
+      <footer><button class="btn ghost" data-v="0">Cancelar</button><button class="btn ${danger ? 'danger' : ''}" data-v="1">${esc(okLabel)}</button></footer></div>`;
+    o.addEventListener('click', e => { const v = e.target.dataset?.v; if (v !== undefined || e.target === o) { o.remove(); res(v === '1'); } });
+    document.body.appendChild(o); o.querySelector('[data-v="1"]').focus();
+  });
+}
+function modal(title, bodyHtml, { submitLabel = 'Salvar', onSubmit } = {}) {
+  const o = document.createElement('div'); o.className = 'overlay';
+  o.innerHTML = `<form class="modal" role="dialog" aria-modal="true" novalidate><header><h3>${esc(title)}</h3>
+    <button type="button" class="icon-btn" data-close aria-label="Fechar">✕</button></header>
+    <div class="body">${bodyHtml}<div class="form-err" data-err></div></div>
+    <footer><button type="button" class="btn ghost" data-close>Cancelar</button><button class="btn" type="submit">${esc(submitLabel)}</button></footer></form>`;
+  const close = () => o.remove();
+  o.addEventListener('click', e => { if (e.target === o || e.target.closest('[data-close]')) close(); });
+  o.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  const form = o.querySelector('form');
+  form.addEventListener('submit', async e => {
+    e.preventDefault(); const btn = form.querySelector('[type=submit]'); const err = form.querySelector('[data-err]');
+    err.textContent = ''; btn.disabled = true; btn.textContent = 'Salvando…';
+    try { await onSubmit(new FormData(form), form); close(); }
+    catch (ex) { err.textContent = errMsg(ex); btn.disabled = false; btn.textContent = submitLabel; }
+  });
+  document.body.appendChild(o); form.querySelector('input,select,textarea')?.focus();
+  return o;
+}
+const icon = p => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+const I = {
+  home: icon('<path d="M3 11l9-8 9 8M5 10v10h14V10"/>'),
+  users: icon('<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 9M22 21a7 7 0 0 0-4-6.3"/>'),
+  church: icon('<path d="M3 21h18M5 21V10l7-6 7 6v11M10 21v-6h4v6"/>'),
+  tag: icon('<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>'),
+  chart: icon('<path d="M3 3v18h18M7 15l4-4 3 3 5-6"/>'),
+  ver: icon('<path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/>'),
+  menu: icon('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+  moon: icon('<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>'),
+};
+const markSvg = '<svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 50h48v6H8zM11 46l6-26 11 13 4-19 4 19 11-13 6 26z" fill="#C9A24B"/></svg>';
+
+/* Tema */
+function applyTheme(t) { document.documentElement.dataset.theme = t; try { localStorage.setItem('gr-theme', t) } catch {} }
+let th = null; try { th = localStorage.getItem('gr-theme') } catch {}
+applyTheme(th || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
+
+/* ===== Estado ===== */
+const S = { session: null, user: null, profile: null, isAdmin: false, org: null, role: null, sub: null, plan: null, recovering: false };
+const hashParams = () => { const [r, q] = location.hash.slice(1).split('?'); return { route: r || '', params: new URLSearchParams(q || '') }; };
+const go = r => { if (location.hash.slice(1) === r) render(); else location.hash = r; };
+
+/* ===== Autenticação ===== */
+function authLayout(inner) {
+  root.innerHTML = `<div class="auth">
+    <aside class="auth-side"><a class="brand" href="index.html"><span class="mark">${markSvg}</span>Gestão do Reino</a>
+      <div><h1>A administração da sua igreja, organizada.</h1>
+      <p>Membros, congregações, finanças e prestação de contas em um só lugar, com os dados da sua igreja protegidos.</p>
+      <ul><li>Teste grátis, sem cartão</li><li>Dados isolados por igreja</li><li>Funciona no computador e no celular</li></ul></div>
+      <small style="color:#7F92B6">Versão ${APP_VERSION}</small></aside>
+    <section class="auth-main"><div class="auth-card">${inner}</div></section></div>`;
+}
+function bindAuthForm(handler) {
+  const f = $('form', root), err = $('[data-err]', root), btn = $('[type=submit]', root), label = btn.textContent;
+  f.addEventListener('submit', async e => {
+    e.preventDefault(); err.textContent = ''; btn.disabled = true; btn.textContent = 'Aguarde…';
+    try { await handler(new FormData(f)); } catch (ex) { err.textContent = errMsg(ex); }
+    btn.disabled = false; btn.textContent = label;
+  });
+}
+function viewLogin() {
+  authLayout(`<a class="brand mobile-only" href="index.html" style="margin-bottom:24px"><span class="mark">${markSvg}</span>Gestão do Reino</a>
+    <h2>Entrar</h2><p class="muted">Acesse o painel da sua igreja.</p>
+    <form class="stack" novalidate>
+      <div class="field"><label for="e">E-mail</label><input id="e" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="p">Senha</label><input id="p" name="password" type="password" autocomplete="current-password" required></div>
+      <div class="form-err" data-err></div>
+      <button class="btn block" type="submit">Entrar</button>
+    </form>
+    <div class="auth-links"><a href="#recuperar">Esqueci minha senha</a><a href="#cadastro">Criar conta com teste grátis</a></div>`);
+  bindAuthForm(async fd => {
+    const { error } = await sb.auth.signInWithPassword({ email: fd.get('email').trim(), password: fd.get('password') });
+    if (error) throw error;
+  });
+}
+async function viewSignup(params) {
+  let days = 14;
+  try { const { data } = await sb.from('platform_settings').select('value').eq('key', 'trial_days').single(); if (data) days = Number(data.value) || 14; } catch {}
+  let plans = [];
+  try { const { data } = await sb.from('plans').select('code,name,price_monthly').eq('is_active', true).order('sort_order'); plans = data || []; } catch {}
+  const pre = params.get('plano') || 'profissional';
+  authLayout(`<a class="brand mobile-only" href="index.html" style="margin-bottom:24px"><span class="mark">${markSvg}</span>Gestão do Reino</a>
+    <h2>Teste grátis por ${days} dias</h2><p class="muted">Crie a conta da sua igreja. Não pedimos cartão.</p>
+    <form class="stack" novalidate>
+      <div class="field"><label for="n">Seu nome</label><input id="n" name="name" autocomplete="name" value="${esc(params.get('nome') || '')}" required></div>
+      <div class="field"><label for="c">Nome da igreja</label><input id="c" name="church" value="${esc(params.get('igreja') || '')}" required></div>
+      <div class="field"><label for="pl">Plano para testar</label><select id="pl" name="plan">${plans.map(p => `<option value="${esc(p.code)}" ${p.code === pre ? 'selected' : ''}>${esc(p.name)} — ${brl(p.price_monthly)}/mês após o teste</option>`).join('') || '<option value="profissional">Profissional</option>'}</select></div>
+      <div class="field"><label for="e">E-mail</label><input id="e" name="email" type="email" autocomplete="email" value="${esc(params.get('email') || '')}" required></div>
+      <div class="field"><label for="p">Senha</label><input id="p" name="password" type="password" autocomplete="new-password" minlength="8" required><small>Mínimo de 8 caracteres.</small></div>
+      <label class="check"><input type="checkbox" name="ok" required> <span>Li e aceito os termos de uso e a política de privacidade.</span></label>
+      <div class="form-err" data-err></div>
+      <button class="btn block gold" type="submit">Criar conta e começar o teste</button>
+    </form>
+    <div class="auth-links"><span class="muted">Já tem conta?</span><a href="#entrar">Entrar</a></div>`);
+  bindAuthForm(async fd => {
+    const name = fd.get('name').trim(), church = fd.get('church').trim(), email = fd.get('email').trim(), pw = fd.get('password');
+    if (name.length < 3) throw new Error('Informe seu nome.');
+    if (church.length < 3) throw new Error('Informe o nome da igreja.');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error('Informe um e-mail válido.');
+    if (pw.length < 8) throw new Error('A senha precisa ter pelo menos 8 caracteres.');
+    if (!fd.get('ok')) throw new Error('Aceite os termos para continuar.');
+    const { data, error } = await sb.auth.signUp({ email, password: pw, options: {
+      data: { full_name: name, church_name: church, plan: fd.get('plan') },
+      emailRedirectTo: location.origin + location.pathname } });
+    if (error) throw error;
+    if (data.user && data.user.identities && data.user.identities.length === 0) throw new Error('Já existe uma conta com este e-mail. Use "Entrar".');
+    if (!data.session) {
+      authLayout(`<h2>Confirme seu e-mail</h2><p class="muted" style="margin:10px 0 20px">Enviamos um link de confirmação para <b>${esc(email)}</b>. Abra o e-mail e clique no link para ativar a conta. Depois, entre com seu e-mail e senha: a igreja será criada automaticamente.</p>
+        <p class="muted" style="font-size:.88rem">Não chegou? Verifique a caixa de spam.</p><a class="btn ghost block" href="#entrar" style="margin-top:20px">Ir para o login</a>`);
+    }
+  });
+}
+function viewRecover() {
+  authLayout(`<h2>Recuperar senha</h2><p class="muted">Enviaremos um link para você criar uma nova senha.</p>
+    <form class="stack" novalidate><div class="field"><label for="e">E-mail</label><input id="e" name="email" type="email" required></div>
+    <div class="form-err" data-err></div><button class="btn block" type="submit">Enviar link</button></form>
+    <div class="auth-links"><a href="#entrar">Voltar ao login</a></div>`);
+  bindAuthForm(async fd => {
+    const { error } = await sb.auth.resetPasswordForEmail(fd.get('email').trim(), { redirectTo: location.origin + location.pathname });
+    if (error) throw error;
+    toast('Se o e-mail estiver cadastrado, você receberá o link em instantes.', 'info');
+  });
+}
+function viewNewPassword() {
+  authLayout(`<h2>Criar nova senha</h2><form class="stack" novalidate>
+    <div class="field"><label for="p">Nova senha</label><input id="p" name="password" type="password" minlength="8" autocomplete="new-password" required></div>
+    <div class="field"><label for="p2">Repita a senha</label><input id="p2" name="password2" type="password" autocomplete="new-password" required></div>
+    <div class="form-err" data-err></div><button class="btn block" type="submit">Salvar nova senha</button></form>`);
+  bindAuthForm(async fd => {
+    if (fd.get('password').length < 8) throw new Error('A senha precisa ter pelo menos 8 caracteres.');
+    if (fd.get('password') !== fd.get('password2')) throw new Error('As senhas não conferem.');
+    const { error } = await sb.auth.updateUser({ password: fd.get('password') }); if (error) throw error;
+    S.recovering = false; toast('Senha alterada com sucesso.'); await loadContext(); go('painel');
+  });
+}
+
+/* ===== Contexto do usuário ===== */
+async function loadContext() {
+  S.user = S.session?.user || null;
+  if (!S.user) return;
+  const [adm, prof, mem] = await Promise.all([
+    sb.rpc('is_platform_admin'),
+    sb.from('profiles').select('*').eq('id', S.user.id).maybeSingle(),
+    sb.from('organization_members').select('role,status,organization_id,organizations(id,name,status,created_at)').eq('user_id', S.user.id).eq('status', 'active').limit(1),
+  ]);
+  S.isAdmin = !!adm.data; S.profile = prof.data;
+  const m = mem.data?.[0];
+  S.org = m?.organizations || null; S.role = m?.role || null; S.sub = null; S.plan = null;
+  if (!S.org && !S.isAdmin && S.user.user_metadata?.church_name && !S._autoTried) {
+    S._autoTried = true;
+    const { error } = await sb.rpc('create_my_organization', { p_name: S.user.user_metadata.church_name, p_plan_code: S.user.user_metadata.plan || 'profissional' });
+    if (!error) { toast('Igreja criada! Seu teste grátis começou.'); return loadContext(); }
+  }
+  if (S.org) {
+    const { data } = await sb.from('subscriptions').select('*, plans(name,code,price_monthly,max_users,max_congregations)').eq('organization_id', S.org.id).maybeSingle();
+    S.sub = data; S.plan = data?.plans || null;
+  }
+}
+const canEditMembers = () => ['admin', 'pastor', 'secretario'].includes(S.role);
+const orgOperational = () => S.org && ['trial', 'active'].includes(S.org.status) && S.sub && ['trialing', 'active', 'past_due'].includes(S.sub.status) && (S.sub.status !== 'trialing' || new Date(S.sub.trial_ends_at) > new Date());
+const roleName = r => ({ admin: 'Administrador', pastor: 'Pastor', tesoureiro: 'Tesoureiro', secretario: 'Secretário', lider: 'Líder de departamento', visualizador: 'Visualizador' }[r] || r);
+
+/* ===== Layout interno ===== */
+const TITLES = { painel: 'Painel', membros: 'Membros', igreja: 'Minha igreja', versoes: 'Versões e atualizações', admin: 'Visão geral da plataforma', 'admin-igrejas': 'Igrejas clientes', 'admin-planos': 'Planos e preços', 'criar-igreja': 'Cadastrar igreja' };
+function shell(route, inner) {
+  const nav = (r, ic, label) => `<a class="nav ${route === r ? 'on' : ''}" href="#${r}">${ic}<span>${label}</span></a>`;
+  const name = S.profile?.full_name || S.user.email;
+  root.innerHTML = `<div class="shell">
+    <aside class="side" id="side">
+      <a class="brand" href="#painel"><span class="mark">${markSvg}</span>Gestão do Reino</a>
+      ${S.org ? `<div class="sec">${esc(S.org.name)}</div>${nav('painel', I.home, 'Painel')}${nav('membros', I.users, 'Membros')}${nav('igreja', I.church, 'Minha igreja')}`
+        : (!S.isAdmin ? nav('criar-igreja', I.church, 'Cadastrar igreja') : '')}
+      ${S.isAdmin ? `<div class="sec">Proprietário</div>${nav('admin', I.chart, 'Visão geral')}${nav('admin-igrejas', I.church, 'Igrejas clientes')}${nav('admin-planos', I.tag, 'Planos e preços')}` : ''}
+      <div class="sec">Sistema</div>${nav('versoes', I.ver, 'Versões e atualizações')}
+      <div class="grow"></div><div class="ver">Versão ${APP_VERSION}</div>
+    </aside>
+    <div>
+      <div class="top">
+        <div style="display:flex;align-items:center;gap:10px"><button class="icon-btn menu-toggle" id="mt" aria-label="Abrir menu">${I.menu}</button><h1>${esc(TITLES[route] || '')}</h1></div>
+        <div class="right">
+          <button class="icon-btn" id="tt" aria-label="Alternar modo escuro">${I.moon}</button>
+          <div class="user"><button class="user-btn" id="ub" aria-haspopup="true"><span class="avatar">${esc((name || '?').trim()[0]?.toUpperCase())}</span><span>${esc(name)}</span></button>
+            <div class="menu hidden" id="um"><div class="who">${esc(S.user.email)}${S.role ? '<br>' + roleName(S.role) : ''}${S.isAdmin ? '<br>Proprietário da plataforma' : ''}</div>
+              <button data-a="perfil">Meu perfil</button>
+              <button data-a="senha">Alterar senha</button>
+              ${!S.isAdmin ? '<button data-a="dono">Ativar acesso de proprietário</button>' : ''}
+              <button data-a="sair">Sair</button></div></div>
+        </div>
+      </div>
+      <main class="content" id="main">${inner}</main>
+    </div></div>`;
+  $('#mt').onclick = () => $('#side').classList.toggle('open');
+  $('#side').addEventListener('click', e => { if (e.target.closest('a.nav')) $('#side').classList.remove('open'); });
+  $('#tt').onclick = () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+  $('#ub').onclick = e => { e.stopPropagation(); $('#um').classList.toggle('hidden'); };
+  document.addEventListener('click', () => $('#um')?.classList.add('hidden'), { once: true });
+  $('#um').addEventListener('click', e => { const a = e.target.dataset.a; if (a) userAction(a); });
+}
+function userAction(a) {
+  if (a === 'sair') return sb.auth.signOut();
+  if (a === 'perfil') return modal('Meu perfil', `<div class="stack">
+      <div class="field"><label>Nome completo</label><input name="full_name" value="${esc(S.profile?.full_name)}" required></div>
+      <div class="field"><label>Telefone</label><input name="phone" value="${esc(S.profile?.phone)}" inputmode="tel"></div></div>`,
+    { onSubmit: async fd => {
+      const full_name = fd.get('full_name').trim(); if (full_name.length < 3) throw new Error('Informe seu nome.');
+      const { error } = await sb.from('profiles').update({ full_name, phone: fd.get('phone').trim() || null }).eq('id', S.user.id);
+      if (error) throw error; toast('Perfil atualizado.'); await loadContext(); render(); } });
+  if (a === 'senha') return modal('Alterar senha', `<div class="stack">
+      <div class="field"><label>Nova senha</label><input name="p" type="password" minlength="8" autocomplete="new-password" required></div>
+      <div class="field"><label>Repita a senha</label><input name="p2" type="password" autocomplete="new-password" required></div></div>`,
+    { onSubmit: async fd => {
+      if (fd.get('p').length < 8) throw new Error('A senha precisa ter pelo menos 8 caracteres.');
+      if (fd.get('p') !== fd.get('p2')) throw new Error('As senhas não conferem.');
+      const { error } = await sb.auth.updateUser({ password: fd.get('p') }); if (error) throw error; toast('Senha alterada.'); } });
+  if (a === 'dono') return modal('Ativar acesso de proprietário', `<p class="muted" style="margin-bottom:14px">Use o código de ativação único da plataforma. Ele funciona uma só vez e torna esta conta a administradora do Gestão do Reino.</p>
+      <div class="field"><label>Código de ativação</label><input name="code" autocomplete="off" placeholder="REINO-XXXX-XXXX-XXXX" required style="text-transform:uppercase;letter-spacing:.06em"></div>`,
+    { submitLabel: 'Ativar', onSubmit: async fd => {
+      const { error } = await sb.rpc('claim_platform_owner', { p_code: fd.get('code').trim().toUpperCase() }); if (error) throw error;
+      toast('Acesso de proprietário ativado!'); await loadContext(); go('admin'); } });
+}
+
+/* ===== Páginas da igreja ===== */
+function statusBanner() {
+  if (!S.org || !S.sub) return '';
+  if (S.org.status === 'suspended') return `<div class="banner err"><div><b>Acesso suspenso.</b> Os dados continuam guardados, mas novos lançamentos estão bloqueados. Fale com o suporte.</div></div>`;
+  if (S.sub.status === 'trialing') {
+    const d = daysLeft(S.sub.trial_ends_at);
+    if (d <= 0) return `<div class="banner err"><div><b>Seu teste grátis terminou.</b> Você ainda pode consultar os dados. Para voltar a cadastrar, contrate um plano.</div></div>`;
+    return `<div class="banner ${d <= 3 ? 'warn' : 'info'}"><div><b>Teste grátis — ${d} dia${d > 1 ? 's' : ''} restante${d > 1 ? 's' : ''}.</b> Plano ${esc(S.plan?.name)} até ${dateBR(S.sub.trial_ends_at)}.</div></div>`;
+  }
+  if (S.sub.status === 'past_due') return `<div class="banner warn"><div><b>Pagamento pendente.</b> Regularize para evitar a suspensão.</div></div>`;
+  return '';
+}
+async function pagePainel() {
+  shell('painel', `<div class="loading"><div class="spinner"></div></div>`);
+  const org = S.org.id, now = new Date(), m = now.getMonth() + 1;
+  const [tot, ativos, visit, recent, team, all] = await Promise.all([
+    sb.from('members').select('id', { count: 'exact', head: true }).eq('organization_id', org),
+    sb.from('members').select('id', { count: 'exact', head: true }).eq('organization_id', org).eq('status', 'ativo'),
+    sb.from('members').select('id', { count: 'exact', head: true }).eq('organization_id', org).eq('status', 'visitante'),
+    sb.from('members').select('full_name,status,created_at').eq('organization_id', org).order('created_at', { ascending: false }).limit(5),
+    sb.from('organization_members').select('user_id', { count: 'exact', head: true }).eq('organization_id', org),
+    sb.from('members').select('full_name,birth_date').eq('organization_id', org).not('birth_date', 'is', null).neq('status', 'inativo'),
+  ]);
+  const bdays = (all.data || []).filter(x => Number(x.birth_date.slice(5, 7)) === m).sort((a, b) => a.birth_date.slice(8) - b.birth_date.slice(8));
+  $('#main').innerHTML = `${statusBanner()}
+    <div class="kpis">
+      <div class="kpi"><small>Membros cadastrados</small><strong>${tot.count ?? 0}</strong></div>
+      <div class="kpi"><small>Membros ativos</small><strong>${ativos.count ?? 0}</strong></div>
+      <div class="kpi"><small>Visitantes</small><strong>${visit.count ?? 0}</strong></div>
+      <div class="kpi"><small>Usuários do sistema</small><strong>${team.count ?? 0}</strong>${S.plan?.max_users ? `<em>de ${S.plan.max_users} no plano</em>` : ''}</div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="card-head"><h3>Últimos cadastros</h3><a class="btn sm ghost" href="#membros">Ver todos</a></div>
+        ${(recent.data || []).length ? `<table><tbody>${recent.data.map(r => `<tr><td>${esc(r.full_name)}</td><td>${statusPill(r.status)}</td><td class="muted" style="text-align:right">${dateBR(r.created_at)}</td></tr>`).join('')}</tbody></table>`
+          : `<div class="empty">Nenhum membro cadastrado ainda.${canEditMembers() && orgOperational() ? '<br><br><a class="btn sm" href="#membros?novo=1">Cadastrar o primeiro membro</a>' : ''}</div>`}</div>
+      <div class="card"><div class="card-head"><h3>Aniversariantes de ${now.toLocaleDateString('pt-BR', { month: 'long' })}</h3></div>
+        ${bdays.length ? `<table><tbody>${bdays.map(b => `<tr><td>${esc(b.full_name)}</td><td class="muted" style="text-align:right">dia ${b.birth_date.slice(8)}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Nenhum aniversariante neste mês.</div>'}</div>
+    </div>
+    <div class="card" style="margin-top:14px"><h3>Próximos módulos</h3><p class="muted" style="margin-top:6px">Congregações, departamentos, financeiro, tesouraria, contas a pagar e a receber e relatórios estão em desenvolvimento. Acompanhe em <a href="#versoes">Versões e atualizações</a>.</p></div>`;
+}
+const statusPill = s => `<span class="pill ${{ ativo: 'green', inativo: 'red', visitante: 'blue', transferido: 'amber' }[s] || ''}">${esc({ ativo: 'Ativo', inativo: 'Inativo', visitante: 'Visitante', transferido: 'Transferido' }[s] || s)}</span>`;
+
+async function pageMembros(params) {
+  shell('membros', `${statusBanner()}<div class="card">
+    <div class="toolbar"><input id="q" type="search" placeholder="Pesquisar por nome ou telefone" aria-label="Pesquisar">
+      <select id="fs" aria-label="Situação"><option value="">Todas as situações</option><option value="ativo">Ativos</option><option value="visitante">Visitantes</option><option value="inativo">Inativos</option><option value="transferido">Transferidos</option></select>
+      ${canEditMembers() ? `<button class="btn" id="add" ${orgOperational() ? '' : 'disabled title="Indisponível: teste encerrado ou acesso suspenso"'}>+ Novo membro</button>` : ''}
+    </div><div id="list"><div class="loading" style="min-height:200px"><div class="spinner"></div></div></div></div>`);
+  let timer;
+  const load = async () => {
+    let q = sb.from('members').select('*').eq('organization_id', S.org.id).order('full_name').limit(500);
+    const s = $('#fs').value, t = $('#q').value.trim().replace(/[%,()]/g, '');
+    if (s) q = q.eq('status', s);
+    if (t) q = q.or(`full_name.ilike.%${t}%,phone.ilike.%${t}%,whatsapp.ilike.%${t}%`);
+    const { data, error } = await q;
+    if (error) { $('#list').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+    $('#list').innerHTML = data.length ? `<div class="table-wrap"><table><thead><tr><th>Nome</th><th class="hide-sm">Telefone / WhatsApp</th><th class="hide-sm">Cargo ou função</th><th>Situação</th><th></th></tr></thead><tbody>
+      ${data.map(r => `<tr><td><b>${esc(r.full_name)}</b>${r.email ? `<div class="muted" style="font-size:.82rem">${esc(r.email)}</div>` : ''}</td>
+        <td class="hide-sm">${esc(r.whatsapp || r.phone || '—')}</td><td class="hide-sm">${esc(r.role_title || '—')}</td><td>${statusPill(r.status)}</td>
+        <td><div class="row-actions">${canEditMembers() && orgOperational() ? `<button class="btn sm ghost" data-edit="${r.id}">Editar</button>` : `<button class="btn sm ghost" data-view="${r.id}">Ver</button>`}</div></td></tr>`).join('')}
+      </tbody></table></div><p class="muted" style="font-size:.82rem;margin-top:10px">${data.length} registro${data.length > 1 ? 's' : ''}</p>`
+      : `<div class="empty">Nenhum membro encontrado.</div>`;
+    $('#list').querySelectorAll('[data-edit],[data-view]').forEach(b => b.onclick = () => memberForm(data.find(x => x.id === (b.dataset.edit || b.dataset.view)), !!b.dataset.view, load));
+  };
+  $('#q').oninput = () => { clearTimeout(timer); timer = setTimeout(load, 250); };
+  $('#fs').onchange = load;
+  if ($('#add')) $('#add').onclick = () => memberForm(null, false, load);
+  await load();
+  if (params.get('novo') && canEditMembers() && orgOperational()) memberForm(null, false, load);
+}
+function memberForm(m, readOnly, reload) {
+  const v = k => esc(m?.[k] ?? '');
+  const sel = (k, opts) => opts.map(([val, lab]) => `<option value="${val}" ${(m?.[k] ?? '') === val ? 'selected' : ''}>${lab}</option>`).join('');
+  const dis = readOnly ? 'disabled' : '';
+  const o = modal(m ? (readOnly ? 'Ficha do membro' : 'Editar membro') : 'Novo membro', `<fieldset ${dis} style="border:0" class="stack">
+    <div class="field"><label>Nome completo *</label><input name="full_name" value="${v('full_name')}" required maxlength="120"></div>
+    <div class="grid2"><div class="field"><label>Data de nascimento</label><input type="date" name="birth_date" value="${v('birth_date')}" max="${new Date().toISOString().slice(0, 10)}"></div>
+      <div class="field"><label>Estado civil</label><select name="marital_status">${sel('marital_status', [['', 'Não informado'], ['solteiro', 'Solteiro(a)'], ['casado', 'Casado(a)'], ['uniao_estavel', 'União estável'], ['divorciado', 'Divorciado(a)'], ['viuvo', 'Viúvo(a)']])}</select></div></div>
+    <div class="grid2"><div class="field"><label>Telefone</label><input name="phone" inputmode="tel" value="${v('phone')}" maxlength="30"></div>
+      <div class="field"><label>WhatsApp</label><input name="whatsapp" inputmode="tel" value="${v('whatsapp')}" maxlength="30"></div></div>
+    <div class="field"><label>E-mail</label><input type="email" name="email" value="${v('email')}"></div>
+    <div class="field"><label>Endereço</label><input name="address" value="${v('address')}" maxlength="300"></div>
+    <div class="grid2"><div class="field"><label>Data de ingresso</label><input type="date" name="joined_at" value="${v('joined_at')}"></div>
+      <div class="field"><label>Cargo ou função</label><input name="role_title" value="${v('role_title')}" maxlength="80" placeholder="Ex.: Diácono, Professor EBD"></div></div>
+    <div class="field"><label>Situação</label><select name="status">${sel('status', [['ativo', 'Ativo'], ['visitante', 'Visitante'], ['inativo', 'Inativo'], ['transferido', 'Transferido']])}</select></div>
+    <div class="field"><label>Observações</label><textarea name="notes" maxlength="2000">${v('notes')}</textarea></div>
+    ${m ? `<p class="muted" style="font-size:.8rem">Cadastrado em ${dateBR(m.created_at)} · atualizado em ${dateBR(m.updated_at)}</p>` : ''}</fieldset>`,
+    { submitLabel: m ? 'Salvar alterações' : 'Cadastrar', onSubmit: async fd => {
+      const row = {}; for (const k of ['full_name', 'birth_date', 'marital_status', 'phone', 'whatsapp', 'email', 'address', 'joined_at', 'role_title', 'status', 'notes']) { const x = (fd.get(k) || '').trim(); row[k] = x || null; }
+      if (!row.full_name || row.full_name.length < 3) throw new Error('Informe o nome completo (mínimo 3 letras).');
+      if (row.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(row.email)) throw new Error('E-mail inválido.');
+      row.status = row.status || 'ativo';
+      const r = m ? await sb.from('members').update(row).eq('id', m.id) : await sb.from('members').insert({ ...row, organization_id: S.org.id, created_by: S.user.id });
+      if (r.error) throw r.error; toast(m ? 'Membro atualizado.' : 'Membro cadastrado.'); reload(); } });
+  if (readOnly) o.querySelector('[type=submit]').remove();
+}
+async function pageIgreja() {
+  const { data: team } = await sb.from('organization_members').select('user_id,role,status,created_at').eq('organization_id', S.org.id);
+  const ids = (team || []).map(t => t.user_id);
+  const { data: profs } = ids.length ? await sb.from('profiles').select('id,full_name').in('id', ids) : { data: [] };
+  const pn = id => profs?.find(p => p.id === id)?.full_name || '—';
+  const subLabel = { trialing: ['Teste grátis', 'blue'], active: ['Ativa', 'green'], past_due: ['Pagamento pendente', 'amber'], suspended: ['Suspensa', 'red'], canceled: ['Cancelada', 'red'] }[S.sub?.status] || ['—', ''];
+  shell('igreja', `${statusBanner()}<div class="grid2">
+    <div class="card"><div class="card-head"><h3>Dados da igreja</h3>${S.role === 'admin' ? '<button class="btn sm ghost" id="ren">Editar</button>' : ''}</div>
+      <p><b>${esc(S.org.name)}</b></p><p class="muted">Cadastrada em ${dateBR(S.org.created_at)}</p><p class="muted">Seu perfil: ${roleName(S.role)}</p></div>
+    <div class="card"><div class="card-head"><h3>Assinatura</h3><span class="pill ${subLabel[1]}">${subLabel[0]}</span></div>
+      <p>Plano <b>${esc(S.plan?.name || '—')}</b> — ${brl(S.sub?.price)}/mês</p>
+      ${S.sub?.status === 'trialing' ? `<p class="muted">Teste até ${dateBR(S.sub.trial_ends_at)}</p>` : ''}
+      <p class="muted" style="margin-top:8px;font-size:.88rem">A contratação online por Pix, boleto ou cartão será liberada em breve. Para contratar agora, fale com a equipe do Gestão do Reino.</p></div></div>
+    <div class="card" style="margin-top:14px"><div class="card-head"><h3>Usuários da igreja</h3></div>
+      <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Perfil</th><th>Desde</th></tr></thead><tbody>
+      ${(team || []).map(t => `<tr><td>${esc(pn(t.user_id))}${t.user_id === S.user.id ? ' <span class="pill">você</span>' : ''}</td><td>${roleName(t.role)}</td><td class="muted">${dateBR(t.created_at)}</td></tr>`).join('')}
+      </tbody></table></div><p class="muted" style="font-size:.85rem;margin-top:10px">O convite de novos usuários chega na próxima versão.</p></div>`);
+  if ($('#ren')) $('#ren').onclick = () => modal('Editar dados da igreja', `<div class="field"><label>Nome da igreja</label><input name="name" value="${esc(S.org.name)}" required maxlength="120"></div>`,
+    { onSubmit: async fd => { const name = fd.get('name').trim(); if (name.length < 3) throw new Error('Nome muito curto.');
+      const { error } = await sb.from('organizations').update({ name }).eq('id', S.org.id); if (error) throw error; toast('Dados atualizados.'); await loadContext(); render(); } });
+}
+function pageCriarIgreja() {
+  shell('criar-igreja', `<div class="card" style="max-width:560px"><h3>Cadastre sua igreja</h3><p class="muted" style="margin:6px 0 18px">Sua conta ainda não está vinculada a uma igreja. Cadastre agora para começar o teste grátis.</p>
+    <form class="stack" id="f" novalidate><div class="field"><label>Nome da igreja</label><input name="name" value="${esc(S.user.user_metadata?.church_name || '')}" required></div>
+    <div class="form-err" data-err></div><button class="btn" type="submit">Cadastrar e começar o teste</button></form></div>`);
+  $('#f').onsubmit = async e => { e.preventDefault(); const err = $('[data-err]', e.target);
+    const { error } = await sb.rpc('create_my_organization', { p_name: new FormData(e.target).get('name').trim(), p_plan_code: S.user.user_metadata?.plan || 'profissional' });
+    if (error) { err.textContent = errMsg(error); return; } toast('Igreja criada! Seu teste grátis começou.'); await loadContext(); go('painel'); };
+}
+
+/* ===== Versões ===== */
+async function pageVersoes() {
+  shell('versoes', `<div class="loading"><div class="spinner"></div></div>`);
+  const { data, error } = await sb.from('app_releases').select('*').order('released_at', { ascending: false }).order('version', { ascending: false });
+  const kinds = { lancamento: ['Lançamento', 'blue'], novidade: ['Novidade', 'green'], melhoria: ['Melhoria', ''], correcao: ['Correção', 'amber'], seguranca: ['Segurança', 'red'] };
+  const sorted = (data || []).slice().sort((a, b) => b.version.split('.').map(Number).reduce((r, x, i) => r || x - a.version.split('.').map(Number)[i], 0));
+  $('#main').innerHTML = `<div class="card-head"><p class="muted">Histórico de tudo que foi lançado no Gestão do Reino. Versão em uso: <b>${APP_VERSION}</b>.</p>
+      ${S.isAdmin ? '<button class="btn" id="nv">+ Registrar nova versão</button>' : ''}</div>
+    ${error ? `<div class="empty">${esc(errMsg(error))}</div>` : `<div class="timeline">${sorted.map((r, i) => `<article class="rel ${i === 0 ? 'current' : ''}"><header>
+      <span class="v">v${esc(r.version)}</span><span class="pill ${kinds[r.kind]?.[1] || ''}">${kinds[r.kind]?.[0] || esc(r.kind)}</span>${i === 0 ? '<span class="pill" style="color:var(--gold)">Mais recente</span>' : ''}
+      <span class="muted" style="margin-left:auto;font-size:.88rem">${dateBR(r.released_at)}</span></header>
+      <h3 style="font-size:1.05rem;margin-bottom:8px">${esc(r.title)}</h3><ul>${(r.items || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul></article>`).join('') || '<div class="empty">Nenhuma versão registrada.</div>'}</div>`}`;
+  if ($('#nv')) $('#nv').onclick = () => {
+    const last = sorted[0]?.version.split('.').map(Number) || [0, 0, 0];
+    modal('Registrar nova versão', `<div class="stack"><div class="grid2">
+      <div class="field"><label>Versão</label><input name="version" value="${last[0]}.${last[1]}.${last[2] + 1}" pattern="\\d+\\.\\d+\\.\\d+" required><small>Formato 1.2.3</small></div>
+      <div class="field"><label>Data</label><input type="date" name="released_at" value="${new Date().toISOString().slice(0, 10)}" required></div></div>
+      <div class="field"><label>Título</label><input name="title" required maxlength="120"></div>
+      <div class="field"><label>Tipo</label><select name="kind">${Object.entries(kinds).map(([k, [l]]) => `<option value="${k}" ${k === 'melhoria' ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div class="field"><label>O que mudou</label><textarea name="items" rows="6" placeholder="Um item por linha" required></textarea></div></div>`,
+      { submitLabel: 'Publicar', onSubmit: async fd => {
+        const items = fd.get('items').split('\n').map(s => s.trim()).filter(Boolean);
+        if (!/^\d+\.\d+\.\d+$/.test(fd.get('version'))) throw new Error('Use o formato de versão 1.2.3.');
+        if (fd.get('title').trim().length < 3) throw new Error('Informe o título.'); if (!items.length) throw new Error('Descreva ao menos uma mudança.');
+        const { error } = await sb.from('app_releases').insert({ version: fd.get('version'), released_at: fd.get('released_at'), title: fd.get('title').trim(), kind: fd.get('kind'), items, created_by: S.user.id });
+        if (error) throw new Error(error.code === '23505' ? 'Essa versão já existe.' : errMsg(error)); toast('Versão publicada.'); pageVersoes(); } });
+  };
+}
+
+/* ===== Proprietário ===== */
+async function pageAdmin() {
+  shell('admin', `<div class="loading"><div class="spinner"></div></div>`);
+  const [{ data: st, error }, { data: plans }, { data: subs }] = await Promise.all([
+    sb.rpc('admin_platform_stats'), sb.from('plans').select('id,name'), sb.from('subscriptions').select('plan_id,status,price')]);
+  if (error) { $('#main').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+  const mrr = (subs || []).filter(s => s.status === 'active').reduce((a, s) => a + Number(s.price), 0);
+  const byPlan = (plans || []).map(p => ({ name: p.name, n: (subs || []).filter(s => s.plan_id === p.id && s.status !== 'canceled').length }));
+  const maxN = Math.max(1, ...byPlan.map(b => b.n));
+  $('#main').innerHTML = `<div class="kpis">
+    <div class="kpi"><small>Igrejas cadastradas</small><strong>${st.igrejas}</strong><em>${st.novas_30d} nos últimos 30 dias</em></div>
+    <div class="kpi"><small>Em teste grátis</small><strong>${st.em_teste}</strong><em>${st.teste_expirado} com teste expirado</em></div>
+    <div class="kpi"><small>Assinaturas ativas</small><strong>${st.ativas}</strong><em>${st.inadimplentes} inadimplentes · ${st.suspensas} suspensas</em></div>
+    <div class="kpi"><small>Receita recorrente (MRR)</small><strong style="font-size:1.4rem">${brl(mrr)}</strong><em>Assinaturas marcadas como ativas</em></div></div>
+    <div class="grid2"><div class="card"><h3>Igrejas por plano</h3><div class="stack" style="margin-top:14px">${byPlan.map(b => `<div><div style="display:flex;justify-content:space-between;font-size:.92rem"><span>${esc(b.name)}</span><b>${b.n}</b></div>
+      <div style="height:8px;background:var(--line);border-radius:99px;margin-top:6px"><div style="height:100%;width:${b.n / maxN * 100}%;background:var(--royal);border-radius:99px"></div></div></div>`).join('')}</div></div>
+    <div class="card"><h3>Atalhos</h3><div class="stack" style="margin-top:14px"><a class="btn ghost" href="#admin-igrejas">Gerenciar igrejas clientes</a><a class="btn ghost" href="#admin-planos">Editar planos e preços</a><a class="btn ghost" href="#versoes">Registrar uma nova versão</a></div>
+      <p class="muted" style="font-size:.82rem;margin-top:14px">Total de usuários na plataforma: ${st.usuarios}. Por privacidade, o painel do proprietário não mostra os dados pessoais dos membros das igrejas.</p></div></div>`;
+}
+async function pageAdminIgrejas() {
+  shell('admin-igrejas', `<div class="card"><div class="toolbar"><input id="q" type="search" placeholder="Pesquisar igreja"><select id="fs"><option value="">Todas</option><option value="trial">Em teste</option><option value="active">Ativas</option><option value="suspended">Suspensas</option><option value="canceled">Canceladas</option></select></div><div id="list"><div class="loading" style="min-height:200px"><div class="spinner"></div></div></div></div>`);
+  const { data, error } = await sb.rpc('admin_list_organizations');
+  if (error) { $('#list').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+  const lab = { trial: ['Teste', 'blue'], active: ['Ativa', 'green'], suspended: ['Suspensa', 'red'], canceled: ['Cancelada', 'red'] };
+  const draw = () => {
+    const t = $('#q').value.trim().toLowerCase(), f = $('#fs').value;
+    const rows = data.filter(o => (!t || o.name.toLowerCase().includes(t)) && (!f || o.status === f));
+    $('#list').innerHTML = rows.length ? `<div class="table-wrap"><table><thead><tr><th>Igreja</th><th>Plano</th><th>Situação</th><th class="hide-sm">Teste até</th><th class="hide-sm">Usuários / membros</th><th></th></tr></thead><tbody>
+      ${rows.map(o => { const d = o.trial_ends_at ? daysLeft(o.trial_ends_at) : null; return `<tr><td><b>${esc(o.name)}</b><div class="muted" style="font-size:.8rem">desde ${dateBR(o.created_at)}</div></td>
+      <td>${esc(o.plan_name || '—')}<div class="muted" style="font-size:.8rem">${brl(o.price)}/mês</div></td>
+      <td><span class="pill ${lab[o.status]?.[1]}">${lab[o.status]?.[0] || esc(o.status)}</span></td>
+      <td class="hide-sm">${o.sub_status === 'trialing' ? `${dateBR(o.trial_ends_at)}<div class="muted" style="font-size:.8rem">${d > 0 ? d + ' dias' : 'expirado'}</div>` : '—'}</td>
+      <td class="hide-sm">${o.users_count} / ${o.members_count}</td>
+      <td><div class="row-actions">
+        ${o.status !== 'active' ? `<button class="btn sm" data-act="active" data-id="${o.id}">Ativar</button>` : ''}
+        ${o.status === 'trial' ? `<button class="btn sm ghost" data-ext="${o.id}">Estender teste</button>` : ''}
+        ${o.status !== 'suspended' && o.status !== 'canceled' ? `<button class="btn sm ghost" data-act="suspended" data-id="${o.id}">Suspender</button>` : ''}
+      </div></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">Nenhuma igreja encontrada.</div>';
+    $('#list').querySelectorAll('[data-act]').forEach(b => b.onclick = async () => {
+      const o = data.find(x => x.id === b.dataset.id), act = b.dataset.act;
+      const ok = await confirmBox(act === 'active' ? 'Ativar igreja' : 'Suspender igreja',
+        act === 'active' ? `Marcar "${o.name}" como assinatura ativa? Use quando o pagamento estiver confirmado.` : `Suspender "${o.name}"? Os dados ficam guardados, mas a igreja não poderá cadastrar nada até ser reativada.`,
+        act === 'active' ? 'Ativar' : 'Suspender', act !== 'active');
+      if (!ok) return;
+      const { error } = await sb.rpc('admin_set_org_status', { p_org: o.id, p_status: act });
+      if (error) return toast(errMsg(error), 'err'); toast('Situação atualizada.'); pageAdminIgrejas();
+    });
+    $('#list').querySelectorAll('[data-ext]').forEach(b => b.onclick = () => modal('Estender teste grátis', `<div class="field"><label>Dias adicionais</label><input name="d" type="number" min="1" max="365" value="7" required></div>`,
+      { submitLabel: 'Estender', onSubmit: async fd => { const { error } = await sb.rpc('admin_extend_trial', { p_org: b.dataset.ext, p_days: Number(fd.get('d')) }); if (error) throw error; toast('Teste estendido.'); pageAdminIgrejas(); } }));
+  };
+  $('#q').oninput = draw; $('#fs').onchange = draw; draw();
+}
+async function pageAdminPlanos() {
+  shell('admin-planos', `<div class="loading"><div class="spinner"></div></div>`);
+  const [{ data: plans, error }, { data: set }] = await Promise.all([sb.from('plans').select('*').order('sort_order'), sb.from('platform_settings').select('value').eq('key', 'trial_days').single()]);
+  if (error) { $('#main').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+  const trialDays = Number(set?.value) || 14;
+  $('#main').innerHTML = `<div class="banner info"><div>Os valores salvos aqui aparecem <b>automaticamente no site</b> e valem para novas igrejas. Assinaturas existentes mantêm o valor contratado.</div></div>
+    <div class="card" style="margin-bottom:16px"><form id="tf" class="toolbar" style="margin:0;align-items:end" novalidate><div class="field" style="flex:1;min-width:200px"><label>Duração do teste grátis (dias)</label><input name="d" type="number" min="1" max="90" value="${trialDays}" required></div><button class="btn" type="submit">Salvar</button><button type="button" class="btn ghost" id="np">+ Novo plano</button></form></div>
+    <div class="plans-edit">${plans.map(p => planCard(p)).join('')}</div>`;
+  $('#tf').onsubmit = async e => { e.preventDefault(); const d = Number(new FormData(e.target).get('d'));
+    if (!(d >= 1 && d <= 90)) return toast('Informe entre 1 e 90 dias.', 'err');
+    const { error } = await sb.from('platform_settings').update({ value: d }).eq('key', 'trial_days'); if (error) return toast(errMsg(error), 'err'); toast('Duração do teste atualizada.'); };
+  $('#np').onclick = () => modal('Novo plano', `<div class="stack"><div class="grid2"><div class="field"><label>Nome</label><input name="name" required maxlength="60"></div>
+    <div class="field"><label>Código</label><input name="code" required pattern="[a-z0-9_-]{2,40}" placeholder="ex.: premium"><small>Letras minúsculas, sem espaço</small></div></div>
+    <div class="field"><label>Mensalidade</label><div class="money"><span>R$</span><input name="price" inputmode="decimal" required placeholder="0,00"></div></div></div>`,
+    { submitLabel: 'Criar plano', onSubmit: async fd => {
+      const price = parseMoney(fd.get('price')); if (price === null) throw new Error('Valor inválido.');
+      const code = fd.get('code').trim(); if (!/^[a-z0-9_-]{2,40}$/.test(code)) throw new Error('Código inválido: use letras minúsculas, números, - ou _.');
+      const { error } = await sb.from('plans').insert({ name: fd.get('name').trim(), code, price_monthly: price, sort_order: plans.length + 1, is_active: false });
+      if (error) throw new Error(error.code === '23505' ? 'Já existe um plano com este código.' : errMsg(error)); toast('Plano criado como inativo. Complete e ative.'); pageAdminPlanos(); } });
+  document.querySelectorAll('form[data-plan]').forEach(f => f.onsubmit = async e => {
+    e.preventDefault(); const fd = new FormData(f), btn = f.querySelector('[type=submit]');
+    const pm = parseMoney(fd.get('price_monthly')), py = fd.get('price_yearly').trim() ? parseMoney(fd.get('price_yearly')) : null;
+    if (pm === null) return toast('Mensalidade inválida.', 'err');
+    if (fd.get('price_yearly').trim() && py === null) return toast('Valor anual inválido.', 'err');
+    const intOrNull = k => { const v = fd.get(k).trim(); return v ? Math.max(1, parseInt(v, 10)) : null; };
+    const row = { name: fd.get('name').trim(), description: fd.get('description').trim(), price_monthly: pm, price_yearly: py,
+      max_users: intOrNull('max_users'), max_congregations: intOrNull('max_congregations'),
+      features: fd.get('features').split('\n').map(s => s.trim()).filter(Boolean), cta_label: fd.get('cta_label').trim() || 'Começar teste grátis',
+      is_featured: fd.get('is_featured') === 'on', is_active: fd.get('is_active') === 'on', sort_order: parseInt(fd.get('sort_order'), 10) || 0 };
+    if (row.name.length < 2) return toast('Informe o nome do plano.', 'err');
+    btn.disabled = true; btn.textContent = 'Salvando…';
+    const { error } = await sb.from('plans').update(row).eq('id', f.dataset.plan);
+    btn.disabled = false; btn.textContent = 'Salvar plano';
+    if (error) return toast(errMsg(error), 'err'); toast(`Plano ${row.name} salvo.`);
+  });
+}
+const parseMoney = s => { s = String(s || '').trim().replace(/[R$\s]/g, ''); if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.'); const n = Number(s); return s !== '' && isFinite(n) && n >= 0 ? Math.round(n * 100) / 100 : null; };
+const moneyIn = n => n === null || n === undefined ? '' : Number(n).toFixed(2).replace('.', ',');
+function planCard(p) {
+  return `<form class="plan-card ${p.is_featured ? 'featured' : ''}" data-plan="${p.id}" novalidate>
+    <header><h3>${esc(p.name)}</h3><span class="pill ${p.is_active ? 'green' : ''}">${p.is_active ? 'Ativo no site' : 'Inativo'}</span></header>
+    <div class="grid2"><div class="field"><label>Nome</label><input name="name" value="${esc(p.name)}" maxlength="60"></div>
+      <div class="field"><label>Ordem no site</label><input name="sort_order" type="number" value="${p.sort_order}"></div></div>
+    <div class="grid2"><div class="field"><label>Mensalidade</label><div class="money"><span>R$</span><input name="price_monthly" inputmode="decimal" value="${moneyIn(p.price_monthly)}"></div></div>
+      <div class="field"><label>Valor anual</label><div class="money"><span>R$</span><input name="price_yearly" inputmode="decimal" value="${moneyIn(p.price_yearly)}" placeholder="${moneyIn(p.price_monthly * 10)}"></div><small>Vazio = 10 mensalidades</small></div></div>
+    <div class="grid2"><div class="field"><label>Limite de usuários</label><input name="max_users" type="number" min="1" value="${p.max_users ?? ''}" placeholder="Ilimitado"></div>
+      <div class="field"><label>Limite de congregações</label><input name="max_congregations" type="number" min="1" value="${p.max_congregations ?? ''}" placeholder="Ilimitado"></div></div>
+    <div class="field"><label>Descrição</label><textarea name="description" rows="2">${esc(p.description)}</textarea></div>
+    <div class="field"><label>Itens exibidos no site</label><textarea name="features" rows="5">${esc((p.features || []).join('\n'))}</textarea><small>Um item por linha</small></div>
+    <div class="field"><label>Texto do botão</label><input name="cta_label" value="${esc(p.cta_label)}" maxlength="40"></div>
+    <label class="check"><input type="checkbox" name="is_featured" ${p.is_featured ? 'checked' : ''}> Destacar como "mais escolhido"</label>
+    <label class="check"><input type="checkbox" name="is_active" ${p.is_active ? 'checked' : ''}> Exibir no site e permitir novas assinaturas</label>
+    <button class="btn" type="submit">Salvar plano</button></form>`;
+}
+
+/* ===== Roteador ===== */
+async function render() {
+  const { route, params } = hashParams();
+  if (S.recovering) return viewNewPassword();
+  if (!S.session) {
+    if (route === 'cadastro') return viewSignup(params);
+    if (route === 'recuperar') return viewRecover();
+    return viewLogin();
+  }
+  try {
+    if (['entrar', 'cadastro', 'recuperar', ''].includes(route)) return go(S.org ? 'painel' : S.isAdmin ? 'admin' : 'criar-igreja');
+    if (route.startsWith('admin')) {
+      if (!S.isAdmin) return go('painel');
+      if (route === 'admin') return pageAdmin();
+      if (route === 'admin-igrejas') return pageAdminIgrejas();
+      if (route === 'admin-planos') return pageAdminPlanos();
+    }
+    if (route === 'versoes') return pageVersoes();
+    if (!S.org) return S.isAdmin && route !== 'criar-igreja' ? go('admin') : pageCriarIgreja();
+    if (route === 'membros') return pageMembros(params);
+    if (route === 'igreja') return pageIgreja();
+    return pagePainel();
+  } catch (e) { toast(errMsg(e), 'err'); }
+}
+window.addEventListener('hashchange', render);
+
+let booted = false;
+sb.auth.onAuthStateChange(async (event, session) => {
+  if (event === 'PASSWORD_RECOVERY') S.recovering = true;
+  if (event === 'TOKEN_REFRESHED' || event === 'USER_UPDATED') { S.session = session; return; }
+  const changed = (S.session?.user?.id || null) !== (session?.user?.id || null);
+  S.session = session;
+  if (!booted || changed || event === 'PASSWORD_RECOVERY') {
+    booted = true;
+    setTimeout(async () => { try { await loadContext(); } catch (e) { toast(errMsg(e), 'err'); } if (!session) { S.org = null; S.isAdmin = false; } render(); }, 0);
+  }
+});
+</script>
+</body>
+</html>

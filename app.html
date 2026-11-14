@@ -168,7 +168,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* ===== Conexão com o banco (chave pública; a segurança fica nas políticas RLS) ===== */
 const SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd';
-const APP_VERSION = '0.2.0';
+const APP_VERSION = '0.3.0';
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
 /* ===== Utilidades ===== */
@@ -229,6 +229,7 @@ const I = {
   home: icon('<path d="M3 11l9-8 9 8M5 10v10h14V10"/>'),
   users: icon('<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 9M22 21a7 7 0 0 0-4-6.3"/>'),
   church: icon('<path d="M3 21h18M5 21V10l7-6 7 6v11M10 21v-6h4v6"/>'),
+  money: icon('<path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>'),
   tag: icon('<path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/>'),
   chart: icon('<path d="M3 3v18h18M7 15l4-4 3 3 5-6"/>'),
   ver: icon('<path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/>'),
@@ -348,7 +349,7 @@ async function loadContext() {
   const [adm, prof, mem] = await Promise.all([
     sb.rpc('is_platform_admin'),
     sb.from('profiles').select('*').eq('id', S.user.id).maybeSingle(),
-    sb.from('organization_members').select('role,status,organization_id,organizations(id,name,status,created_at)').eq('user_id', S.user.id).eq('status', 'active').limit(1),
+    sb.from('organization_members').select('role,status,organization_id,organizations(id,name,status,created_at,is_internal)').eq('user_id', S.user.id).eq('status', 'active').limit(1),
   ]);
   S.isAdmin = !!adm.data; S.profile = prof.data;
   const m = mem.data?.[0];
@@ -368,7 +369,7 @@ const orgOperational = () => S.org && ['trial', 'active'].includes(S.org.status)
 const roleName = r => ({ admin: 'Administrador', pastor: 'Pastor', tesoureiro: 'Tesoureiro', secretario: 'Secretário', lider: 'Líder de departamento', visualizador: 'Visualizador' }[r] || r);
 
 /* ===== Layout interno ===== */
-const TITLES = { painel: 'Painel', membros: 'Membros', igreja: 'Minha igreja', versoes: 'Versões e atualizações', admin: 'Visão geral da plataforma', 'admin-igrejas': 'Igrejas clientes', 'admin-planos': 'Planos e preços', 'criar-igreja': 'Cadastrar igreja' };
+const TITLES = { painel: 'Painel', membros: 'Membros', igreja: 'Minha igreja', versoes: 'Versões e atualizações', admin: 'Visão geral da plataforma', 'admin-igrejas': 'Igrejas clientes', 'admin-planos': 'Planos e preços', 'admin-financeiro': 'Financeiro da plataforma', 'criar-igreja': 'Cadastrar igreja' };
 function shell(route, inner) {
   const nav = (r, ic, label) => `<a class="nav ${route === r ? 'on' : ''}" href="#${r}">${ic}<span>${label}</span></a>`;
   const name = S.profile?.full_name || S.user.email;
@@ -377,7 +378,7 @@ function shell(route, inner) {
       <a class="brand" href="#painel"><span class="mark">${markSvg}</span>Gestão do Reino</a>
       ${S.org ? `<div class="sec">${esc(S.org.name)}</div>${nav('painel', I.home, 'Painel')}${nav('membros', I.users, 'Membros')}${nav('igreja', I.church, 'Minha igreja')}`
         : (!S.isAdmin ? nav('criar-igreja', I.church, 'Cadastrar igreja') : '')}
-      ${S.isAdmin ? `<div class="sec">Proprietário</div>${nav('admin', I.chart, 'Visão geral')}${nav('admin-igrejas', I.church, 'Igrejas clientes')}${nav('admin-planos', I.tag, 'Planos e preços')}` : ''}
+      ${S.isAdmin ? `<div class="sec">Proprietário</div>${nav('admin', I.chart, 'Visão geral')}${nav('admin-financeiro', I.money, 'Financeiro')}${nav('admin-igrejas', I.church, 'Igrejas clientes')}${nav('admin-planos', I.tag, 'Planos e preços')}` : ''}
       <div class="sec">Sistema</div>${nav('versoes', I.ver, 'Versões e atualizações')}
       <div class="grow"></div><div class="ver">Versão ${APP_VERSION}</div>
     </aside>
@@ -390,7 +391,6 @@ function shell(route, inner) {
             <div class="menu hidden" id="um"><div class="who">${esc(S.user.email)}${S.role ? '<br>' + roleName(S.role) : ''}${S.isAdmin ? '<br>Proprietário da plataforma' : ''}</div>
               <button data-a="perfil">Meu perfil</button>
               <button data-a="senha">Alterar senha</button>
-              ${!S.isAdmin ? '<button data-a="dono">Ativar acesso de proprietário</button>' : ''}
               <button data-a="sair">Sair</button></div></div>
         </div>
       </div>
@@ -419,16 +419,12 @@ function userAction(a) {
       if (fd.get('p').length < 8) throw new Error('A senha precisa ter pelo menos 8 caracteres.');
       if (fd.get('p') !== fd.get('p2')) throw new Error('As senhas não conferem.');
       const { error } = await sb.auth.updateUser({ password: fd.get('p') }); if (error) throw error; toast('Senha alterada.'); } });
-  if (a === 'dono') return modal('Ativar acesso de proprietário', `<p class="muted" style="margin-bottom:14px">Use o código de ativação único da plataforma. Ele funciona uma só vez e torna esta conta a administradora do Gestão do Reino.</p>
-      <div class="field"><label>Código de ativação</label><input name="code" autocomplete="off" placeholder="REINO-XXXX-XXXX-XXXX" required style="text-transform:uppercase;letter-spacing:.06em"></div>`,
-    { submitLabel: 'Ativar', onSubmit: async fd => {
-      const { error } = await sb.rpc('claim_platform_owner', { p_code: fd.get('code').trim().toUpperCase() }); if (error) throw error;
-      toast('Acesso de proprietário ativado!'); await loadContext(); go('admin'); } });
 }
 
 /* ===== Páginas da igreja ===== */
 function statusBanner() {
   if (!S.org || !S.sub) return '';
+  if (S.org.is_internal) return `<div class="banner info"><div><b>Igreja do proprietário</b> — acesso vitalício, sem cobrança e fora das métricas comerciais.</div></div>`;
   if (S.org.status === 'suspended') return `<div class="banner err"><div><b>Acesso suspenso.</b> Os dados continuam guardados, mas novos lançamentos estão bloqueados. Fale com o suporte.</div></div>`;
   if (S.sub.status === 'trialing') {
     const d = daysLeft(S.sub.trial_ends_at);
@@ -527,7 +523,7 @@ async function pageIgreja() {
   const ids = (team || []).map(t => t.user_id);
   const { data: profs } = ids.length ? await sb.from('profiles').select('id,full_name').in('id', ids) : { data: [] };
   const pn = id => profs?.find(p => p.id === id)?.full_name || '—';
-  const subLabel = { trialing: ['Teste grátis', 'blue'], active: ['Ativa', 'green'], past_due: ['Pagamento pendente', 'amber'], suspended: ['Suspensa', 'red'], canceled: ['Cancelada', 'red'] }[S.sub?.status] || ['—', ''];
+  const subLabel = S.org.is_internal ? ['Vitalício', 'green'] : { trialing: ['Teste grátis', 'blue'], active: ['Ativa', 'green'], past_due: ['Pagamento pendente', 'amber'], suspended: ['Suspensa', 'red'], canceled: ['Cancelada', 'red'] }[S.sub?.status] || ['—', ''];
   shell('igreja', `${statusBanner()}<div class="grid2">
     <div class="card"><div class="card-head"><h3>Dados da igreja</h3>${S.role === 'admin' ? '<button class="btn sm ghost" id="ren">Editar</button>' : ''}</div>
       <p><b>${esc(S.org.name)}</b></p><p class="muted">Cadastrada em ${dateBR(S.org.created_at)}</p><p class="muted">Seu perfil: ${roleName(S.role)}</p></div>
@@ -597,7 +593,7 @@ async function pageAdmin() {
     <div class="kpi"><small>Receita recorrente (MRR)</small><strong style="font-size:1.4rem">${brl(mrr)}</strong><em>Assinaturas marcadas como ativas</em></div></div>
     <div class="grid2"><div class="card"><h3>Igrejas por plano</h3><div class="stack" style="margin-top:14px">${byPlan.map(b => `<div><div style="display:flex;justify-content:space-between;font-size:.92rem"><span>${esc(b.name)}</span><b>${b.n}</b></div>
       <div style="height:8px;background:var(--line);border-radius:99px;margin-top:6px"><div style="height:100%;width:${b.n / maxN * 100}%;background:var(--royal);border-radius:99px"></div></div></div>`).join('')}</div></div>
-    <div class="card"><h3>Atalhos</h3><div class="stack" style="margin-top:14px"><a class="btn ghost" href="#admin-igrejas">Gerenciar igrejas clientes</a><a class="btn ghost" href="#admin-planos">Editar planos e preços</a><a class="btn ghost" href="#versoes">Registrar uma nova versão</a></div>
+    <div class="card"><h3>Atalhos</h3><div class="stack" style="margin-top:14px"><a class="btn ghost" href="#admin-financeiro">Financeiro e previsões</a><a class="btn ghost" href="#admin-igrejas">Gerenciar igrejas clientes</a><a class="btn ghost" href="#admin-planos">Editar planos e preços</a><a class="btn ghost" href="#versoes">Registrar uma nova versão</a></div>
       <p class="muted" style="font-size:.82rem;margin-top:14px">Total de usuários na plataforma: ${st.usuarios}. Por privacidade, o painel do proprietário não mostra os dados pessoais dos membros das igrejas.</p></div></div>`;
 }
 async function pageAdminIgrejas() {
@@ -610,14 +606,15 @@ async function pageAdminIgrejas() {
     const rows = data.filter(o => (!t || o.name.toLowerCase().includes(t)) && (!f || o.status === f));
     $('#list').innerHTML = rows.length ? `<div class="table-wrap"><table><thead><tr><th>Igreja</th><th>Plano</th><th>Situação</th><th class="hide-sm">Teste até</th><th class="hide-sm">Usuários / membros</th><th></th></tr></thead><tbody>
       ${rows.map(o => { const d = o.trial_ends_at ? daysLeft(o.trial_ends_at) : null; return `<tr><td><b>${esc(o.name)}</b><div class="muted" style="font-size:.8rem">desde ${dateBR(o.created_at)}</div></td>
-      <td>${esc(o.plan_name || '—')}<div class="muted" style="font-size:.8rem">${brl(o.price)}/mês</div></td>
-      <td><span class="pill ${lab[o.status]?.[1]}">${lab[o.status]?.[0] || esc(o.status)}</span></td>
+      <td>${esc(o.plan_name || '—')}<div class="muted" style="font-size:.8rem">${o.is_internal ? 'sem cobrança' : brl(o.price) + (o.billing_cycle === 'anual' ? '/ano' : '/mês')}</div></td>
+      <td>${o.is_internal ? '<span class="pill green">Vitalícia (sua)</span>' : `<span class="pill ${lab[o.status]?.[1]}">${lab[o.status]?.[0] || esc(o.status)}</span>`}</td>
       <td class="hide-sm">${o.sub_status === 'trialing' ? `${dateBR(o.trial_ends_at)}<div class="muted" style="font-size:.8rem">${d > 0 ? d + ' dias' : 'expirado'}</div>` : '—'}</td>
       <td class="hide-sm">${o.users_count} / ${o.members_count}</td>
-      <td><div class="row-actions">
+      <td><div class="row-actions">${o.is_internal ? '' : `
+        <button class="btn sm ghost" data-sub="${o.id}">Assinatura</button>
         ${o.status !== 'active' ? `<button class="btn sm" data-act="active" data-id="${o.id}">Ativar</button>` : ''}
         ${o.status === 'trial' ? `<button class="btn sm ghost" data-ext="${o.id}">Estender teste</button>` : ''}
-        ${o.status !== 'suspended' && o.status !== 'canceled' ? `<button class="btn sm ghost" data-act="suspended" data-id="${o.id}">Suspender</button>` : ''}
+        ${o.status !== 'suspended' && o.status !== 'canceled' ? `<button class="btn sm ghost" data-act="suspended" data-id="${o.id}">Suspender</button>` : ''}`}
       </div></td></tr>`; }).join('')}</tbody></table></div>` : '<div class="empty">Nenhuma igreja encontrada.</div>';
     $('#list').querySelectorAll('[data-act]').forEach(b => b.onclick = async () => {
       const o = data.find(x => x.id === b.dataset.id), act = b.dataset.act;
@@ -631,7 +628,86 @@ async function pageAdminIgrejas() {
     $('#list').querySelectorAll('[data-ext]').forEach(b => b.onclick = () => modal('Estender teste grátis', `<div class="field"><label>Dias adicionais</label><input name="d" type="number" min="1" max="365" value="7" required></div>`,
       { submitLabel: 'Estender', onSubmit: async fd => { const { error } = await sb.rpc('admin_extend_trial', { p_org: b.dataset.ext, p_days: Number(fd.get('d')) }); if (error) throw error; toast('Teste estendido.'); pageAdminIgrejas(); } }));
   };
+  const { data: allPlans } = await sb.from('plans').select('code,name,price_monthly,price_yearly').order('sort_order');
+  $('#list').addEventListener('click', e => {
+    const b = e.target.closest('[data-sub]'); if (!b) return;
+    const o = data.find(x => x.id === b.dataset.sub);
+    const f = modal('Ajustar assinatura — ' + o.name, `<div class="stack">
+      <div class="field"><label>Plano</label><select name="plan">${(allPlans || []).map(p => `<option value="${esc(p.code)}" ${p.code === o.plan_code ? 'selected' : ''}>${esc(p.name)}</option>`).join('')}</select></div>
+      <div class="grid2"><div class="field"><label>Ciclo de cobrança</label><select name="cycle"><option value="mensal" ${o.billing_cycle !== 'anual' ? 'selected' : ''}>Mensal</option><option value="anual" ${o.billing_cycle === 'anual' ? 'selected' : ''}>Anual</option></select></div>
+      <div class="field"><label>Valor cobrado</label><div class="money"><span>R$</span><input name="price" inputmode="decimal" value="${moneyIn(o.price)}" required></div><small>Valor por ciclo (mês ou ano)</small></div></div>
+      <button type="button" class="btn sm ghost" data-fill style="justify-self:start">Usar preço da tabela</button></div>`,
+      { onSubmit: async fd => { const v = parseMoney(fd.get('price')); if (v === null) throw new Error('Valor inválido.');
+        const { error } = await sb.rpc('admin_update_subscription', { p_org: o.id, p_plan_code: fd.get('plan'), p_cycle: fd.get('cycle'), p_price: v });
+        if (error) throw error; toast('Assinatura atualizada.'); pageAdminIgrejas(); } });
+    f.querySelector('[data-fill]').onclick = () => { const p = allPlans.find(x => x.code === f.querySelector('[name=plan]').value); if (!p) return;
+      f.querySelector('[name=price]').value = moneyIn(f.querySelector('[name=cycle]').value === 'anual' ? (p.price_yearly ?? p.price_monthly * 10) : p.price_monthly); };
+  });
   $('#q').oninput = draw; $('#fs').onchange = draw; draw();
+}
+
+async function pageAdminFinanceiro() {
+  shell('admin-financeiro', `<div class="loading"><div class="spinner"></div></div>`);
+  const { data: f, error } = await sb.rpc('admin_financial_overview');
+  if (error) { $('#main').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+  const n = x => Number(x || 0);
+  const hist = f.novas_por_mes || [];
+  const ult3 = hist.slice(-3).reduce((a, m) => a + m.igrejas, 0) / 3;
+  const ticketReal = n(f.clientes_ativos) ? n(f.mrr) / n(f.clientes_ativos) : null;
+  const mesNome = m => new Date(m + '-15').toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }).replace('.', '');
+  $('#main').innerHTML = `
+    <div class="kpis">
+      <div class="kpi"><small>Receita mensal recorrente</small><strong style="font-size:1.45rem">${brl(f.mrr)}</strong><em>${f.clientes_ativos} cliente${f.clientes_ativos == 1 ? '' : 's'} ativo${f.clientes_ativos == 1 ? '' : 's'}</em></div>
+      <div class="kpi"><small>Receita anual (ARR)</small><strong style="font-size:1.45rem">${brl(n(f.mrr) * 12)}</strong><em>MRR × 12</em></div>
+      <div class="kpi"><small>Em risco (inadimplentes)</small><strong style="font-size:1.45rem;color:${n(f.mrr_em_risco) ? 'var(--red)' : 'inherit'}">${brl(f.mrr_em_risco)}</strong><em>${f.clientes_inadimplentes} cliente(s) com pagamento pendente</em></div>
+      <div class="kpi"><small>Potencial dos testes</small><strong style="font-size:1.45rem">${brl(f.potencial_testes)}</strong><em>${f.testes_ativos} igreja(s) em teste, por mês</em></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><h3>Previsão de curto prazo</h3><p class="muted" style="font-size:.88rem;margin:4px 0 14px">Testes grátis que terminam em breve e quanto podem gerar se virarem assinatura.</p>
+        <table><tbody>
+          <tr><td>Testes que vencem em 7 dias</td><td style="text-align:right"><b>${f.testes_7d}</b></td><td style="text-align:right">${brl(f.potencial_7d)}/mês</td></tr>
+          <tr><td>Testes que vencem em 30 dias</td><td style="text-align:right"><b>${f.testes_30d}</b></td><td style="text-align:right">${brl(f.potencial_30d)}/mês</td></tr>
+          <tr><td>Testes já expirados sem contratar</td><td style="text-align:right"><b>${f.testes_expirados}</b></td><td></td></tr>
+          <tr><td>Suspensos ou cancelados</td><td style="text-align:right"><b>${f.cancelados}</b></td><td></td></tr>
+          <tr><td>Conversão histórica de testes</td><td style="text-align:right" colspan="2"><b>${f.conversao_historica == null ? 'sem histórico ainda' : f.conversao_historica + '%'}</b></td></tr>
+        </tbody></table></div>
+      <div class="card"><h3>Receita por plano</h3><div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Plano</th><th style="text-align:right">Ativos</th><th style="text-align:right">Em teste</th><th style="text-align:right">MRR</th></tr></thead><tbody>
+        ${(f.por_plano || []).map(p => `<tr><td>${esc(p.plano)}</td><td style="text-align:right">${p.ativos}</td><td style="text-align:right">${p.testes}</td><td style="text-align:right">${brl(p.mrr)}</td></tr>`).join('')}
+      </tbody></table></div></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="card-head"><div><h3>Projeção de receita — próximos 12 meses</h3><p class="muted" style="font-size:.88rem">Estimativa a partir dos dados reais de hoje. Ajuste as premissas para simular cenários.</p></div></div>
+      <div class="grid3" id="prem">
+        <div class="field"><label>Conversão de testes em clientes (%)</label><input type="number" name="conv" min="0" max="100" value="${f.conversao_historica ?? 30}"><small>${f.conversao_historica == null ? 'Sugestão inicial; ainda não há histórico' : 'Valor inicial = sua conversão histórica'}</small></div>
+        <div class="field"><label>Novas igrejas em teste por mês</label><input type="number" name="novas" min="0" step="1" value="${Math.round(ult3 * 10) / 10}"><small>Valor inicial = média dos últimos 3 meses</small></div>
+        <div class="field"><label>Valor médio por cliente (R$/mês)</label><input name="ticket" inputmode="decimal" value="${moneyIn(ticketReal ?? 149)}"><small>${ticketReal ? 'Valor inicial = média dos clientes ativos' : 'Sugestão inicial; ajuste ao seu plano mais vendido'}</small></div>
+      </div>
+      <div id="proj" style="margin-top:18px"></div>
+    </div>
+    <div class="card" style="margin-top:14px"><h3>Novas igrejas por mês</h3><div id="novasChart" style="margin-top:14px"></div></div>`;
+  const bars = (vals, labels, fmt, hl = true) => { const max = Math.max(1, ...vals); const W = 760, H = 200, bw = W / vals.length;
+    return `<svg viewBox="0 0 ${W} ${H + 40}" width="100%" role="img" style="max-height:280px">${vals.map((v, i) => { const h = Math.round(v / max * H);
+      return `<g><rect x="${i * bw + 6}" y="${H - h + 18}" width="${bw - 12}" height="${Math.max(h, 1)}" rx="5" fill="${hl && i === 0 ? 'var(--gold)' : 'var(--royal)'}"><title>${labels[i]}: ${fmt(v)}</title></rect>
+      <text x="${i * bw + bw / 2}" y="${H - h + 12}" text-anchor="middle" font-size="11" fill="var(--muted)">${fmt(v)}</text>
+      <text x="${i * bw + bw / 2}" y="${H + 34}" text-anchor="middle" font-size="11" fill="var(--muted)">${labels[i]}</text></g>`; }).join('')}</svg>`; };
+  const k = v => v >= 1000 ? (v / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil' : Math.round(v).toLocaleString('pt-BR');
+  $('#novasChart').innerHTML = bars(hist.map(m => m.igrejas), hist.map(m => mesNome(m.mes)), v => String(v), false);
+  const calc = () => {
+    const P = new FormData(); $('#prem').querySelectorAll('input').forEach(i => P.set(i.name, i.value));
+    const conv = Math.min(100, Math.max(0, Number(P.get('conv')) || 0)) / 100, novas = Math.max(0, Number(P.get('novas')) || 0), ticket = parseMoney(P.get('ticket')) ?? 0;
+    const base = n(f.mrr) + conv * n(f.potencial_30d);
+    const months = [], labels = []; const now = new Date();
+    for (let i = 1; i <= 12; i++) { const d = new Date(now.getFullYear(), now.getMonth() + i, 15);
+      months.push(Math.round((base + novas * conv * ticket * (i - 1)) * 100) / 100); labels.push(d.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '')); }
+    const total = months.reduce((a, b) => a + b, 0);
+    $('#proj').innerHTML = `<div class="kpis" style="grid-template-columns:repeat(3,1fr);margin-bottom:10px">
+        <div class="kpi"><small>MRR previsto no próximo mês</small><strong style="font-size:1.3rem">${brl(months[0])}</strong></div>
+        <div class="kpi"><small>MRR previsto em 12 meses</small><strong style="font-size:1.3rem">${brl(months[11])}</strong></div>
+        <div class="kpi"><small>Receita prevista em 12 meses</small><strong style="font-size:1.3rem">${brl(total)}</strong></div></div>
+      ${bars(months, labels, k)}
+      <p class="muted" style="font-size:.8rem">Cálculo: MRR atual + conversão × potencial dos testes que vencem em 30 dias, somando a cada mês as novas igrejas × conversão × valor médio. É uma estimativa, não receita garantida; cancelamentos não estão incluídos.</p>`;
+  };
+  $('#prem').addEventListener('input', calc); calc();
 }
 async function pageAdminPlanos() {
   shell('admin-planos', `<div class="loading"><div class="spinner"></div></div>`);
@@ -704,6 +780,7 @@ async function render() {
       if (route === 'admin') return pageAdmin();
       if (route === 'admin-igrejas') return pageAdminIgrejas();
       if (route === 'admin-planos') return pageAdminPlanos();
+      if (route === 'admin-financeiro') return pageAdminFinanceiro();
     }
     if (route === 'versoes') return pageVersoes();
     if (!S.org) return S.isAdmin && route !== 'criar-igreja' ? go('admin') : pageCriarIgreja();

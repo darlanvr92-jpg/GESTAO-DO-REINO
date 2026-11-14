@@ -479,7 +479,7 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);margin-top:96px;back
           <button type="button" data-cycle="anual">Anual <em>2 meses grátis</em></button>
         </div>
       </div>
-      <div class="plans">
+      <div class="plans" id="plansGrid">
         <article class="plan reveal">
           <h3>Básico</h3>
           <p class="desc">Para igrejas com uma congregação que querem organizar membros e finanças.</p>
@@ -555,19 +555,19 @@ footer{padding:56px 0 36px;border-top:1px solid var(--line);margin-top:96px;back
         <div>
           <span class="eyebrow">Comece hoje</span>
           <h2>Coloque a administração da sua igreja em ordem</h2>
-          <p>Preencha os dados e nossa equipe libera o seu teste grátis e ajuda na implantação.</p>
+          <p>Crie a conta da sua igreja em menos de um minuto e comece a usar na hora. Sem cartão de crédito.</p>
+          <p id="waLine" style="margin-top:14px;display:none">Prefere conversar antes? <a id="waLink" href="#" target="_blank" rel="noopener" style="color:var(--gold);font-weight:600">Fale com a equipe no WhatsApp</a></p>
         </div>
         <form id="leadForm" novalidate>
           <div class="field"><label for="f-nome">Seu nome</label><input id="f-nome" name="nome" autocomplete="name" placeholder="Nome completo" required></div>
           <div class="field"><label for="f-igreja">Nome da igreja</label><input id="f-igreja" name="igreja" placeholder="Igreja ..." required></div>
           <div class="row2">
-            <div class="field"><label for="f-tel">WhatsApp</label><input id="f-tel" name="telefone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(00) 00000-0000" required></div>
-            <div class="field"><label for="f-plano">Plano de interesse</label>
-              <select id="f-plano" name="plano"><option>Básico</option><option selected>Profissional</option><option>Enterprise</option><option>Ainda não sei</option></select>
+            <div class="field"><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" placeholder="voce@email.com" required></div>
+            <div class="field"><label for="f-plano">Plano para testar</label>
+              <select id="f-plano" name="plano"><option value="basico">Básico</option><option value="profissional" selected>Profissional</option><option value="enterprise">Enterprise</option></select>
             </div>
           </div>
-          <label class="consent"><input type="checkbox" id="f-ok" required><span>Concordo em ser contatado pela equipe do Gestão do Reino sobre o teste grátis. Meus dados não serão compartilhados.</span></label>
-          <button class="btn btn-gold" type="submit">Quero meu teste grátis</button>
+          <button class="btn btn-gold" type="submit">Continuar para criar minha conta</button>
           <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
         </form>
       </div>

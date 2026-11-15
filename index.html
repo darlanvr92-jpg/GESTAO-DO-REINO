@@ -216,7 +216,7 @@
       <li><a href="#faq">Dúvidas</a></li>
     </ul>
     <div class="nav-cta">
-      <a href="/login" class="login">Entrar</a>
+      <a href="app.html#entrar" class="login">Entrar</a>
       <a href="#teste" class="btn btn-gold">Teste grátis</a>
       <button class="menu-btn" aria-label="Abrir menu" onclick="document.getElementById('menu').classList.toggle('open')">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -290,7 +290,7 @@
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div>
         <h3>Financeiro</h3>
-        <p>Dízimos, ofertas, despesas, centros de custo, contas a pagar e prestação de contas transparente.</p>
+        <p>Entradas e saídas do caixa, dízimos e ofertas, contas a pagar e a receber, e o caixa de qualquer período exportado em PDF.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
@@ -393,7 +393,9 @@
         <ul>
           <li>1 congregação</li>
           <li>Cadastro de membros e departamentos</li>
-          <li>Controle financeiro</li>
+          <li>Controle de caixa: entradas e saídas</li>
+          <li>Contas a pagar e a receber</li>
+          <li>Exportação do caixa em PDF por período</li>
           <li>Relatórios básicos</li>
           <li>Até 3 usuários</li>
         </ul>
@@ -409,8 +411,10 @@
         <ul>
           <li>Múltiplas congregações</li>
           <li>Até 10 usuários</li>
-          <li>Tesouraria com fundos e aprovações</li>
+          <li>Controle de caixa: entradas e saídas</li>
           <li>Contas a pagar e a receber</li>
+          <li>Exportação do caixa em PDF por período</li>
+          <li>Tesouraria com fundos e aprovações</li>
           <li>Relatórios completos e prestação de contas</li>
           <li>Permissões avançadas</li>
         </ul>
@@ -425,6 +429,8 @@
         <ul>
           <li>Unidades e usuários ampliados</li>
           <li>Administração centralizada</li>
+          <li>Controle de caixa, contas a pagar e a receber</li>
+          <li>Exportação do caixa em PDF por período</li>
           <li>Relatórios gerenciais consolidados</li>
           <li>Configurações personalizadas</li>
           <li>Implantação assistida</li>
@@ -524,7 +530,7 @@
       <div><h4>Empresa</h4><ul><li><a href="mailto:contato@gestaodoreino.com.br">Contato</a></li><li><a href="#faq">Dúvidas</a></li></ul></div>
       <div><h4>Legal</h4><ul><li><a href="/termos">Termos de Uso</a></li><li><a href="/privacidade">Privacidade (LGPD)</a></li></ul></div>
     </div>
-    <div class="copy"><span>© <span id="ano"></span> Gestão do Reino. Todos os direitos reservados.</span><span><a href="/login">Acessar o sistema</a></span></div>
+    <div class="copy"><span>© <span id="ano"></span> Gestão do Reino. Todos os direitos reservados.</span><span><a href="app.html#entrar">Acessar o sistema</a></span></div>
   </div>
 </footer>
 
@@ -533,11 +539,10 @@
   /* ===== CONFIGURAÇÃO ===== */
   var SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd'; // chave pública (pode ficar no site)
-  var APP_URL = '';   // endereço do sistema quando estiver no ar, ex.: 'https://app.gestaodoreino.com.br'
+  var APP_URL = 'app.html';   // endereço do sistema (mesma pasta do site)
   /* ======================== */
 
   document.getElementById('ano').textContent = new Date().getFullYear();
-  if (APP_URL) document.querySelectorAll('a[href="/login"]').forEach(function(a){ a.href = APP_URL; });
 
   // Alternar mensal/anual
   document.querySelectorAll('.toggle button').forEach(function(b){
@@ -579,7 +584,7 @@
   function sucesso(){
     var d = new Date(); d.setDate(d.getDate() + 14);
     show('Igreja criada! Seu teste grátis vai até <b>' + d.toLocaleDateString('pt-BR') + '</b>.' +
-      (APP_URL ? ' <a href="' + APP_URL + '">Acessar o sistema →</a>' : ' Você já pode entrar no sistema com seu e-mail e senha.'));
+      (APP_URL ? ' <a href="' + APP_URL + '#entrar">Acessar o sistema →</a>' : ' Você já pode entrar no sistema com seu e-mail e senha.'));
   }
 
   // Cria a igreja para o usuário logado (usa os dados guardados no cadastro)
@@ -628,7 +633,9 @@
             full_name: f.elements.nome.value.trim(),
             phone: f.elements.telefone.value.trim(),
             igreja_pendente: f.elements.igreja.value.trim(),
-            plano: f.elements.plano.value
+            church_name: f.elements.igreja.value.trim(),
+            plano: f.elements.plano.value,
+            plan: f.elements.plano.value
           }
         }
       });

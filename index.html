@@ -170,6 +170,10 @@
   .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .fine{font-size:.78rem;color:var(--muted)}
   .msg{display:none;padding:.8rem 1rem;border-radius:10px;background:#ecfdf5;color:var(--ok);font-weight:600;font-size:.9rem}
+  .msg.err{background:#fef2f2;color:#b91c1c}
+  .msg.info{background:#eef2ff;color:var(--royal-2)}
+  .msg a{text-decoration:underline}
+  button[disabled]{opacity:.6;cursor:wait}
 
   footer{padding:56px 0 36px;color:var(--muted);font-size:.92rem}
   .foot{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}
@@ -382,52 +386,50 @@
 
     <div class="plans">
       <div class="plan">
-        <h3>Semente</h3>
-        <p class="muted">Para igrejas e congregações que estão começando.</p>
-        <div class="price"><small>R$</small><strong data-m="49" data-a="41">49</strong><small class="per">/mês</small></div>
-        <p class="muted bill">cobrado mensalmente</p>
+        <h3>Básico</h3>
+        <p class="muted">Para igrejas com uma congregação que querem organizar membros e finanças.</p>
+        <div class="price"><small>R$</small><strong data-m="19,90" data-a="19,90">19,90</strong><small class="per">/mês</small></div>
+        <p class="muted bill" data-m="cobrado mensalmente" data-a="R$ 238,80 por ano">cobrado mensalmente</p>
         <ul>
-          <li>Até 150 membros</li>
-          <li>Membros, visitantes e famílias</li>
-          <li>Financeiro básico</li>
-          <li>Agenda e eventos</li>
-          <li>3 usuários administrativos</li>
-          <li>App para membros</li>
+          <li>1 congregação</li>
+          <li>Cadastro de membros e departamentos</li>
+          <li>Controle financeiro</li>
+          <li>Relatórios básicos</li>
+          <li>Até 3 usuários</li>
         </ul>
-        <a href="#teste" data-plan="semente" class="btn btn-outline choose">Testar grátis</a>
+        <a href="#teste" data-plan="basico" class="btn btn-outline choose">Começar teste grátis</a>
       </div>
 
       <div class="plan pop">
         <span class="badge">Mais escolhido</span>
-        <h3>Colheita</h3>
-        <p class="muted">Para igrejas em crescimento, com células e ministérios.</p>
-        <div class="price"><small>R$</small><strong data-m="99" data-a="83">99</strong><small class="per">/mês</small></div>
-        <p class="muted bill">cobrado mensalmente</p>
+        <h3>Profissional</h3>
+        <p class="muted">Para igrejas com várias congregações e tesouraria organizada por fundos.</p>
+        <div class="price"><small>R$</small><strong data-m="49,90" data-a="41,58">49,90</strong><small class="per">/mês</small></div>
+        <p class="muted bill" data-m="cobrado mensalmente" data-a="R$ 499 por ano">cobrado mensalmente</p>
         <ul>
-          <li>Até 600 membros</li>
-          <li>Tudo do Semente</li>
-          <li>Células com relatórios</li>
-          <li>Ministérios e escalas</li>
-          <li>Financeiro completo e centros de custo</li>
-          <li>10 usuários administrativos</li>
+          <li>Múltiplas congregações</li>
+          <li>Até 10 usuários</li>
+          <li>Tesouraria com fundos e aprovações</li>
+          <li>Contas a pagar e a receber</li>
+          <li>Relatórios completos e prestação de contas</li>
+          <li>Permissões avançadas</li>
         </ul>
-        <a href="#teste" data-plan="colheita" class="btn btn-gold choose">Testar grátis</a>
+        <a href="#teste" data-plan="profissional" class="btn btn-gold choose">Começar teste grátis</a>
       </div>
 
       <div class="plan">
-        <h3>Reino</h3>
-        <p class="muted">Para igrejas grandes, com sede e congregações.</p>
-        <div class="price"><small>R$</small><strong data-m="199" data-a="166">199</strong><small class="per">/mês</small></div>
-        <p class="muted bill">cobrado mensalmente</p>
+        <h3>Enterprise</h3>
+        <p class="muted">Para ministérios e convenções com muitas unidades e gestão centralizada.</p>
+        <div class="price"><small>R$</small><strong data-m="149" data-a="124,92">149</strong><small class="per">/mês</small></div>
+        <p class="muted bill" data-m="cobrado mensalmente" data-a="R$ 1.499 por ano">cobrado mensalmente</p>
         <ul>
-          <li>Membros ilimitados</li>
-          <li>Tudo do Colheita</li>
-          <li>Múltiplas congregações</li>
-          <li>Relatórios consolidados</li>
-          <li>Usuários ilimitados</li>
-          <li>Suporte prioritário</li>
+          <li>Unidades e usuários ampliados</li>
+          <li>Administração centralizada</li>
+          <li>Relatórios gerenciais consolidados</li>
+          <li>Configurações personalizadas</li>
+          <li>Implantação assistida</li>
         </ul>
-        <a href="#teste" data-plan="reino" class="btn btn-dark choose">Testar grátis</a>
+        <a href="#teste" data-plan="enterprise" class="btn btn-dark choose">Começar teste grátis</a>
       </div>
     </div>
 
@@ -482,7 +484,7 @@
           <li>Suporte em português</li>
         </ul>
       </div>
-      <form class="signup" id="signup" action="/cadastro" method="get" novalidate>
+      <form class="signup" id="signup" novalidate>
         <label>Nome da igreja<input name="igreja" required placeholder="Ex.: Igreja Batista Vida Nova" autocomplete="organization"></label>
         <div class="two">
           <label>Seu nome<input name="nome" required placeholder="Nome completo" autocomplete="name"></label>
@@ -490,23 +492,17 @@
         </div>
         <label>E-mail<input name="email" type="email" required placeholder="voce@igreja.com.br" autocomplete="email"></label>
         <div class="two">
-          <label>Membros (aprox.)
-            <select name="porte">
-              <option value="ate150">Até 150</option>
-              <option value="ate600">151 a 600</option>
-              <option value="mais600">Mais de 600</option>
-            </select>
-          </label>
+          <label>Senha<input name="senha" type="password" required minlength="8" placeholder="Mínimo 8 caracteres" autocomplete="new-password"></label>
           <label>Plano
             <select name="plano" id="plano">
-              <option value="semente">Semente</option>
-              <option value="colheita" selected>Colheita</option>
-              <option value="reino">Reino</option>
+              <option value="basico">Básico</option>
+              <option value="profissional" selected>Profissional</option>
+              <option value="enterprise">Enterprise</option>
             </select>
           </label>
         </div>
-        <button class="btn btn-gold" type="submit" style="justify-content:center">Criar conta e começar teste →</button>
-        <div class="msg" id="msg">Tudo certo! Redirecionando para a criação da sua conta…</div>
+        <button class="btn btn-gold" type="submit" id="btnSignup" style="justify-content:center">Criar conta e começar teste →</button>
+        <div class="msg" id="msg" role="status"></div>
         <p class="fine">Ao continuar, você concorda com os <a href="/termos" style="text-decoration:underline">Termos de Uso</a> e a <a href="/privacidade" style="text-decoration:underline">Política de Privacidade</a>.</p>
       </form>
     </div>
@@ -532,8 +528,16 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  /* ===== CONFIGURAÇÃO ===== */
+  var SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
+  var SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd'; // chave pública (pode ficar no site)
+  var APP_URL = '';   // endereço do sistema quando estiver no ar, ex.: 'https://app.gestaodoreino.com.br'
+  /* ======================== */
+
   document.getElementById('ano').textContent = new Date().getFullYear();
+  if (APP_URL) document.querySelectorAll('a[href="/login"]').forEach(function(a){ a.href = APP_URL; });
 
   // Alternar mensal/anual
   document.querySelectorAll('.toggle button').forEach(function(b){
@@ -542,9 +546,7 @@
       b.classList.add('on');
       var p = b.dataset.period;
       document.querySelectorAll('.price strong').forEach(function(s){ s.textContent = s.dataset[p]; });
-      document.querySelectorAll('.bill').forEach(function(t){
-        t.textContent = p === 'a' ? 'por mês, cobrado anualmente' : 'cobrado mensalmente';
-      });
+      document.querySelectorAll('.bill').forEach(function(t){ t.textContent = t.dataset[p]; });
     });
   });
 
@@ -553,22 +555,101 @@
     a.addEventListener('click', function(){ document.getElementById('plano').value = a.dataset.plan; });
   });
 
-  // Validação simples do cadastro
-  document.getElementById('signup').addEventListener('submit', function(e){
-    var f = e.target, ok = true;
-    ['igreja','nome','email'].forEach(function(n){
-      var el = f.elements[n];
-      var bad = !el.value.trim() || (n === 'email' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(el.value));
-      el.style.borderColor = bad ? '#dc2626' : '';
-      if (bad) ok = false;
-    });
-    if (!ok) { e.preventDefault(); return; }
-    document.getElementById('msg').style.display = 'block';
-  });
-
   // Fecha menu mobile ao clicar num link
   document.querySelectorAll('#menu a').forEach(function(a){
     a.addEventListener('click', function(){ document.getElementById('menu').classList.remove('open'); });
+  });
+
+  var msg = document.getElementById('msg');
+  function show(text, kind){ msg.className = 'msg' + (kind ? ' ' + kind : ''); msg.innerHTML = text; msg.style.display = 'block'; }
+
+  var sb = (window.supabase && window.supabase.createClient)
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { detectSessionInUrl: true, persistSession: true } })
+    : null;
+
+  function traduz(e){
+    var m = (e && (e.message || e.error_description)) || String(e);
+    if (/already registered|already exists/i.test(m)) return 'Este e-mail já tem conta. Use outro e-mail ou entre no sistema.';
+    if (/rate limit|too many/i.test(m)) return 'Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente de novo.';
+    if (/password/i.test(m)) return 'A senha precisa ter pelo menos 8 caracteres (evite senhas muito simples).';
+    if (/invalid.*email|email.*invalid/i.test(m)) return 'E-mail inválido.';
+    return m;
+  }
+
+  function sucesso(){
+    var d = new Date(); d.setDate(d.getDate() + 14);
+    show('Igreja criada! Seu teste grátis vai até <b>' + d.toLocaleDateString('pt-BR') + '</b>.' +
+      (APP_URL ? ' <a href="' + APP_URL + '">Acessar o sistema →</a>' : ' Você já pode entrar no sistema com seu e-mail e senha.'));
+  }
+
+  // Cria a igreja para o usuário logado (usa os dados guardados no cadastro)
+  async function criarIgreja(user){
+    var meta = user.user_metadata || {};
+    if (!meta.igreja_pendente) return false;
+    var r = await sb.rpc('create_my_organization', { p_name: meta.igreja_pendente, p_plan_code: meta.plano || 'profissional' });
+    if (r.error && !/já cadastrou/i.test(r.error.message)) throw r.error;
+    await sb.auth.updateUser({ data: { igreja_pendente: null } });
+    return true;
+  }
+
+  // Volta do link de confirmação de e-mail: termina de criar a igreja
+  if (sb) {
+    sb.auth.getSession().then(async function(res){
+      var s = res.data && res.data.session;
+      if (!s) return;
+      try {
+        if (await criarIgreja(s.user)) { location.hash = 'teste'; sucesso(); }
+      } catch (e) { location.hash = 'teste'; show(traduz(e), 'err'); }
+    });
+  }
+
+  document.getElementById('signup').addEventListener('submit', async function(e){
+    e.preventDefault();
+    var f = e.target, ok = true;
+    ['igreja','nome','email','senha'].forEach(function(n){
+      var el = f.elements[n], v = el.value.trim();
+      var bad = !v || (n === 'email' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v)) || (n === 'senha' && v.length < 8) || (n === 'igreja' && v.length < 3);
+      el.style.borderColor = bad ? '#dc2626' : '';
+      if (bad) ok = false;
+    });
+    if (!ok) { show('Confira os campos destacados (senha com no mínimo 8 caracteres).', 'err'); return; }
+    if (!sb) { show('Não foi possível conectar ao servidor. Verifique sua internet e recarregue a página.', 'err'); return; }
+
+    var btn = document.getElementById('btnSignup');
+    btn.disabled = true; show('Criando sua conta…', 'info');
+    try {
+      var redirect = location.origin + location.pathname;
+      var r = await sb.auth.signUp({
+        email: f.elements.email.value.trim(),
+        password: f.elements.senha.value,
+        options: {
+          emailRedirectTo: redirect,
+          data: {
+            full_name: f.elements.nome.value.trim(),
+            phone: f.elements.telefone.value.trim(),
+            igreja_pendente: f.elements.igreja.value.trim(),
+            plano: f.elements.plano.value
+          }
+        }
+      });
+      if (r.error) throw r.error;
+      // E-mail já cadastrado: o Supabase devolve um usuário sem identidades
+      if (r.data.user && r.data.user.identities && r.data.user.identities.length === 0) {
+        throw new Error('already registered');
+      }
+      if (r.data.session) {           // confirmação de e-mail desligada
+        await criarIgreja(r.data.user);
+        sucesso();
+      } else {                        // confirmação de e-mail ligada
+        show('Quase lá! Enviamos um link para <b>' + f.elements.email.value.trim() +
+             '</b>. Abra o e-mail e clique no link para ativar a conta; a igreja é criada em seguida. Confira também o spam.', 'info');
+      }
+      f.reset();
+    } catch (err) {
+      show(traduz(err), 'err');
+    } finally {
+      btn.disabled = false;
+    }
   });
 </script>
 </body>

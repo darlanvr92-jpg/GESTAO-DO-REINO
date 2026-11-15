@@ -3,703 +3,573 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Gestão do Reino — Gestão completa para igrejas</title>
-<meta name="description" content="Gestão do Reino: plataforma para administrar membros, congregações, departamentos, finanças, tesouraria e prestação de contas da sua igreja. No computador e no celular.">
-<meta name="theme-color" content="#0B1F3A">
-<meta property="og:title" content="Gestão do Reino — Gestão completa para igrejas">
-<meta property="og:description" content="Membros, congregações, finanças, tesouraria e prestação de contas em um só lugar, com segurança e transparência.">
+<title>Gestão do Reino — Sistema de gestão para igrejas</title>
+<meta name="description" content="Gestão do Reino: membros, células, finanças, eventos, escalas e comunicação da sua igreja em um só lugar. Teste grátis por 14 dias.">
+<meta name="theme-color" content="#1e1b4b">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231e1b4b'/%3E%3Cpath d='M14 44l4-22 9 10 5-14 5 14 9-10 4 22z' fill='%23f5b301'/%3E%3C/svg%3E">
+<meta property="og:title" content="Gestão do Reino — Sistema de gestão para igrejas">
+<meta property="og:description" content="Organize membros, células, finanças e eventos da sua igreja. Teste grátis por 14 dias.">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1F3A'/%3E%3Cpath d='M16 42h32v5H16zM18 40l4-16 7 8 3-12 3 12 7-8 4 16z' fill='%23C9A24B'/%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --navy:#0B1F3A; --navy-2:#132D52; --royal:#2453D6; --royal-2:#1C43B3;
-  --gold:#C9A24B; --gold-soft:#F4ECD8; --green:#15935B; --red:#D2453B;
-  --bg:#F4F6FA; --surface:#FFFFFF; --text:#14213A; --muted:#5B6782; --line:#E2E7F0;
-  --radius:16px; --shadow:0 10px 30px -12px rgba(11,31,58,.18);
-}
-[data-theme="dark"]{
-  --bg:#0A1424; --surface:#111E33; --text:#E8EDF6; --muted:#9AA8C2; --line:#22324D;
-  --gold-soft:#2A2617; --shadow:0 10px 30px -12px rgba(0,0,0,.6);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
-a{color:inherit;text-decoration:none}
-img,svg{display:block}
-.wrap{width:min(1160px,92%);margin-inline:auto}
-h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.15;letter-spacing:-.01em}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
-.eyebrow::before{content:"";width:22px;height:2px;background:var(--gold);border-radius:2px}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 22px;border-radius:12px;font-weight:600;font-size:.98rem;border:1px solid transparent;cursor:pointer;transition:transform .15s,background .2s,box-shadow .2s;font-family:inherit}
-.btn:active{transform:translateY(1px)}
-.btn-primary{background:var(--royal);color:#fff;box-shadow:0 8px 20px -8px rgba(36,83,214,.7)}
-.btn-primary:hover{background:var(--royal-2)}
-.btn-ghost{background:transparent;border-color:var(--line);color:var(--text)}
-.btn-ghost:hover{border-color:var(--royal);color:var(--royal)}
-.btn-gold{background:var(--gold);color:var(--navy)}
-.btn-gold:hover{filter:brightness(1.05)}
-:focus-visible{outline:3px solid var(--gold);outline-offset:2px;border-radius:6px}
+  :root{
+    --ink:#0f0d2e; --royal:#1e1b4b; --royal-2:#312e81; --violet:#4f46e5;
+    --gold:#f5b301; --gold-soft:#fff4cc; --bg:#fafaf7; --card:#ffffff;
+    --muted:#5b5a73; --line:#e7e5ef; --ok:#15803d;
+    --radius:18px; --shadow:0 10px 30px -12px rgba(30,27,75,.25);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img,svg{display:block}
+  .wrap{width:min(1160px,92%);margin-inline:auto}
+  .btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 1.4rem;border-radius:999px;font-weight:650;font-size:1rem;border:2px solid transparent;cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn-gold{background:var(--gold);color:var(--ink);box-shadow:0 8px 22px -8px rgba(245,179,1,.7)}
+  .btn-gold:hover{background:#ffc21a}
+  .btn-ghost{border-color:rgba(255,255,255,.35);color:#fff}
+  .btn-ghost:hover{background:rgba(255,255,255,.08)}
+  .btn-dark{background:var(--royal);color:#fff}
+  .btn-outline{border-color:var(--line);background:#fff;color:var(--royal)}
+  .eyebrow{display:inline-block;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--violet)}
+  h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
+  h2{font-size:clamp(1.8rem,3.2vw,2.6rem);margin:.4rem 0 .8rem}
+  .lead{color:var(--muted);font-size:1.1rem;max-width:640px}
+  section{padding:96px 0}
+  .center{text-align:center}.center .lead{margin-inline:auto}
 
-/* Header */
-header{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
-.brand{display:flex;align-items:center;gap:10px;font-family:Fraunces,serif;font-weight:700;font-size:1.25rem}
-.brand-mark{width:38px;height:38px;border-radius:10px;background:var(--navy);display:grid;place-items:center}
-[data-theme="dark"] .brand-mark{background:#1A3460}
-.nav-links{display:flex;gap:28px;font-size:.95rem;color:var(--muted);font-weight:500}
-.nav-links a:hover{color:var(--royal)}
-.nav-actions{display:flex;align-items:center;gap:10px}
-.icon-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--text);display:grid;place-items:center;cursor:pointer}
-.icon-btn:hover{border-color:var(--royal)}
-.menu-btn{display:none}
-.mobile-menu{display:none;flex-direction:column;gap:4px;padding:12px 0 18px;border-top:1px solid var(--line)}
-.mobile-menu a{padding:12px 4px;font-weight:500}
-.mobile-menu.open{display:flex}
+  /* Header */
+  header{position:sticky;top:0;z-index:50;background:rgba(30,27,75,.92);backdrop-filter:blur(10px);color:#fff}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .brand{display:flex;align-items:center;gap:.6rem;font-weight:800;font-size:1.15rem}
+  .brand span b{color:var(--gold)}
+  .nav ul{display:flex;gap:1.8rem;list-style:none;font-size:.95rem;opacity:.9}
+  .nav ul a:hover{color:var(--gold)}
+  .nav-cta{display:flex;gap:.6rem;align-items:center}
+  .nav-cta .login{font-size:.95rem;opacity:.9;padding:.5rem .8rem}
+  .menu-btn{display:none;background:none;border:0;color:#fff;cursor:pointer}
 
-/* Hero */
-.hero{position:relative;overflow:hidden;background:radial-gradient(1200px 500px at 85% -10%,rgba(36,83,214,.35),transparent 60%),linear-gradient(160deg,#0B1F3A 0%,#10294D 60%,#0B1F3A 100%);color:#fff;padding:88px 0 110px}
-.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5}
-.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
-.hero h1{font-size:clamp(2.3rem,4.6vw,3.6rem);margin:18px 0 20px}
-.hero h1 em{font-style:normal;color:var(--gold)}
-.hero p.lead{font-size:1.12rem;color:#C9D4EA;max-width:540px}
-.hero-ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-.hero .btn-ghost{color:#fff;border-color:rgba(255,255,255,.25)}
-.hero .btn-ghost:hover{border-color:var(--gold);color:var(--gold)}
-.hero-notes{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;font-size:.88rem;color:#AFC0DE}
-.hero-notes span{display:inline-flex;align-items:center;gap:6px}
+  /* Hero */
+  .hero{background:radial-gradient(1200px 500px at 80% -10%,rgba(79,70,229,.55),transparent 60%),linear-gradient(180deg,var(--royal),var(--ink));color:#fff;padding:88px 0 120px;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .pill{display:inline-flex;gap:.5rem;align-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);padding:.35rem .9rem;border-radius:999px;font-size:.85rem}
+  .pill i{width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block}
+  .hero h1{font-size:clamp(2.3rem,5vw,3.7rem);margin:1.1rem 0}
+  .hero h1 em{font-style:normal;color:var(--gold)}
+  .hero p{font-size:1.15rem;opacity:.85;max-width:560px}
+  .hero-actions{display:flex;gap:.8rem;flex-wrap:wrap;margin:2rem 0 1.4rem}
+  .hero-note{font-size:.88rem;opacity:.7;display:flex;gap:1.2rem;flex-wrap:wrap}
+  .hero-note span::before{content:"✓ ";color:var(--gold)}
 
-/* Dashboard mock */
-.mock{background:#fff;color:#14213A;border-radius:20px;box-shadow:0 40px 80px -30px rgba(0,0,0,.55);overflow:hidden;border:1px solid rgba(255,255,255,.1)}
-.mock-top{display:flex;align-items:center;gap:6px;padding:12px 16px;background:#EEF2F8;border-bottom:1px solid #E2E7F0}
-.mock-top i{width:10px;height:10px;border-radius:50%;background:#CDD5E3}
-.mock-top b{margin-left:10px;font-size:.75rem;color:#5B6782;font-weight:500}
-.mock-body{display:grid;grid-template-columns:56px 1fr}
-.mock-side{background:#0B1F3A;padding:14px 0;display:flex;flex-direction:column;align-items:center;gap:14px}
-.mock-side span{width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.12)}
-.mock-side span.on{background:#2453D6}
-.mock-main{padding:18px;display:grid;gap:14px}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.kpi{border:1px solid #E2E7F0;border-radius:12px;padding:10px 12px}
-.kpi small{display:block;font-size:.66rem;color:#5B6782;text-transform:uppercase;letter-spacing:.06em}
-.kpi strong{font-size:1rem}
-.kpi .up{color:#15935B}.kpi .down{color:#D2453B}
-.chart{border:1px solid #E2E7F0;border-radius:12px;padding:12px}
-.chart small{font-size:.7rem;color:#5B6782}
-.bars{display:flex;align-items:flex-end;gap:8px;height:110px;margin-top:10px}
-.bars div{flex:1;display:flex;gap:3px;align-items:flex-end;height:100%}
-.bars i{flex:1;border-radius:4px 4px 0 0}
-.bars i:first-child{background:#15935B}.bars i:last-child{background:#E8A39E}
-.rows{border:1px solid #E2E7F0;border-radius:12px;font-size:.76rem}
-.rows div{display:flex;justify-content:space-between;padding:8px 12px;border-top:1px solid #EEF2F8}
-.rows div:first-child{border-top:0}
-.demo-tag{display:inline-block;margin-top:12px;font-size:.75rem;color:#AFC0DE}
+  /* Mock dashboard */
+  .mock{background:#fff;color:var(--ink);border-radius:20px;box-shadow:0 40px 80px -30px rgba(0,0,0,.6);padding:18px;transform:rotate(-1.2deg)}
+  .mock-top{display:flex;gap:6px;margin-bottom:14px}
+  .mock-top i{width:10px;height:10px;border-radius:50%;background:#e5e7eb}
+  .mock-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .kpi{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .kpi small{color:var(--muted);font-size:.72rem}
+  .kpi strong{display:block;font-size:1.3rem}
+  .kpi .up{color:var(--ok);font-size:.72rem;font-weight:700}
+  .mock-chart{margin-top:12px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .bars{display:flex;align-items:flex-end;gap:8px;height:110px;margin-top:8px}
+  .bars div{flex:1;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,var(--violet),var(--royal-2))}
+  .bars div:nth-child(even){background:linear-gradient(180deg,#fcd34d,var(--gold))}
+  .mock-list{margin-top:12px;display:grid;gap:8px}
+  .row{display:flex;justify-content:space-between;align-items:center;font-size:.85rem;padding:9px 12px;border:1px solid var(--line);border-radius:10px}
+  .tag{font-size:.7rem;padding:.15rem .55rem;border-radius:999px;background:var(--gold-soft);color:#8a5a00;font-weight:700}
 
-/* Sections */
-section{padding:96px 0}
-.section-head{max-width:720px;margin-bottom:52px}
-.section-head h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin:14px 0 14px}
-.section-head p{color:var(--muted);font-size:1.06rem}
-.center{text-align:center;margin-inline:auto}
-.center .eyebrow{justify-content:center}
+  /* Logos/trust */
+  .trust{padding:40px 0;border-bottom:1px solid var(--line);background:#fff}
+  .trust .wrap{display:flex;justify-content:space-around;flex-wrap:wrap;gap:2rem;text-align:center}
+  .trust strong{display:block;font-size:2rem;color:var(--royal)}
+  .trust small{color:var(--muted)}
 
-.strip{padding:28px 0;background:var(--surface);border-bottom:1px solid var(--line)}
-.strip-grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;color:var(--muted);font-weight:500;font-size:.95rem}
-.strip-grid span{display:inline-flex;align-items:center;gap:10px}
-.strip-grid svg{color:var(--royal)}
+  /* Features */
+  .features{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px}
+  .feat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:28px;transition:box-shadow .2s,transform .2s}
+  .feat:hover{box-shadow:var(--shadow);transform:translateY(-3px)}
+  .ico{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--royal),var(--violet));color:var(--gold);margin-bottom:16px}
+  .feat h3{font-size:1.15rem;margin-bottom:.4rem}
+  .feat p{color:var(--muted);font-size:.97rem}
 
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;transition:transform .2s,box-shadow .2s,border-color .2s}
-.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:color-mix(in srgb,var(--royal) 35%,var(--line))}
-.card .ic{width:48px;height:48px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--royal) 12%,transparent);color:var(--royal);margin-bottom:18px}
-.card h3{font-size:1.22rem;margin-bottom:8px}
-.card p{color:var(--muted);font-size:.96rem}
-.card ul{margin-top:14px;list-style:none;display:grid;gap:6px;font-size:.92rem;color:var(--muted)}
-.card li{display:flex;gap:8px}
-.card li::before{content:"";flex:none;width:6px;height:6px;margin-top:9px;border-radius:50%;background:var(--gold)}
+  /* Split */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+  .checks{list-style:none;margin-top:1.4rem;display:grid;gap:.8rem}
+  .checks li{display:flex;gap:.7rem;align-items:flex-start}
+  .checks li::before{content:"";flex:0 0 22px;height:22px;border-radius:50%;background:var(--gold-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a5a00' stroke-width='3'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/13px no-repeat;margin-top:2px}
+  .phone{width:270px;margin-inline:auto;background:var(--ink);border-radius:38px;padding:12px;box-shadow:0 40px 70px -30px rgba(30,27,75,.6)}
+  .screen{background:var(--bg);border-radius:28px;overflow:hidden;min-height:500px}
+  .screen-head{background:linear-gradient(135deg,var(--royal),var(--violet));color:#fff;padding:28px 18px 22px}
+  .screen-head small{opacity:.75}
+  .screen-head strong{display:block;font-size:1.25rem;margin-top:2px}
+  .screen-body{padding:14px;display:grid;gap:10px}
+  .card-s{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;font-size:.85rem}
+  .card-s b{display:block}
+  .card-s span{color:var(--muted);font-size:.78rem}
+  .gp{display:inline-flex;align-items:center;gap:.6rem;background:var(--ink);color:#fff;padding:.7rem 1.2rem;border-radius:12px;margin-top:1.6rem;font-size:.85rem;line-height:1.2}
+  .gp b{font-size:1.05rem;display:block}
 
-/* Finance split */
-.split{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
-.checklist{list-style:none;display:grid;gap:16px;margin-top:26px}
-.checklist li{display:flex;gap:14px}
-.checklist .tick{flex:none;width:28px;height:28px;border-radius:8px;background:color-mix(in srgb,var(--green) 14%,transparent);color:var(--green);display:grid;place-items:center}
-.checklist b{display:block}
-.checklist span{color:var(--muted);font-size:.95rem}
-.ledger{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow)}
-.ledger h4{font-family:Fraunces,serif;font-size:1.1rem;margin-bottom:4px}
-.ledger .sub{color:var(--muted);font-size:.85rem;margin-bottom:18px}
-.fund{display:grid;grid-template-columns:1fr auto;gap:6px 12px;padding:14px 0;border-top:1px solid var(--line)}
-.fund:first-of-type{border-top:0}
-.fund .name{font-weight:600}
-.fund .val{font-variant-numeric:tabular-nums;font-weight:600}
-.meter{grid-column:1/-1;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
-.meter i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--royal),#5B83F0)}
-.ledger .note{margin-top:14px;font-size:.8rem;color:var(--muted)}
+  /* Steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px;counter-reset:s}
+  .step{padding:28px;border-radius:var(--radius);background:#fff;border:1px solid var(--line);position:relative}
+  .step::before{counter-increment:s;content:counter(s);position:absolute;top:-18px;left:28px;width:38px;height:38px;border-radius:50%;background:var(--gold);display:grid;place-items:center;font-weight:800}
+  .step h3{margin:.6rem 0 .3rem}
+  .step p{color:var(--muted)}
 
-/* Security */
-.security{background:var(--navy);color:#fff}
-.security .section-head p{color:#B5C3DD}
-.security .card{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
-.security .card p{color:#B5C3DD}
-.security .card .ic{background:rgba(201,162,75,.15);color:var(--gold)}
-.security .card:hover{border-color:rgba(201,162,75,.5)}
+  /* Pricing */
+  .pricing{background:linear-gradient(180deg,#fff,var(--bg))}
+  .toggle{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px;margin-top:1.4rem}
+  .toggle button{border:0;background:none;padding:.55rem 1.1rem;border-radius:999px;font-weight:650;cursor:pointer;color:var(--muted);font-size:.92rem}
+  .toggle button.on{background:var(--royal);color:#fff}
+  .toggle .save{font-size:.72rem;color:var(--ok);margin-left:.3rem}
+  .toggle button.on .save{color:var(--gold)}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:40px;align-items:stretch}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:22px;padding:32px;display:flex;flex-direction:column;text-align:left}
+  .plan.pop{background:var(--royal);color:#fff;border-color:var(--royal);box-shadow:0 30px 60px -25px rgba(30,27,75,.55);position:relative;transform:scale(1.03)}
+  .plan.pop .muted{color:rgba(255,255,255,.7)}
+  .badge{position:absolute;top:-13px;right:24px;background:var(--gold);color:var(--ink);font-size:.75rem;font-weight:800;padding:.3rem .8rem;border-radius:999px}
+  .plan h3{font-size:1.25rem}
+  .muted{color:var(--muted);font-size:.93rem}
+  .price{margin:1.2rem 0 .3rem;display:flex;align-items:baseline;gap:.3rem}
+  .price small{font-size:1rem;font-weight:600}
+  .price strong{font-size:2.8rem;letter-spacing:-.03em}
+  .plan ul{list-style:none;margin:1.4rem 0 1.8rem;display:grid;gap:.65rem;font-size:.95rem;flex:1}
+  .plan li{display:flex;gap:.55rem}
+  .plan li::before{content:"✓";color:var(--violet);font-weight:800}
+  .plan.pop li::before{color:var(--gold)}
+  .plan .btn{justify-content:center;width:100%}
+  .enterprise{margin-top:22px;background:#fff;border:1px dashed var(--line);border-radius:18px;padding:22px 28px;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;text-align:left}
 
-/* App */
-.app-box{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center;background:linear-gradient(135deg,var(--surface),color-mix(in srgb,var(--royal) 6%,var(--surface)));border:1px solid var(--line);border-radius:28px;padding:56px}
-.phone{width:230px;height:460px;margin-inline:auto;border-radius:36px;background:#0B1F3A;padding:12px;box-shadow:var(--shadow)}
-.phone-screen{height:100%;border-radius:26px;background:#F4F6FA;padding:18px 14px;display:grid;align-content:start;gap:10px;color:#14213A}
-.phone-screen .hi{font-size:.72rem;color:#5B6782}
-.phone-screen .bal{background:#0B1F3A;color:#fff;border-radius:16px;padding:14px}
-.phone-screen .bal small{font-size:.65rem;color:#AFC0DE}
-.phone-screen .bal strong{display:block;font-size:1.15rem}
-.phone-screen .tiles{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.phone-screen .tiles div{background:#fff;border:1px solid #E2E7F0;border-radius:12px;padding:10px;font-size:.68rem;font-weight:600}
-.phone-screen .tiles i{display:block;width:20px;height:20px;border-radius:6px;background:#E4EBFB;margin-bottom:6px}
-.badges{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
-.badge{display:inline-flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:var(--navy);color:#fff;font-size:.82rem;line-height:1.2}
-.badge small{display:block;font-size:.66rem;color:#AFC0DE}
-[data-theme="dark"] .badge{background:#1A3460}
+  /* Testimonials */
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px}
+  .quote{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .quote p{font-size:1.02rem}
+  .who{display:flex;gap:.8rem;align-items:center;margin-top:1.2rem}
+  .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--violet),var(--royal))}
+  .who small{display:block;color:var(--muted)}
+  .stars{color:var(--gold);letter-spacing:2px;margin-bottom:.6rem}
+  .sample{font-size:.78rem;color:var(--muted);margin-top:1.2rem}
 
-/* Plans */
-.billing{display:inline-flex;gap:4px;padding:4px;border-radius:12px;background:var(--surface);border:1px solid var(--line);margin-top:22px}
-.billing button{border:0;background:transparent;color:var(--muted);font:inherit;font-weight:600;font-size:.9rem;padding:10px 18px;border-radius:9px;cursor:pointer}
-.billing button.on{background:var(--navy);color:#fff}
-[data-theme="dark"] .billing button.on{background:var(--royal)}
-.billing em{font-style:normal;color:var(--green);font-size:.78rem;margin-left:4px}
-.plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
-.plan{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:32px;position:relative}
-.plan.featured{border:2px solid var(--royal);box-shadow:var(--shadow)}
-.plan .tag{position:absolute;top:-13px;left:32px;background:var(--gold);color:var(--navy);font-size:.74rem;font-weight:700;padding:4px 12px;border-radius:99px;letter-spacing:.04em}
-.plan h3{font-size:1.4rem}
-.plan .desc{color:var(--muted);font-size:.93rem;margin:6px 0 20px;min-height:48px}
-.price{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
-.price .cur{font-weight:600;color:var(--muted)}
-.price .amt{font-family:Fraunces,serif;font-size:2.7rem;font-weight:700;font-variant-numeric:tabular-nums}
-.price .per{color:var(--muted)}
-.price-note{font-size:.82rem;color:var(--muted);min-height:20px;margin-bottom:22px}
-.plan ul{list-style:none;display:grid;gap:10px;margin-bottom:28px;font-size:.95rem;flex:1}
-.plan li{display:flex;gap:10px}
-.plan li svg{flex:none;margin-top:4px;color:var(--green)}
-.plan .btn{width:100%}
-.plans-foot{text-align:center;color:var(--muted);font-size:.9rem;margin-top:26px}
+  /* FAQ */
+  .faq{max-width:780px;margin:40px auto 0;display:grid;gap:12px}
+  details{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 22px}
+  summary{cursor:pointer;font-weight:650;list-style:none;display:flex;justify-content:space-between;gap:1rem}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--violet)}
+  details[open] summary::after{content:"–"}
+  details p{color:var(--muted);margin-top:.7rem}
 
-/* FAQ */
-.faq{max-width:820px;margin-inline:auto;display:grid;gap:12px}
-details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 22px}
-summary{list-style:none;cursor:pointer;padding:18px 0;font-weight:600;display:flex;justify-content:space-between;gap:16px;align-items:center}
-summary::-webkit-details-marker{display:none}
-summary::after{content:"+";font-size:1.4rem;color:var(--royal);transition:transform .2s;line-height:1}
-details[open] summary::after{transform:rotate(45deg)}
-details p{color:var(--muted);padding-bottom:20px}
+  /* CTA / Signup */
+  .cta{background:linear-gradient(135deg,var(--royal),var(--ink));color:#fff;border-radius:28px;padding:64px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .cta p{opacity:.8;margin-top:.6rem}
+  form.signup{background:#fff;color:var(--ink);border-radius:20px;padding:28px;display:grid;gap:12px}
+  form.signup label{font-size:.85rem;font-weight:600;display:grid;gap:5px}
+  form.signup input,form.signup select{font:inherit;padding:.75rem .9rem;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+  form.signup input:focus,form.signup select:focus{outline:2px solid var(--violet);border-color:transparent}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .fine{font-size:.78rem;color:var(--muted)}
+  .msg{display:none;padding:.8rem 1rem;border-radius:10px;background:#ecfdf5;color:var(--ok);font-weight:600;font-size:.9rem}
 
-/* Contact */
-.cta{background:linear-gradient(150deg,#0B1F3A,#16366A);color:#fff;border-radius:28px;padding:56px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
-.cta h2{font-size:clamp(1.8rem,3vw,2.4rem);margin:14px 0}
-.cta p{color:#C3CFE6}
-form{display:grid;gap:12px}
-.field{display:grid;gap:6px}
-.field label{font-size:.85rem;font-weight:600;color:#DDE5F3}
-.field input,.field select{min-height:48px;padding:0 14px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#fff;font:inherit}
-.field select option{color:#14213A}
-.field input::placeholder{color:#8FA0BF}
-.field input:focus,.field select:focus{outline:none;border-color:var(--gold)}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.form-msg{font-size:.88rem;min-height:22px}
-.form-msg.err{color:#FFB4AE}.form-msg.ok{color:#9BE3BF}
-.consent{display:flex;gap:10px;font-size:.82rem;color:#B5C3DD;align-items:flex-start}
-.consent input{margin-top:4px;width:18px;height:18px;accent-color:var(--gold)}
+  footer{padding:56px 0 36px;color:var(--muted);font-size:.92rem}
+  .foot{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}
+  .foot h4{color:var(--ink);margin-bottom:.8rem;font-size:.95rem}
+  .foot ul{list-style:none;display:grid;gap:.45rem}
+  .foot a:hover{color:var(--violet)}
+  .copy{border-top:1px solid var(--line);margin-top:40px;padding-top:22px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 
-footer{padding:56px 0 36px;border-top:1px solid var(--line);margin-top:96px;background:var(--surface)}
-.foot{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px}
-.foot h5{font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px;color:var(--muted)}
-.foot a{display:block;padding:4px 0;color:var(--text);font-size:.95rem}
-.foot a:hover{color:var(--royal)}
-.foot p{color:var(--muted);font-size:.92rem;margin-top:12px;max-width:320px}
-.copy{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:40px;padding-top:24px;border-top:1px solid var(--line);color:var(--muted);font-size:.85rem}
-
-.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
-.reveal.in{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
-
-@media (max-width:980px){
-  .hero-grid,.split,.app-box,.cta{grid-template-columns:1fr}
-  .grid-3,.plans{grid-template-columns:1fr 1fr}
-  .foot{grid-template-columns:1fr 1fr}
-  .nav-links,.nav-actions .btn-ghost{display:none}
-  .menu-btn{display:grid}
-  .app-box,.cta{padding:36px}
-}
-@media (max-width:640px){
-  section{padding:72px 0}
-  .hero{padding:56px 0 80px}
-  .grid-3,.plans,.row2,.foot{grid-template-columns:1fr}
-  .kpis{grid-template-columns:1fr 1fr}
-  .nav-actions .btn-primary{display:none}
-  .app-box,.cta{padding:26px;border-radius:22px}
-  .strip-grid{justify-content:flex-start}
-}
+  @media (max-width:960px){
+    .hero-grid,.split,.cta{grid-template-columns:1fr}
+    .features,.plans,.quotes,.steps{grid-template-columns:1fr 1fr}
+    .plan.pop{transform:none}
+    .foot{grid-template-columns:1fr 1fr}
+    .nav ul,.nav-cta .login{display:none}
+    .menu-btn{display:block}
+    .nav ul.open{display:flex;flex-direction:column;position:absolute;top:68px;left:0;right:0;background:var(--royal);padding:1.2rem 4%;gap:1rem}
+    .cta{padding:40px 28px}
+    .mock{transform:none}
+  }
+  @media (max-width:620px){
+    section{padding:72px 0}
+    .features,.plans,.quotes,.steps,.two{grid-template-columns:1fr}
+    .mock-kpis{grid-template-columns:1fr 1fr}
+    .nav-cta .btn{padding:.6rem 1rem;font-size:.9rem}
+  }
 </style>
 </head>
 <body>
 
 <header>
   <div class="wrap nav">
-    <a href="#topo" class="brand" aria-label="Gestão do Reino — início">
-      <span class="brand-mark"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 50h48v6H8zM11 46l6-26 11 13 4-19 4 19 11-13 6 26z" fill="#C9A24B"/></svg></span>
-      Gestão do Reino
+    <a href="#" class="brand" aria-label="Gestão do Reino — início">
+      <svg width="34" height="34" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#312e81"/><path d="M14 44l4-22 9 10 5-14 5 14 9-10 4 22z" fill="#f5b301"/><rect x="14" y="47" width="36" height="5" rx="2" fill="#f5b301"/></svg>
+      <span>Gestão do <b>Reino</b></span>
     </a>
-    <nav class="nav-links" aria-label="Principal">
-      <a href="#recursos">Recursos</a>
-      <a href="#financeiro">Financeiro</a>
-      <a href="#seguranca">Segurança</a>
-      <a href="#planos">Planos</a>
-      <a href="#duvidas">Dúvidas</a>
-    </nav>
-    <div class="nav-actions">
-      <button class="icon-btn" id="themeBtn" aria-label="Alternar modo escuro">
-        <svg id="themeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
-      </button>
-      <a href="#" class="btn btn-ghost js-login">Entrar</a>
-      <a href="#contato" class="btn btn-primary">Teste grátis</a>
-      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobileMenu">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <ul id="menu">
+      <li><a href="#recursos">Recursos</a></li>
+      <li><a href="#app">App</a></li>
+      <li><a href="#planos">Planos</a></li>
+      <li><a href="#faq">Dúvidas</a></li>
+    </ul>
+    <div class="nav-cta">
+      <a href="/login" class="login">Entrar</a>
+      <a href="#teste" class="btn btn-gold">Teste grátis</a>
+      <button class="menu-btn" aria-label="Abrir menu" onclick="document.getElementById('menu').classList.toggle('open')">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
     </div>
-  </div>
-  <div class="wrap mobile-menu" id="mobileMenu">
-    <a href="#recursos">Recursos</a>
-    <a href="#financeiro">Financeiro</a>
-    <a href="#seguranca">Segurança</a>
-    <a href="#planos">Planos</a>
-    <a href="#duvidas">Dúvidas</a>
-    <a href="#" class="js-login">Entrar no sistema</a>
-    <a href="#contato" class="btn btn-primary" style="margin-top:8px">Começar teste grátis</a>
   </div>
 </header>
 
-<main id="topo">
-  <!-- HERO -->
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow">Gestão para igrejas e ministérios</span>
-        <h1>Administre sua igreja com <em>ordem, transparência</em> e tranquilidade.</h1>
-        <p class="lead">Membros, congregações, departamentos, finanças, tesouraria e prestação de contas em um só lugar. Funciona no computador, no tablet e no celular.</p>
-        <div class="hero-ctas">
-          <a href="#contato" class="btn btn-gold">Começar teste grátis</a>
-          <a href="#recursos" class="btn btn-ghost">Conhecer os recursos</a>
-        </div>
-        <div class="hero-notes">
-          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A24B" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg>Sem cartão para testar</span>
-          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A24B" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg>Dados isolados por igreja</span>
-          <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#C9A24B" stroke-width="2.4"><path d="M5 12l5 5 9-10"/></svg>Adequado à LGPD</span>
-        </div>
+<main>
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="pill"><i></i> Feito para igrejas brasileiras</span>
+      <h1>Sua igreja organizada para <em>cuidar de pessoas</em>, não de planilhas.</h1>
+      <p>Membros, células, dízimos e ofertas, eventos, escalas de ministério e comunicação: tudo no Gestão do Reino, no computador ou no celular.</p>
+      <div class="hero-actions">
+        <a href="#teste" class="btn btn-gold">Começar teste grátis de 14 dias →</a>
+        <a href="#recursos" class="btn btn-ghost">Ver recursos</a>
       </div>
-      <div>
-        <div class="mock" aria-hidden="true">
-          <div class="mock-top"><i></i><i></i><i></i><b>Painel — Gestão do Reino</b></div>
-          <div class="mock-body">
-            <div class="mock-side"><span class="on"></span><span></span><span></span><span></span><span></span></div>
-            <div class="mock-main">
-              <div class="kpis">
-                <div class="kpi"><small>Membros</small><strong>—</strong></div>
-                <div class="kpi"><small>Receitas</small><strong class="up">▲ R$</strong></div>
-                <div class="kpi"><small>Despesas</small><strong class="down">▼ R$</strong></div>
-              </div>
-              <div class="chart">
-                <small>Receitas × Despesas</small>
-                <div class="bars">
-                  <div><i style="height:55%"></i><i style="height:38%"></i></div>
-                  <div><i style="height:68%"></i><i style="height:44%"></i></div>
-                  <div><i style="height:60%"></i><i style="height:52%"></i></div>
-                  <div><i style="height:78%"></i><i style="height:47%"></i></div>
-                  <div><i style="height:72%"></i><i style="height:50%"></i></div>
-                  <div><i style="height:88%"></i><i style="height:55%"></i></div>
-                </div>
-              </div>
-              <div class="rows">
-                <div><span>Fundo geral</span><b>saldo</b></div>
-                <div><span>Fundo missionário</span><b>saldo</b></div>
-                <div><span>Contas a vencer (7 dias)</span><b>alertas</b></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <span class="demo-tag">Ilustração do painel. No sistema, todos os números vêm dos dados da sua igreja.</span>
-      </div>
+      <div class="hero-note"><span>Sem cartão de crédito</span><span>Cancele quando quiser</span><span>Suporte em português</span></div>
     </div>
-  </section>
 
-  <div class="strip">
-    <div class="wrap strip-grid">
-      <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Acesso por perfil e permissão</span>
-      <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>Web, celular e app Android</span>
-      <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 15l3-3 2 2 3-4"/></svg>Relatórios em PDF e Excel</span>
-      <span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg>Histórico de todas as alterações</span>
+    <div class="mock" aria-hidden="true">
+      <div class="mock-top"><i></i><i></i><i></i></div>
+      <div class="mock-kpis">
+        <div class="kpi"><small>Membros ativos</small><strong>1.248</strong><span class="up">▲ 6% no mês</span></div>
+        <div class="kpi"><small>Células</small><strong>64</strong><span class="up">▲ 3 novas</span></div>
+        <div class="kpi"><small>Entradas do mês</small><strong>R$ 86 mil</strong><span class="up">▲ 4%</span></div>
+      </div>
+      <div class="mock-chart">
+        <small style="color:var(--muted);font-size:.75rem">Frequência nos cultos — últimas 8 semanas</small>
+        <div class="bars"><div style="height:55%"></div><div style="height:62%"></div><div style="height:58%"></div><div style="height:70%"></div><div style="height:66%"></div><div style="height:78%"></div><div style="height:74%"></div><div style="height:88%"></div></div>
+      </div>
+      <div class="mock-list">
+        <div class="row"><span>Culto de Celebração · Dom 18h</span><span class="tag">Escala ok</span></div>
+        <div class="row"><span>Encontro de Casais · Sáb 19h30</span><span class="tag">42 inscritos</span></div>
+      </div>
     </div>
   </div>
+</section>
 
-  <!-- RECURSOS -->
-  <section id="recursos">
-    <div class="wrap">
-      <div class="section-head center reveal">
-        <span class="eyebrow">Tudo integrado</span>
-        <h2>Um sistema completo para a vida administrativa da igreja</h2>
-        <p>Os módulos conversam entre si: o membro cadastrado aparece no departamento, o pagamento de uma conta vira movimentação no caixa e tudo chega aos relatórios.</p>
+<!-- NÚMEROS -->
+<div class="trust">
+  <div class="wrap">
+    <div><strong>14 dias</strong><small>de teste grátis</small></div>
+    <div><strong>100% web</strong><small>+ app Android</small></div>
+    <div><strong>LGPD</strong><small>dados protegidos por igreja</small></div>
+    <div><strong>Servidores no Brasil</strong><small>São Paulo</small></div>
+  </div>
+</div>
+
+<!-- RECURSOS -->
+<section id="recursos">
+  <div class="wrap center">
+    <span class="eyebrow">Recursos</span>
+    <h2>Tudo o que a liderança precisa, em um só lugar</h2>
+    <p class="lead">Do primeiro contato do visitante até o relatório financeiro do mês, o Gestão do Reino acompanha toda a vida da igreja.</p>
+
+    <div class="features" style="text-align:left">
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7"/><path d="M16 4a4 4 0 010 8M22 21c0-3-2-6-5-7"/></svg></div>
+        <h3>Membros e visitantes</h3>
+        <p>Cadastro completo, famílias, aniversários, batismos, histórico e acompanhamento de novos convertidos.</p>
       </div>
-      <div class="grid-3">
-        <article class="card reveal">
-          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 9M22 21a7 7 0 0 0-4-6.3"/></svg></div>
-          <h3>Membros</h3>
-          <p>Ficha completa com foto, família, histórico, visitantes e transferências.</p>
-          <ul><li>Aniversariantes do mês</li><li>Ativos e inativos</li><li>Impressão de fichas</li></ul>
-        </article>
-        <article class="card reveal">
-          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V10l7-6 7 6v11M10 21v-6h4v6"/></svg></div>
-          <h3>Congregações</h3>
-          <p>Administre várias congregações com visão consolidada para a sede.</p>
-          <ul><li>Membros por congregação</li><li>Financeiro por unidade</li><li>Responsáveis e situação</li></ul>
-        </article>
-        <article class="card reveal">
-          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div>
-          <h3>Departamentos</h3>
-          <p>Louvor, jovens, crianças, missões, escola bíblica e quantos mais precisar.</p>
-          <ul><li>Líderes e participantes</li><li>Vínculo de membros</li><li>Relatórios por ministério</li></ul>
-        </article>
-        <article class="card reveal">
-          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-          <h3>Financeiro</h3>
-          <p>Dízimos, ofertas, doações e despesas com comprovantes anexados.</p>
-          <ul><li>Caixa e contas bancárias</li><li>Transferências entre contas</li><li>Fechamento e conciliação</li></ul>
-        </article>
-        <article class="card reveal">
-          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 14h3"/></svg></div>
-          <h3>Contas a pagar e a receber</h3>
-          <p>Vencimentos, parcelamentos, pagamentos parciais e alertas automáticos.</p>
-          <ul><li>Baixa gera o lançamento</li><li>Sem duplicidade</li><li>Previsto separado do recebido</li></ul>
-        </article>
-        <article class="card reveal">
-          <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg></div>
-          <h3>Relatórios e prestação de contas</h3>
-          <p>Extratos por conta, fundo e congregação, prontos para a assembleia.</p>
-          <ul><li>Fluxo de revisão e aprovação</li><li>PDF e Excel</li><li>Saldo inicial e final</li></ul>
-        </article>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg></div>
+        <h3>Células e grupos</h3>
+        <p>Líderes, multiplicação, presença em cada encontro e relatórios semanais enviados pelo celular.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div>
+        <h3>Financeiro</h3>
+        <p>Dízimos, ofertas, despesas, centros de custo, contas a pagar e prestação de contas transparente.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+        <h3>Eventos e agenda</h3>
+        <p>Calendário da igreja, inscrições online, controle de vagas e check-in na entrada.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2h9"/></svg></div>
+        <h3>Ministérios e escalas</h3>
+        <p>Escalas de louvor, recepção, mídia e infantil, com confirmação de cada voluntário.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <h3>Comunicação</h3>
+        <p>Avisos, mural e notificações para membros, líderes ou ministérios específicos.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+        <h3>Relatórios e painéis</h3>
+        <p>Crescimento, frequência e finanças em gráficos claros, prontos para a reunião de liderança.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+        <h3>Permissões por função</h3>
+        <p>Pastor, secretaria, tesouraria e líderes: cada um vê apenas o que precisa.</p>
+      </div>
+      <div class="feat">
+        <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></div>
+        <h3>Sede e congregações</h3>
+        <p>Gerencie várias congregações com visão consolidada para a sede.</p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- FINANCEIRO -->
-  <section id="financeiro" style="padding-top:0">
-    <div class="wrap split">
-      <div class="reveal">
-        <span class="eyebrow">Tesouraria por fundos</span>
-        <h2 style="font-size:clamp(1.9rem,3.4vw,2.6rem);margin:14px 0">Cada real no seu lugar, com quem autorizou e quando</h2>
-        <p style="color:var(--muted);font-size:1.06rem">Separe o dinheiro de missões, construção, ação social e eventos. Defina limites e exija aprovação para movimentações acima deles.</p>
-        <ul class="checklist">
-          <li><span class="tick"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Saldos calculados pelas movimentações</b><span>Nada de saldo digitado à mão: o sistema soma entradas e saídas registradas.</span></div></li>
-          <li><span class="tick"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Regras de aprovação</b><span>Movimentações acima do limite ficam pendentes até um responsável autorizar.</span></div></li>
-          <li><span class="tick"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Rastreabilidade total</b><span>Lançamentos efetivados não somem: estornos ficam registrados no histórico.</span></div></li>
-          <li><span class="tick"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg></span><div><b>Transferências internas corretas</b><span>Mover dinheiro entre caixa e banco não é contado como receita nem despesa.</span></div></li>
+<!-- APP -->
+<section id="app" style="background:#fff">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">App Android</span>
+      <h2>A igreja na palma da mão de cada membro</h2>
+      <p class="lead">Líderes registram presença da célula, voluntários confirmam escalas e membros acompanham a agenda, tudo pelo celular.</p>
+      <ul class="checks">
+        <li>Relatório de célula em menos de um minuto</li>
+        <li>Confirmação de escala com um toque</li>
+        <li>Inscrição em eventos e carteirinha de membro</li>
+        <li>Avisos e notificações da igreja</li>
+        <li>Funciona também no navegador do iPhone e do computador</li>
+      </ul>
+      <a class="gp" href="#teste" aria-label="Disponível em breve no Google Play">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 3l10 9-10 9z" fill="#34d399"/><path d="M4 3l13 7-3 2z" fill="#60a5fa"/><path d="M4 21l13-7-3-2z" fill="#f87171"/><path d="M17 10l3 2-3 2-3-2z" fill="#fbbf24"/></svg>
+        <span>Em breve no<b>Google Play</b></span>
+      </a>
+    </div>
+    <div class="phone" aria-hidden="true">
+      <div class="screen">
+        <div class="screen-head"><small>Olá, Pr. Marcos</small><strong>Domingo, 15 de novembro</strong></div>
+        <div class="screen-body">
+          <div class="card-s"><b>Culto de Celebração · 18h</b><span>Você está escalado: Recepção</span></div>
+          <div class="card-s"><b>Célula Vida Nova</b><span>Quarta · 20h · 12 membros</span></div>
+          <div class="card-s"><b>Aniversariantes da semana</b><span>Ana, João, Priscila e mais 5</span></div>
+          <div class="card-s"><b>Retiro de Jovens</b><span>Inscrições abertas · 38/60 vagas</span></div>
+          <div class="card-s"><b>Aviso da secretaria</b><span>Reunião de líderes no sábado às 9h</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMO FUNCIONA -->
+<section>
+  <div class="wrap center">
+    <span class="eyebrow">Como funciona</span>
+    <h2>Comece hoje, em poucos minutos</h2>
+    <div class="steps" style="text-align:left">
+      <div class="step"><h3>Crie a conta da igreja</h3><p>Informe o nome da igreja e o seu e-mail. O ambiente é criado na hora, separado e protegido.</p></div>
+      <div class="step"><h3>Importe seus membros</h3><p>Traga a sua planilha atual ou cadastre aos poucos. Convide a secretaria, a tesouraria e os líderes.</p></div>
+      <div class="step"><h3>Use no dia a dia</h3><p>Escalas, células, finanças e eventos funcionando, no computador e no app.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANOS -->
+<section id="planos" class="pricing">
+  <div class="wrap center">
+    <span class="eyebrow">Planos</span>
+    <h2>Um plano para cada tamanho de igreja</h2>
+    <p class="lead">Todos os planos começam com 14 dias grátis e acesso completo.</p>
+    <div class="toggle" role="group" aria-label="Período de cobrança">
+      <button class="on" data-period="m">Mensal</button>
+      <button data-period="a">Anual <span class="save">-2 meses</span></button>
+    </div>
+
+    <div class="plans">
+      <div class="plan">
+        <h3>Semente</h3>
+        <p class="muted">Para igrejas e congregações que estão começando.</p>
+        <div class="price"><small>R$</small><strong data-m="49" data-a="41">49</strong><small class="per">/mês</small></div>
+        <p class="muted bill">cobrado mensalmente</p>
+        <ul>
+          <li>Até 150 membros</li>
+          <li>Membros, visitantes e famílias</li>
+          <li>Financeiro básico</li>
+          <li>Agenda e eventos</li>
+          <li>3 usuários administrativos</li>
+          <li>App para membros</li>
+        </ul>
+        <a href="#teste" data-plan="semente" class="btn btn-outline choose">Testar grátis</a>
+      </div>
+
+      <div class="plan pop">
+        <span class="badge">Mais escolhido</span>
+        <h3>Colheita</h3>
+        <p class="muted">Para igrejas em crescimento, com células e ministérios.</p>
+        <div class="price"><small>R$</small><strong data-m="99" data-a="83">99</strong><small class="per">/mês</small></div>
+        <p class="muted bill">cobrado mensalmente</p>
+        <ul>
+          <li>Até 600 membros</li>
+          <li>Tudo do Semente</li>
+          <li>Células com relatórios</li>
+          <li>Ministérios e escalas</li>
+          <li>Financeiro completo e centros de custo</li>
+          <li>10 usuários administrativos</li>
+        </ul>
+        <a href="#teste" data-plan="colheita" class="btn btn-gold choose">Testar grátis</a>
+      </div>
+
+      <div class="plan">
+        <h3>Reino</h3>
+        <p class="muted">Para igrejas grandes, com sede e congregações.</p>
+        <div class="price"><small>R$</small><strong data-m="199" data-a="166">199</strong><small class="per">/mês</small></div>
+        <p class="muted bill">cobrado mensalmente</p>
+        <ul>
+          <li>Membros ilimitados</li>
+          <li>Tudo do Colheita</li>
+          <li>Múltiplas congregações</li>
+          <li>Relatórios consolidados</li>
+          <li>Usuários ilimitados</li>
+          <li>Suporte prioritário</li>
+        </ul>
+        <a href="#teste" data-plan="reino" class="btn btn-dark choose">Testar grátis</a>
+      </div>
+    </div>
+
+    <div class="enterprise">
+      <div><strong>Convenção, ministério ou rede de igrejas?</strong><p class="muted">Condições especiais para muitas igrejas, com implantação assistida.</p></div>
+      <a href="mailto:contato@gestaodoreino.com.br" class="btn btn-outline">Falar com a equipe</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEPOIMENTOS -->
+<section style="background:#fff">
+  <div class="wrap center">
+    <span class="eyebrow">Depoimentos</span>
+    <h2>Feito para quem serve</h2>
+    <div class="quotes" style="text-align:left">
+      <div class="quote"><div class="stars">★★★★★</div><p>[Depoimento de pastor sobre a organização dos membros e das células.]</p><div class="who"><div class="av">P</div><div><b>[Nome do pastor]</b><small>[Igreja · Cidade/UF]</small></div></div></div>
+      <div class="quote"><div class="stars">★★★★★</div><p>[Depoimento da tesouraria sobre a prestação de contas e os relatórios financeiros.]</p><div class="who"><div class="av">T</div><div><b>[Nome do tesoureiro]</b><small>[Igreja · Cidade/UF]</small></div></div></div>
+      <div class="quote"><div class="stars">★★★★★</div><p>[Depoimento de líder de ministério sobre as escalas pelo app.]</p><div class="who"><div class="av">L</div><div><b>[Nome do líder]</b><small>[Igreja · Cidade/UF]</small></div></div></div>
+    </div>
+    <p class="sample">Espaço reservado: substitua por depoimentos reais de igrejas clientes, com autorização.</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap center">
+    <span class="eyebrow">Dúvidas frequentes</span>
+    <h2>Perguntas que as igrejas fazem</h2>
+    <div class="faq" style="text-align:left">
+      <details><summary>Preciso de cartão de crédito para testar?</summary><p>Não. O teste de 14 dias é gratuito e completo. Ao final, você escolhe um plano ou o acesso é pausado, sem cobrança automática.</p></details>
+      <details><summary>Os dados da minha igreja ficam separados de outras igrejas?</summary><p>Sim. Cada igreja tem o próprio ambiente, isolado no banco de dados por regras de segurança. Ninguém de outra igreja tem acesso às suas informações.</p></details>
+      <details><summary>O sistema segue a LGPD?</summary><p>Sim. Os dados ficam em servidores no Brasil (São Paulo), com acesso controlado por função, e você pode exportar ou excluir os dados quando quiser.</p></details>
+      <details><summary>Consigo importar minha planilha de membros?</summary><p>Sim. Você envia a planilha em Excel ou CSV e o sistema faz a importação dos membros.</p></details>
+      <details><summary>Tem aplicativo?</summary><p>Sim. O app Android estará na Google Play, e o sistema também funciona no navegador do celular (inclusive iPhone), podendo ser instalado na tela inicial.</p></details>
+      <details><summary>Posso mudar de plano ou cancelar?</summary><p>A qualquer momento, direto no painel, sem multa e sem fidelidade.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- TESTE GRÁTIS -->
+<section id="teste" style="padding-top:24px">
+  <div class="wrap">
+    <div class="cta">
+      <div>
+        <span class="eyebrow" style="color:var(--gold)">Teste grátis</span>
+        <h2>Comece hoje e organize sua igreja ainda esta semana</h2>
+        <p>14 dias com todos os recursos do plano escolhido. Sem cartão de crédito e sem compromisso.</p>
+        <ul class="checks" style="margin-top:1.6rem">
+          <li>Ambiente da sua igreja criado na hora</li>
+          <li>Ajuda para importar seus membros</li>
+          <li>Suporte em português</li>
         </ul>
       </div>
-      <div class="ledger reveal" aria-hidden="true">
-        <h4>Fundos da tesouraria</h4>
-        <div class="sub">Uso do orçamento no período</div>
-        <div class="fund"><span class="name">Fundo geral</span><span class="val">62%</span><div class="meter"><i style="width:62%"></i></div></div>
-        <div class="fund"><span class="name">Fundo missionário</span><span class="val">41%</span><div class="meter"><i style="width:41%"></i></div></div>
-        <div class="fund"><span class="name">Fundo de construção</span><span class="val">78%</span><div class="meter"><i style="width:78%"></i></div></div>
-        <div class="fund"><span class="name">Fundo social</span><span class="val">29%</span><div class="meter"><i style="width:29%"></i></div></div>
-        <div class="note">Ilustração. Os valores reais vêm das movimentações da sua igreja.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEGURANÇA -->
-  <section id="seguranca" class="security">
-    <div class="wrap">
-      <div class="section-head reveal">
-        <span class="eyebrow">Segurança e LGPD</span>
-        <h2>Os dados da sua igreja pertencem só à sua igreja</h2>
-        <p>Informações de membros revelam convicção religiosa, que a LGPD classifica como dado pessoal sensível. Por isso a proteção vem antes de tudo.</p>
-      </div>
-      <div class="grid-3">
-        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg></div><h3>Isolamento entre igrejas</h3><p>Cada organização tem um ambiente próprio, separado no banco de dados por regras de acesso em cada tabela.</p></article>
-        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><h3>Perfis e permissões</h3><p>Pastor, tesoureiro, secretário, líder ou visualizador: cada pessoa vê apenas o que precisa.</p></article>
-        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg></div><h3>Auditoria completa</h3><p>Quem criou, alterou ou aprovou cada registro fica guardado em um histórico de auditoria.</p></article>
-        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div><h3>Acesso protegido</h3><p>Login seguro, recuperação de senha, controle de sessões e bloqueio de usuários.</p></article>
-        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg></div><h3>Backups</h3><p>Banco de dados em nuvem com cópias de segurança e conexão sempre criptografada (HTTPS).</p></article>
-        <article class="card reveal"><div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div><h3>Coleta mínima</h3><p>CPF e outros dados só quando houver finalidade. Direitos dos titulares respeitados.</p></article>
-      </div>
-    </div>
-  </section>
-
-  <!-- APP -->
-  <section id="app">
-    <div class="wrap">
-      <div class="app-box reveal">
-        <div>
-          <span class="eyebrow">No bolso do pastor e do tesoureiro</span>
-          <h2 style="font-size:clamp(1.8rem,3vw,2.4rem);margin:14px 0">Consulte membros, lance ofertas e veja saldos pelo celular</h2>
-          <p style="color:var(--muted)">O Gestão do Reino funciona no navegador de qualquer aparelho e também como aplicativo Android. No iPhone, basta adicionar à tela de início.</p>
-          <div class="badges">
-            <span class="badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M3.6 2.2 13.4 12l-9.8 9.8c-.4-.2-.6-.6-.6-1.1V3.3c0-.5.2-.9.6-1.1zm11 11 2.6 2.6-11 6.3 8.4-8.9zm3.8-3.8 2.6 1.5c.8.5.8 1.6 0 2.1l-2.6 1.5-2.9-2.6 2.9-2.5zM6.2 2l11 6.3-2.6 2.6L6.2 2z"/></svg><span><small>Em breve no</small>Google Play</span></span>
-            <span class="badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></svg><span><small>iPhone e computador</small>Instale pelo navegador</span></span>
-          </div>
+      <form class="signup" id="signup" action="/cadastro" method="get" novalidate>
+        <label>Nome da igreja<input name="igreja" required placeholder="Ex.: Igreja Batista Vida Nova" autocomplete="organization"></label>
+        <div class="two">
+          <label>Seu nome<input name="nome" required placeholder="Nome completo" autocomplete="name"></label>
+          <label>WhatsApp<input name="telefone" type="tel" placeholder="(11) 90000-0000" autocomplete="tel"></label>
         </div>
-        <div class="phone" aria-hidden="true">
-          <div class="phone-screen">
-            <span class="hi">Olá, tesoureiro</span>
-            <div class="bal"><small>Saldo consolidado</small><strong>R$ ••••••</strong></div>
-            <div class="tiles">
-              <div><i></i>Nova receita</div>
-              <div><i></i>Nova despesa</div>
-              <div><i></i>Membros</div>
-              <div><i></i>Relatórios</div>
-              <div><i></i>A pagar</div>
-              <div><i></i>Fundos</div>
-            </div>
-          </div>
+        <label>E-mail<input name="email" type="email" required placeholder="voce@igreja.com.br" autocomplete="email"></label>
+        <div class="two">
+          <label>Membros (aprox.)
+            <select name="porte">
+              <option value="ate150">Até 150</option>
+              <option value="ate600">151 a 600</option>
+              <option value="mais600">Mais de 600</option>
+            </select>
+          </label>
+          <label>Plano
+            <select name="plano" id="plano">
+              <option value="semente">Semente</option>
+              <option value="colheita" selected>Colheita</option>
+              <option value="reino">Reino</option>
+            </select>
+          </label>
         </div>
-      </div>
+        <button class="btn btn-gold" type="submit" style="justify-content:center">Criar conta e começar teste →</button>
+        <div class="msg" id="msg">Tudo certo! Redirecionando para a criação da sua conta…</div>
+        <p class="fine">Ao continuar, você concorda com os <a href="/termos" style="text-decoration:underline">Termos de Uso</a> e a <a href="/privacidade" style="text-decoration:underline">Política de Privacidade</a>.</p>
+      </form>
     </div>
-  </section>
-
-  <!-- PLANOS -->
-  <section id="planos" style="padding-top:0">
-    <div class="wrap">
-      <div class="section-head center reveal">
-        <span class="eyebrow">Planos</span>
-        <h2>Escolha o plano do tamanho da sua igreja</h2>
-        <p>Comece com o teste grátis. Troque de plano ou cancele quando quiser.</p>
-        <div class="billing" role="group" aria-label="Período de cobrança">
-          <button type="button" class="on" data-cycle="mensal">Mensal</button>
-          <button type="button" data-cycle="anual">Anual <em>2 meses grátis</em></button>
-        </div>
-      </div>
-      <div class="plans" id="plansGrid">
-        <article class="plan reveal">
-          <h3>Básico</h3>
-          <p class="desc">Para igrejas com uma congregação que querem organizar membros e finanças.</p>
-          <div class="price"><span class="cur">R$</span><span class="amt" data-monthly="79">79</span><span class="per">/mês</span></div>
-          <div class="price-note"></div>
-          <ul>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>1 congregação</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Cadastro de membros e departamentos</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Controle financeiro</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Relatórios básicos</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Até 3 usuários</li>
-          </ul>
-          <a href="#contato" class="btn btn-ghost" data-plan="Básico">Começar teste grátis</a>
-        </article>
-        <article class="plan featured reveal">
-          <span class="tag">MAIS ESCOLHIDO</span>
-          <h3>Profissional</h3>
-          <p class="desc">Para igrejas com várias congregações e tesouraria organizada por fundos.</p>
-          <div class="price"><span class="cur">R$</span><span class="amt" data-monthly="149">149</span><span class="per">/mês</span></div>
-          <div class="price-note"></div>
-          <ul>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Múltiplas congregações</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Até 10 usuários</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Tesouraria com fundos e aprovações</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Contas a pagar e a receber</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Relatórios completos e prestação de contas</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Permissões avançadas</li>
-          </ul>
-          <a href="#contato" class="btn btn-primary" data-plan="Profissional">Começar teste grátis</a>
-        </article>
-        <article class="plan reveal">
-          <h3>Enterprise</h3>
-          <p class="desc">Para ministérios e convenções com muitas unidades e gestão centralizada.</p>
-          <div class="price"><span class="cur">R$</span><span class="amt" data-monthly="349">349</span><span class="per">/mês</span></div>
-          <div class="price-note"></div>
-          <ul>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Unidades e usuários ampliados</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Administração centralizada</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Relatórios gerenciais consolidados</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Configurações personalizadas</li>
-            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>Implantação assistida</li>
-          </ul>
-          <a href="#contato" class="btn btn-ghost" data-plan="Enterprise">Falar com a equipe</a>
-        </article>
-      </div>
-      <p class="plans-foot">Pagamento por Pix, boleto ou cartão via Mercado Pago. Não armazenamos dados de cartão.</p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="duvidas" style="padding-top:0">
-    <div class="wrap">
-      <div class="section-head center reveal">
-        <span class="eyebrow">Dúvidas frequentes</span>
-        <h2>Perguntas que as igrejas costumam fazer</h2>
-      </div>
-      <div class="faq">
-        <details class="reveal"><summary>Preciso instalar alguma coisa?</summary><p>Não. O Gestão do Reino funciona pelo navegador em computador, tablet e celular. Se preferir, instale o aplicativo Android ou adicione o sistema à tela de início do iPhone.</p></details>
-        <details class="reveal"><summary>Outra igreja consegue ver os nossos dados?</summary><p>Não. Cada igreja tem um ambiente separado, e o banco de dados aplica regras de acesso em cada tabela para impedir que uma organização veja os dados de outra.</p></details>
-        <details class="reveal"><summary>Posso controlar várias congregações?</summary><p>Sim, nos planos Profissional e Enterprise. A sede acompanha tudo de forma consolidada e cada congregação vê apenas o que lhe cabe, conforme as permissões.</p></details>
-        <details class="reveal"><summary>Quem da igreja pode acessar o sistema?</summary><p>O administrador da igreja convida os usuários e define o perfil de cada um: pastor, tesoureiro, secretário, líder de departamento ou apenas visualização.</p></details>
-        <details class="reveal"><summary>Como funciona o teste grátis?</summary><p>Você cadastra a igreja e usa o sistema sem informar cartão. Ao final do período de teste, escolhe o plano para continuar. Seus dados ficam guardados.</p></details>
-        <details class="reveal"><summary>Consigo levar os relatórios para a assembleia?</summary><p>Sim. Os relatórios e a prestação de contas podem ser exportados em PDF e Excel, com nome da igreja, período, responsável, totais e saldos inicial e final.</p></details>
-        <details class="reveal"><summary>E se eu quiser cancelar?</summary><p>Você pode cancelar quando quiser, sem multa. Antes do encerramento, é possível exportar os dados da sua igreja.</p></details>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTATO -->
-  <section id="contato" style="padding-top:0;padding-bottom:0">
-    <div class="wrap">
-      <div class="cta reveal">
-        <div>
-          <span class="eyebrow">Comece hoje</span>
-          <h2>Coloque a administração da sua igreja em ordem</h2>
-          <p>Crie a conta da sua igreja em menos de um minuto e comece a usar na hora. Sem cartão de crédito.</p>
-          <p id="waLine" style="margin-top:14px;display:none">Prefere conversar antes? <a id="waLink" href="#" target="_blank" rel="noopener" style="color:var(--gold);font-weight:600">Fale com a equipe no WhatsApp</a></p>
-        </div>
-        <form id="leadForm" novalidate>
-          <div class="field"><label for="f-nome">Seu nome</label><input id="f-nome" name="nome" autocomplete="name" placeholder="Nome completo" required></div>
-          <div class="field"><label for="f-igreja">Nome da igreja</label><input id="f-igreja" name="igreja" placeholder="Igreja ..." required></div>
-          <div class="row2">
-            <div class="field"><label for="f-email">E-mail</label><input id="f-email" name="email" type="email" autocomplete="email" placeholder="voce@email.com" required></div>
-            <div class="field"><label for="f-plano">Plano para testar</label>
-              <select id="f-plano" name="plano"><option value="basico">Básico</option><option value="profissional" selected>Profissional</option><option value="enterprise">Enterprise</option></select>
-            </div>
-          </div>
-          <button class="btn btn-gold" type="submit">Continuar para criar minha conta</button>
-          <div class="form-msg" id="formMsg" role="status" aria-live="polite"></div>
-        </form>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 </main>
 
 <footer>
   <div class="wrap">
     <div class="foot">
       <div>
-        <a href="#topo" class="brand"><span class="brand-mark"><svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 50h48v6H8zM11 46l6-26 11 13 4-19 4 19 11-13 6 26z" fill="#C9A24B"/></svg></span>Gestão do Reino</a>
-        <p>Plataforma de gestão administrativa e financeira para igrejas, congregações e ministérios.</p>
+        <a href="#" class="brand" style="color:var(--ink)">
+          <svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="14" fill="#1e1b4b"/><path d="M14 44l4-22 9 10 5-14 5 14 9-10 4 22z" fill="#f5b301"/><rect x="14" y="47" width="36" height="5" rx="2" fill="#f5b301"/></svg>
+          <span>Gestão do <b style="color:var(--violet)">Reino</b></span>
+        </a>
+        <p style="margin-top:.8rem;max-width:320px">Sistema de gestão para igrejas: pessoas, células, finanças e ministérios em um só lugar.</p>
       </div>
-      <div><h5>Produto</h5><a href="#recursos">Recursos</a><a href="#financeiro">Tesouraria</a><a href="#planos">Planos</a><a href="#app">Aplicativo</a></div>
-      <div><h5>Suporte</h5><a href="#duvidas">Dúvidas frequentes</a><a href="#contato">Fale conosco</a><a href="#" class="js-login">Entrar no sistema</a></div>
-      <div><h5>Legal</h5><a href="#seguranca">Segurança e LGPD</a><a href="#" id="privacyLink">Política de privacidade</a><a href="#" id="termsLink">Termos de uso</a></div>
+      <div><h4>Produto</h4><ul><li><a href="#recursos">Recursos</a></li><li><a href="#planos">Planos</a></li><li><a href="#app">App Android</a></li></ul></div>
+      <div><h4>Empresa</h4><ul><li><a href="mailto:contato@gestaodoreino.com.br">Contato</a></li><li><a href="#faq">Dúvidas</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="/termos">Termos de Uso</a></li><li><a href="/privacidade">Privacidade (LGPD)</a></li></ul></div>
     </div>
-    <div class="copy"><span>© <span id="year"></span> Gestão do Reino. Todos os direitos reservados.</span><span>Feito para servir à igreja.</span></div>
+    <div class="copy"><span>© <span id="ano"></span> Gestão do Reino. Todos os direitos reservados.</span><span><a href="/login">Acessar o sistema</a></span></div>
   </div>
 </footer>
 
 <script>
-/* ===== CONFIGURAÇÃO — ajuste antes de publicar ===== */
-const CONFIG = {
-  appUrl: "app.html",          // painel do sistema (fica na mesma pasta do site)
-  whatsapp: "",                // opcional: número com DDI e DDD, só dígitos, ex.: "5511999999999"
-  privacyUrl: "",              // link da política de privacidade
-  termsUrl: ""                 // link dos termos de uso
-};
-const SUPABASE_URL = "https://ifttmkpmwcjsyoxofmry.supabase.co";
-const SUPABASE_KEY = "sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd"; // chave pública (somente leitura dos planos)
-/* ==================================================== */
+  document.getElementById('ano').textContent = new Date().getFullYear();
 
-const signupUrl = (params = {}) => CONFIG.appUrl + "#cadastro" + (Object.keys(params).length ? "?" + new URLSearchParams(params) : "");
-document.getElementById('year').textContent = new Date().getFullYear();
-
-// Entrar / Teste grátis
-document.querySelectorAll('.js-login').forEach(a => a.href = CONFIG.appUrl + "#entrar");
-document.querySelectorAll('a[href="#contato"].btn').forEach(a => a.href = signupUrl());
-[['privacyLink','privacyUrl'],['termsLink','termsUrl']].forEach(([id,key]) => {
-  const el = document.getElementById(id);
-  if (CONFIG[key]) el.href = CONFIG[key]; else el.addEventListener('click', e => { e.preventDefault(); location.hash = 'seguranca'; });
-});
-if (CONFIG.whatsapp) {
-  document.getElementById('waLine').style.display = 'block';
-  document.getElementById('waLink').href = 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent('Olá! Quero saber mais sobre o Gestão do Reino.');
-}
-
-// Tema
-const root = document.documentElement;
-const moon = '<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>';
-const sun = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
-function setTheme(t){ root.dataset.theme = t; document.getElementById('themeIcon').innerHTML = t === 'dark' ? sun : moon; try{localStorage.setItem('gr-theme', t)}catch(e){} }
-let saved = null; try{ saved = localStorage.getItem('gr-theme') }catch(e){}
-setTheme(saved || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-document.getElementById('themeBtn').addEventListener('click', () => setTheme(root.dataset.theme === 'dark' ? 'light' : 'dark'));
-
-// Menu mobile
-const menuBtn = document.getElementById('menuBtn'), menu = document.getElementById('mobileMenu');
-menuBtn.addEventListener('click', () => { const o = menu.classList.toggle('open'); menuBtn.setAttribute('aria-expanded', o); });
-menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => { menu.classList.remove('open'); menuBtn.setAttribute('aria-expanded', false); }));
-
-// ===== Planos (carregados do banco; se falhar, mantém os planos do HTML) =====
-const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const money = n => Number(n).toLocaleString('pt-BR', { minimumFractionDigits: Number(n) % 1 ? 2 : 0, maximumFractionDigits: 2 });
-const tick = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l5 5 9-10"/></svg>';
-let cycle = 'mensal';
-let PLANS = null;
-
-function bindPlanButtons() {
-  document.querySelectorAll('[data-plan]').forEach(a => {
-    const code = a.dataset.code || ({'Básico':'basico','Profissional':'profissional','Enterprise':'enterprise'}[a.dataset.plan] || 'profissional');
-    a.href = signupUrl({ plano: code });
+  // Alternar mensal/anual
+  document.querySelectorAll('.toggle button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.toggle button').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');
+      var p = b.dataset.period;
+      document.querySelectorAll('.price strong').forEach(function(s){ s.textContent = s.dataset[p]; });
+      document.querySelectorAll('.bill').forEach(function(t){
+        t.textContent = p === 'a' ? 'por mês, cobrado anualmente' : 'cobrado mensalmente';
+      });
+    });
   });
-}
-function renderPlans() {
-  if (!PLANS) return applyStaticCycle();
-  const grid = document.getElementById('plansGrid');
-  grid.innerHTML = PLANS.map(p => {
-    const yearly = p.price_yearly != null ? Number(p.price_yearly) : Number(p.price_monthly) * 10;
-    const amt = cycle === 'anual' ? yearly / 12 : Number(p.price_monthly);
-    return `<article class="plan reveal in ${p.is_featured ? 'featured' : ''}">
-      ${p.is_featured ? '<span class="tag">MAIS ESCOLHIDO</span>' : ''}
-      <h3>${esc(p.name)}</h3><p class="desc">${esc(p.description)}</p>
-      <div class="price"><span class="cur">R$</span><span class="amt">${money(Math.round(amt * 100) / 100)}</span><span class="per">/mês</span></div>
-      <div class="price-note">${cycle === 'anual' ? 'R$ ' + money(yearly) + ' cobrados por ano' : ''}</div>
-      <ul>${(p.features || []).map(f => `<li>${tick}${esc(f)}</li>`).join('')}</ul>
-      <a href="#" class="btn ${p.is_featured ? 'btn-primary' : 'btn-ghost'}" data-plan="${esc(p.name)}" data-code="${esc(p.code)}">${esc(p.cta_label || 'Começar teste grátis')}</a>
-    </article>`;
-  }).join('');
-  const sel = document.getElementById('f-plano');
-  const cur = sel.value;
-  sel.innerHTML = PLANS.map(p => `<option value="${esc(p.code)}">${esc(p.name)}</option>`).join('');
-  sel.value = PLANS.some(p => p.code === cur) ? cur : (PLANS.find(p => p.is_featured) || PLANS[0]).code;
-  bindPlanButtons();
-}
-function applyStaticCycle() {
-  document.querySelectorAll('.plan').forEach(p => {
-    const amt = p.querySelector('.amt'); if (!amt || !amt.dataset.monthly) return;
-    const m = +amt.dataset.monthly, note = p.querySelector('.price-note');
-    if (cycle === 'anual') { amt.textContent = money(Math.round(m * 10 / 12)); note.textContent = 'R$ ' + money(m * 10) + ' cobrados por ano'; }
-    else { amt.textContent = money(m); note.textContent = ''; }
+
+  // Botões dos planos preenchem o formulário
+  document.querySelectorAll('.choose').forEach(function(a){
+    a.addEventListener('click', function(){ document.getElementById('plano').value = a.dataset.plan; });
   });
-}
-document.querySelectorAll('.billing button').forEach(b => b.addEventListener('click', () => {
-  document.querySelectorAll('.billing button').forEach(x => x.classList.toggle('on', x === b));
-  cycle = b.dataset.cycle; renderPlans();
-}));
-bindPlanButtons();
-fetch(SUPABASE_URL + '/rest/v1/plans?select=code,name,description,price_monthly,price_yearly,features,is_featured,cta_label&is_active=eq.true&order=sort_order', {
-  headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY }
-}).then(r => r.ok ? r.json() : Promise.reject(r.status)).then(d => { if (Array.isArray(d) && d.length) { PLANS = d; renderPlans(); } }).catch(() => {});
-fetch(SUPABASE_URL + '/rest/v1/platform_settings?select=value&key=eq.trial_days', { headers: { apikey: SUPABASE_KEY, Authorization: 'Bearer ' + SUPABASE_KEY } })
-  .then(r => r.ok ? r.json() : null).then(d => { const n = d && d[0] && Number(d[0].value); if (n) document.querySelectorAll('.js-trial-days').forEach(el => el.textContent = n); }).catch(() => {});
 
-// Formulário → cadastro no sistema com os dados preenchidos
-document.getElementById('leadForm').addEventListener('submit', e => {
-  e.preventDefault();
-  const msg = document.getElementById('formMsg');
-  const nome = e.target.nome.value.trim(), igreja = e.target.igreja.value.trim(), email = e.target.email.value.trim(), plano = e.target.plano.value;
-  msg.className = 'form-msg err';
-  if (nome.length < 3) return msg.textContent = 'Informe seu nome.';
-  if (igreja.length < 3) return msg.textContent = 'Informe o nome da igreja.';
-  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return msg.textContent = 'Informe um e-mail válido.';
-  msg.className = 'form-msg ok'; msg.textContent = 'Abrindo o cadastro…';
-  location.href = signupUrl({ nome, igreja, email, plano });
-});
+  // Validação simples do cadastro
+  document.getElementById('signup').addEventListener('submit', function(e){
+    var f = e.target, ok = true;
+    ['igreja','nome','email'].forEach(function(n){
+      var el = f.elements[n];
+      var bad = !el.value.trim() || (n === 'email' && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(el.value));
+      el.style.borderColor = bad ? '#dc2626' : '';
+      if (bad) ok = false;
+    });
+    if (!ok) { e.preventDefault(); return; }
+    document.getElementById('msg').style.display = 'block';
+  });
 
-// Animação ao rolar
-const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(x => { if (x.isIntersecting){ x.target.classList.add('in'); io.unobserve(x.target); } }), {threshold:.12}) : null;
-document.querySelectorAll('.reveal').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+  // Fecha menu mobile ao clicar num link
+  document.querySelectorAll('#menu a').forEach(function(a){
+    a.addEventListener('click', function(){ document.getElementById('menu').classList.remove('open'); });
+  });
 </script>
 </body>
 </html>

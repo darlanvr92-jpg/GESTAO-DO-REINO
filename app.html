@@ -63,6 +63,7 @@ input[type=checkbox]{width:18px;height:18px;min-height:0;accent-color:var(--roya
 
 /* Shell */
 .shell{display:grid;grid-template-columns:256px 1fr;min-height:100vh}
+.shell>div{min-width:0}
 .side{background:var(--navy);color:#C9D4EA;padding:18px 14px;display:flex;flex-direction:column;gap:4px;position:sticky;top:0;height:100vh;overflow:auto}
 .side .brand{color:#fff;padding:6px 8px 18px}
 .side .sec{font-size:.7rem;text-transform:uppercase;letter-spacing:.12em;color:#7F92B6;padding:14px 10px 6px}
@@ -142,6 +143,15 @@ tr:last-child td{border-bottom:0}
 @keyframes spin{to{transform:rotate(360deg)}}
 .form-err{color:var(--red);font-size:.88rem;min-height:20px}
 .mobile-only{display:none}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;overflow-x:auto}
+.tabs a{padding:10px 14px;border-bottom:2px solid transparent;color:var(--muted);text-decoration:none;font-weight:600;white-space:nowrap;font-size:.93rem;margin-bottom:-1px}
+.tabs a:hover{color:var(--text)}.tabs a.on{color:var(--royal);border-bottom-color:var(--royal)}
+.toolbar .field{flex:1;min-width:150px}.toolbar .field input,.toolbar .field select{min-width:0;width:100%}
+.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.v-in{color:var(--green);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.v-out{color:var(--red);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.canceled td{opacity:.6}tr.canceled .v-in,tr.canceled .v-out{text-decoration:line-through}
+.kpi strong.mk{font-size:1.45rem}.kpi strong.pos{color:var(--green)}.kpi strong.neg{color:var(--red)}
 @media (max-width:1000px){.kpis{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){
   .auth{grid-template-columns:1fr}.auth-side{display:none}
@@ -168,7 +178,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* ===== Conexão com o banco (chave pública; a segurança fica nas políticas RLS) ===== */
 const SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd';
-const APP_VERSION = '0.3.0';
+const APP_VERSION = '0.4.0';
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
 /* ===== Utilidades ===== */
@@ -187,6 +197,7 @@ const errMsg = e => {
     'Password should be at least 6 characters': 'A senha precisa ter pelo menos 6 caracteres.',
   };
   for (const k in map) if (m.includes(k)) return map[k];
+  if (/duplicate key|23505/i.test(m)) return 'Já existe um registro com esse nome.';
   if (/rate limit/i.test(m)) return 'Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente novamente.';
   if (/row-level security|permission denied/i.test(m)) return 'Você não tem permissão para esta ação, ou o período de teste da igreja terminou.';
   return m;
@@ -205,7 +216,7 @@ function confirmBox(title, text, okLabel = 'Confirmar', danger = false) {
     document.body.appendChild(o); o.querySelector('[data-v="1"]').focus();
   });
 }
-function modal(title, bodyHtml, { submitLabel = 'Salvar', onSubmit } = {}) {
+function modal(title, bodyHtml, { submitLabel = 'Salvar', busyLabel = 'Salvando…', onSubmit } = {}) {
   const o = document.createElement('div'); o.className = 'overlay';
   o.innerHTML = `<form class="modal" role="dialog" aria-modal="true" novalidate><header><h3>${esc(title)}</h3>
     <button type="button" class="icon-btn" data-close aria-label="Fechar">✕</button></header>
@@ -217,7 +228,7 @@ function modal(title, bodyHtml, { submitLabel = 'Salvar', onSubmit } = {}) {
   const form = o.querySelector('form');
   form.addEventListener('submit', async e => {
     e.preventDefault(); const btn = form.querySelector('[type=submit]'); const err = form.querySelector('[data-err]');
-    err.textContent = ''; btn.disabled = true; btn.textContent = 'Salvando…';
+    err.textContent = ''; btn.disabled = true; btn.textContent = busyLabel;
     try { await onSubmit(new FormData(form), form); close(); }
     catch (ex) { err.textContent = errMsg(ex); btn.disabled = false; btn.textContent = submitLabel; }
   });
@@ -234,6 +245,8 @@ const I = {
   chart: icon('<path d="M3 3v18h18M7 15l4-4 3 3 5-6"/>'),
   ver: icon('<path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/>'),
   menu: icon('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+  cash: icon('<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/>'),
+  bill: icon('<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h5"/>'),
   moon: icon('<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>'),
 };
 const markSvg = '<svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 50h48v6H8zM11 46l6-26 11 13 4-19 4 19 11-13 6 26z" fill="#C9A24B"/></svg>';
@@ -369,14 +382,14 @@ const orgOperational = () => S.org && ['trial', 'active'].includes(S.org.status)
 const roleName = r => ({ admin: 'Administrador', pastor: 'Pastor', tesoureiro: 'Tesoureiro', secretario: 'Secretário', lider: 'Líder de departamento', visualizador: 'Visualizador' }[r] || r);
 
 /* ===== Layout interno ===== */
-const TITLES = { painel: 'Painel', membros: 'Membros', igreja: 'Minha igreja', versoes: 'Versões e atualizações', admin: 'Visão geral da plataforma', 'admin-igrejas': 'Igrejas clientes', 'admin-planos': 'Planos e preços', 'admin-financeiro': 'Financeiro da plataforma', 'criar-igreja': 'Cadastrar igreja' };
+const TITLES = { painel: 'Painel', membros: 'Membros', igreja: 'Minha igreja', versoes: 'Versões e atualizações', admin: 'Visão geral da plataforma', 'admin-igrejas': 'Igrejas clientes', 'admin-planos': 'Planos e preços', 'admin-financeiro': 'Financeiro da plataforma', 'criar-igreja': 'Cadastrar igreja', caixa: 'Financeiro — Caixa', contas: 'Financeiro — Contas a pagar e a receber', 'fin-config': 'Financeiro — Caixas e categorias' };
 function shell(route, inner) {
   const nav = (r, ic, label) => `<a class="nav ${route === r ? 'on' : ''}" href="#${r}">${ic}<span>${label}</span></a>`;
   const name = S.profile?.full_name || S.user.email;
   root.innerHTML = `<div class="shell">
     <aside class="side" id="side">
       <a class="brand" href="#painel"><span class="mark">${markSvg}</span>Gestão do Reino</a>
-      ${S.org ? `<div class="sec">${esc(S.org.name)}</div>${nav('painel', I.home, 'Painel')}${nav('membros', I.users, 'Membros')}${nav('igreja', I.church, 'Minha igreja')}`
+      ${S.org ? `<div class="sec">${esc(S.org.name)}</div>${nav('painel', I.home, 'Painel')}${nav('membros', I.users, 'Membros')}${canSeeFin() ? `<div class="sec">Financeiro</div>${nav('caixa', I.cash, 'Caixa')}${nav('contas', I.bill, 'Contas a pagar e receber')}` : ''}${nav('igreja', I.church, 'Minha igreja')}`
         : (!S.isAdmin ? nav('criar-igreja', I.church, 'Cadastrar igreja') : '')}
       ${S.isAdmin ? `<div class="sec">Proprietário</div>${nav('admin', I.chart, 'Visão geral')}${nav('admin-financeiro', I.money, 'Financeiro')}${nav('admin-igrejas', I.church, 'Igrejas clientes')}${nav('admin-planos', I.tag, 'Planos e preços')}` : ''}
       <div class="sec">Sistema</div>${nav('versoes', I.ver, 'Versões e atualizações')}
@@ -460,7 +473,20 @@ async function pagePainel() {
       <div class="card"><div class="card-head"><h3>Aniversariantes de ${now.toLocaleDateString('pt-BR', { month: 'long' })}</h3></div>
         ${bdays.length ? `<table><tbody>${bdays.map(b => `<tr><td>${esc(b.full_name)}</td><td class="muted" style="text-align:right">dia ${b.birth_date.slice(8)}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Nenhum aniversariante neste mês.</div>'}</div>
     </div>
-    <div class="card" style="margin-top:14px"><h3>Próximos módulos</h3><p class="muted" style="margin-top:6px">Congregações, departamentos, financeiro, tesouraria, contas a pagar e a receber e relatórios estão em desenvolvimento. Acompanhe em <a href="#versoes">Versões e atualizações</a>.</p></div>`;
+    <div id="finCard"></div>
+    <div class="card" style="margin-top:14px"><h3>Próximos módulos</h3><p class="muted" style="margin-top:6px">Congregações, departamentos, tesouraria com fundos e aprovações e relatórios avançados estão em desenvolvimento. Acompanhe em <a href="#versoes">Versões e atualizações</a>.</p></div>`;
+  if (canSeeFin()) {
+    const [a, z] = monthRange();
+    const [{ data: r }, { data: late }] = await Promise.all([
+      sb.rpc('finance_cash_report', { p_org: org, p_start: a, p_end: z }),
+      sb.from('finance_payables').select('type,amount').eq('organization_id', org).eq('status', 'aberto').lt('due_date', ymd(new Date())).limit(1000)]);
+    const lp = (late || []).filter(p => p.type === 'pagar');
+    if (r && $('#finCard')) $('#finCard').innerHTML = `<div class="card" style="margin-top:14px"><div class="card-head"><h3>Caixa de ${now.toLocaleDateString('pt-BR', { month: 'long' })}</h3><a class="btn sm ghost" href="#caixa">Abrir caixa</a></div>
+      <div class="grid3"><div><small class="muted">Entradas</small><div class="v-in" style="font-size:1.25rem">${brl(r.total_entradas)}</div></div>
+        <div><small class="muted">Saídas</small><div class="v-out" style="font-size:1.25rem">${brl(r.total_saidas)}</div></div>
+        <div><small class="muted">Saldo no fim do mês</small><div style="font-size:1.25rem;font-weight:700">${brl(r.saldo_final)}</div></div></div>
+      ${lp.length ? `<p style="margin-top:12px"><span class="pill red">${lp.length} conta${lp.length > 1 ? 's' : ''} a pagar vencida${lp.length > 1 ? 's' : ''}</span> <a href="#contas?tipo=pagar">ver contas</a></p>` : ''}</div>`;
+  }
 }
 const statusPill = s => `<span class="pill ${{ ativo: 'green', inativo: 'red', visitante: 'blue', transferido: 'amber' }[s] || ''}">${esc({ ativo: 'Ativo', inativo: 'Inativo', visitante: 'Visitante', transferido: 'Transferido' }[s] || s)}</span>`;
 
@@ -546,6 +572,435 @@ function pageCriarIgreja() {
   $('#f').onsubmit = async e => { e.preventDefault(); const err = $('[data-err]', e.target);
     const { error } = await sb.rpc('create_my_organization', { p_name: new FormData(e.target).get('name').trim(), p_plan_code: S.user.user_metadata?.plan || 'profissional' });
     if (error) { err.textContent = errMsg(error); return; } toast('Igreja criada! Seu teste grátis começou.'); await loadContext(); go('painel'); };
+}
+
+/* ===== Financeiro ===== */
+const canSeeFin = () => ['admin', 'pastor', 'tesoureiro', 'visualizador'].includes(S.role);
+const canEditFin = () => ['admin', 'pastor', 'tesoureiro'].includes(S.role) && orgOperational();
+const ymd = d => d.toLocaleDateString('sv-SE');
+const monthRange = (ref = new Date(), add = 0) => [ymd(new Date(ref.getFullYear(), ref.getMonth() + add, 1)), ymd(new Date(ref.getFullYear(), ref.getMonth() + add + 1, 0))];
+const parseValor = v => {
+  let s = String(v ?? '').replace(/[R$\s ]/g, '');
+  if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+  if (!/^-?\d+(\.\d+)?$/.test(s)) return NaN;
+  return Math.round(Number(s) * 100) / 100;
+};
+const moneyField = v => v == null || v === '' ? '' : Number(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const PAY_METHODS = [['', 'Não informado'], ['dinheiro', 'Dinheiro'], ['pix', 'Pix'], ['cartao', 'Cartão'], ['transferencia', 'Transferência'], ['boleto', 'Boleto'], ['cheque', 'Cheque'], ['outro', 'Outro']];
+const payName = v => v ? (PAY_METHODS.find(p => p[0] === v)?.[1] || v) : '—';
+const ACC_KINDS = [['caixa', 'Caixa (dinheiro)'], ['banco', 'Conta bancária'], ['digital', 'Conta digital / Pix']];
+const opts = (list, sel) => list.map(([v, l]) => `<option value="${esc(v)}" ${String(sel ?? '') === String(v) ? 'selected' : ''}>${esc(l)}</option>`).join('');
+const slug = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '').toLowerCase() || 'igreja';
+const spin = '<div class="loading" style="min-height:200px"><div class="spinner"></div></div>';
+
+const FIN = { accounts: [], categories: [] };
+async function loadFinMeta() {
+  const [a, c] = await Promise.all([
+    sb.from('finance_accounts').select('*').eq('organization_id', S.org.id).order('name'),
+    sb.from('finance_categories').select('*').eq('organization_id', S.org.id).order('name'),
+  ]);
+  if (a.error) throw a.error; if (c.error) throw c.error;
+  FIN.accounts = a.data || []; FIN.categories = c.data || [];
+}
+const accName = id => FIN.accounts.find(a => a.id === id)?.name || '—';
+const catName = id => FIN.categories.find(c => c.id === id)?.name || '—';
+const finTabs = route => `<nav class="tabs" aria-label="Financeiro">${[['caixa', 'Caixa'], ['contas', 'Contas a pagar e a receber'], ['fin-config', 'Caixas e categorias']]
+  .map(([r, l]) => `<a href="#${r}" class="${r === route ? 'on' : ''}">${l}</a>`).join('')}</nav>`;
+const readOnlyNote = () => !canEditFin() ? `<p class="muted" style="font-size:.85rem;margin-bottom:12px">${['admin', 'pastor', 'tesoureiro'].includes(S.role) ? 'Lançamentos bloqueados: teste encerrado ou acesso suspenso. Você ainda pode consultar e exportar.' : 'Seu perfil permite apenas consultar e exportar o financeiro.'}</p>` : '';
+
+/* --- Caixa (entradas e saídas) --- */
+async function pageCaixa(params) {
+  shell('caixa', spin);
+  await loadFinMeta();
+  const [d1, d2] = monthRange();
+  $('#main').innerHTML = `${statusBanner()}${finTabs('caixa')}${readOnlyNote()}
+    <div class="kpis" id="k"></div>
+    <div class="card">
+      <div class="toolbar">
+        <div class="field"><label for="d1">De</label><input type="date" id="d1" value="${esc(params.get('de') || d1)}"></div>
+        <div class="field"><label for="d2">Até</label><input type="date" id="d2" value="${esc(params.get('ate') || d2)}"></div>
+        <div class="field"><label for="ac">Caixa / conta</label><select id="ac"><option value="">Todos os caixas</option>${FIN.accounts.map(a => `<option value="${a.id}">${esc(a.name)}${a.is_active ? '' : ' (inativo)'}</option>`).join('')}</select></div>
+        <div class="field"><label for="tp">Tipo</label><select id="tp"><option value="">Entradas e saídas</option><option value="entrada">Só entradas</option><option value="saida">Só saídas</option></select></div>
+      </div>
+      <div class="toolbar">
+        <button class="btn sm ghost" data-p="0">Este mês</button><button class="btn sm ghost" data-p="-1">Mês passado</button><button class="btn sm ghost" data-p="y">Este ano</button>
+        <span style="flex:1"></span>
+        ${canEditFin() ? `<button class="btn" id="ne">+ Entrada</button><button class="btn danger" id="ns">+ Saída</button>` : ''}
+        <button class="btn ghost" id="pdf">Exportar PDF</button>
+      </div>
+      <div id="list">${spin}</div></div>`;
+  const cur = () => ({ start: $('#d1').value, end: $('#d2').value, account: $('#ac').value, type: $('#tp').value });
+  const load = async () => {
+    const st = cur();
+    if (!st.start || !st.end || st.end < st.start) { $('#k').innerHTML = ''; $('#list').innerHTML = '<div class="empty">Escolha um período válido.</div>'; return; }
+    $('#list').innerHTML = spin;
+    let q = sb.from('finance_transactions').select('*').eq('organization_id', S.org.id).gte('occurred_on', st.start).lte('occurred_on', st.end)
+      .order('occurred_on', { ascending: false }).order('created_at', { ascending: false }).limit(2000);
+    if (st.account) q = q.eq('account_id', st.account);
+    if (st.type) q = q.eq('type', st.type);
+    const [rep, tx] = await Promise.all([sb.rpc('finance_cash_report', { p_org: S.org.id, p_start: st.start, p_end: st.end, p_account: st.account || null }), q]);
+    if (rep.error || tx.error) { $('#k').innerHTML = ''; $('#list').innerHTML = `<div class="empty">${esc(errMsg(rep.error || tx.error))}</div>`; return; }
+    const r = rep.data, rows = tx.data || [];
+    const res = Number(r.total_entradas) - Number(r.total_saidas);
+    $('#k').innerHTML = `
+      <div class="kpi"><small>Saldo em ${dateBR(st.start)}</small><strong class="mk">${brl(r.saldo_inicial)}</strong><em>antes do período</em></div>
+      <div class="kpi"><small>Entradas</small><strong class="mk pos">${brl(r.total_entradas)}</strong></div>
+      <div class="kpi"><small>Saídas</small><strong class="mk neg">${brl(r.total_saidas)}</strong></div>
+      <div class="kpi"><small>Saldo em ${dateBR(st.end)}</small><strong class="mk ${Number(r.saldo_final) < 0 ? 'neg' : ''}">${brl(r.saldo_final)}</strong><em>Resultado do período: ${brl(res)}</em></div>`;
+    const memIds = [...new Set(rows.map(x => x.member_id).filter(Boolean))];
+    let mem = {};
+    if (memIds.length) { const { data } = await sb.from('members').select('id,full_name').in('id', memIds); (data || []).forEach(m => mem[m.id] = m.full_name); }
+    $('#list').innerHTML = rows.length ? `<div class="table-wrap"><table><thead><tr><th>Data</th><th>Descrição</th><th class="hide-sm">Caixa</th><th class="hide-sm">Forma</th><th class="num">Valor</th><th></th></tr></thead><tbody>
+      ${rows.map(x => `<tr class="${x.status === 'cancelado' ? 'canceled' : ''}">
+        <td style="white-space:nowrap">${dateBR(x.occurred_on)}</td>
+        <td><b>${esc(x.description || catName(x.category_id))}</b>
+          <div class="muted" style="font-size:.82rem">${esc(catName(x.category_id))}${x.member_id ? ' · ' + esc(mem[x.member_id] || 'Membro') : ''}${x.document ? ' · Doc. ' + esc(x.document) : ''}${x.payable_id ? ' · baixa de conta' : ''}</div>
+          ${x.status === 'cancelado' ? `<div style="font-size:.8rem;margin-top:3px"><span class="pill red">Cancelado</span> <span class="muted">${esc(x.cancel_reason || '')}</span></div>` : ''}</td>
+        <td class="hide-sm">${esc(accName(x.account_id))}</td><td class="hide-sm">${esc(payName(x.payment_method))}</td>
+        <td class="num"><span class="${x.type === 'entrada' ? 'v-in' : 'v-out'}">${x.type === 'entrada' ? '+' : '−'} ${brl(x.amount)}</span></td>
+        <td><div class="row-actions">${canEditFin() && x.status === 'confirmado' ? `<button class="btn sm ghost" data-cancel="${x.id}">Cancelar</button>` : ''}</div></td></tr>`).join('')}
+      </tbody></table></div><p class="muted" style="font-size:.82rem;margin-top:10px">${rows.length} lançamento${rows.length > 1 ? 's' : ''} no período. Lançamentos cancelados aparecem riscados e não entram nos totais.</p>`
+      : `<div class="empty">Nenhum lançamento neste período.${canEditFin() ? '<br><br>Use <b>+ Entrada</b> ou <b>+ Saída</b> para lançar.' : ''}</div>`;
+    $('#list').querySelectorAll('[data-cancel]').forEach(b => b.onclick = () => cancelTx(rows.find(x => x.id === b.dataset.cancel), load));
+  };
+  ['#d1', '#d2', '#ac', '#tp'].forEach(s => $(s).onchange = load);
+  $('#main').querySelectorAll('[data-p]').forEach(b => b.onclick = () => {
+    const p = b.dataset.p, y = new Date().getFullYear();
+    const [a, z] = p === 'y' ? [`${y}-01-01`, `${y}-12-31`] : monthRange(new Date(), Number(p));
+    $('#d1').value = a; $('#d2').value = z; load();
+  });
+  if ($('#ne')) $('#ne').onclick = () => txForm('entrada', load);
+  if ($('#ns')) $('#ns').onclick = () => txForm('saida', load);
+  $('#pdf').onclick = () => exportCaixaModal(cur());
+  await load();
+  if (params.get('novo') === 'entrada' && canEditFin()) txForm('entrada', load);
+}
+
+async function txForm(type, done) {
+  const cats = FIN.categories.filter(c => c.type === type && c.is_active);
+  const accs = FIN.accounts.filter(a => a.is_active);
+  if (!accs.length) return toast('Cadastre um caixa ativo em "Caixas e categorias".', 'err');
+  if (!cats.length) return toast(`Cadastre uma categoria de ${type} em "Caixas e categorias".`, 'err');
+  let mem = [];
+  if (type === 'entrada') {
+    const { data } = await sb.from('members').select('id,full_name').eq('organization_id', S.org.id).neq('status', 'inativo').order('full_name').limit(1000);
+    mem = data || [];
+  }
+  modal(type === 'entrada' ? 'Nova entrada' : 'Nova saída', `<div class="stack">
+    <div class="grid2"><div class="field"><label for="tv">Valor *</label><div class="money"><span>R$</span><input id="tv" name="amount" inputmode="decimal" placeholder="0,00" autocomplete="off" required></div></div>
+      <div class="field"><label for="td">Data *</label><input id="td" type="date" name="occurred_on" value="${ymd(new Date())}" required></div></div>
+    <div class="grid2"><div class="field"><label for="tc">Categoria *</label><select id="tc" name="category_id">${cats.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>
+      <div class="field"><label for="ta">Caixa / conta *</label><select id="ta" name="account_id">${accs.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select></div></div>
+    <div class="grid2"><div class="field"><label for="tf">Forma de pagamento</label><select id="tf" name="payment_method">${opts(PAY_METHODS, '')}</select></div>
+      <div class="field"><label for="tn">Documento / recibo</label><input id="tn" name="document" maxlength="60" placeholder="Nº do recibo ou nota"></div></div>
+    ${type === 'entrada' && mem.length ? `<div class="field"><label for="tm">Membro (dízimo ou oferta identificada)</label><select id="tm" name="member_id"><option value="">Não identificado</option>${mem.map(m => `<option value="${m.id}">${esc(m.full_name)}</option>`).join('')}</select></div>` : ''}
+    <div class="field"><label for="tx">Descrição</label><input id="tx" name="description" maxlength="200" placeholder="${type === 'entrada' ? 'Ex.: Dízimos do culto de domingo' : 'Ex.: Conta de luz de novembro'}"></div></div>`,
+  { submitLabel: 'Lançar', onSubmit: async fd => {
+    const amount = parseValor(fd.get('amount'));
+    if (!(amount > 0)) throw new Error('Informe um valor maior que zero (ex.: 150,00).');
+    if (amount >= 1e12) throw new Error('Valor alto demais.');
+    if (!fd.get('occurred_on')) throw new Error('Informe a data.');
+    const row = { organization_id: S.org.id, created_by: S.user.id, type, amount, occurred_on: fd.get('occurred_on'),
+      category_id: fd.get('category_id'), account_id: fd.get('account_id'), payment_method: fd.get('payment_method') || null,
+      document: (fd.get('document') || '').trim() || null, description: (fd.get('description') || '').trim() || null, member_id: fd.get('member_id') || null };
+    const { error } = await sb.from('finance_transactions').insert(row); if (error) throw error;
+    toast(type === 'entrada' ? 'Entrada lançada.' : 'Saída lançada.'); done();
+  } });
+}
+
+function cancelTx(x, done) {
+  modal('Cancelar lançamento', `<div class="stack">
+    <p class="muted">${x.type === 'entrada' ? 'Entrada' : 'Saída'} de <b>${brl(x.amount)}</b> em ${dateBR(x.occurred_on)}${x.description ? ' — ' + esc(x.description) : ''}.</p>
+    <p class="muted" style="font-size:.88rem">O lançamento não é apagado: fica registrado como cancelado, fora dos totais, para a prestação de contas.${x.payable_id ? ' A conta a pagar/receber ligada a ele volta a ficar em aberto.' : ''}</p>
+    <div class="field"><label for="cr">Motivo *</label><input id="cr" name="reason" maxlength="300" required placeholder="Ex.: lançado em duplicidade"></div></div>`,
+  { submitLabel: 'Cancelar lançamento', busyLabel: 'Cancelando…', onSubmit: async fd => {
+    const reason = (fd.get('reason') || '').trim(); if (reason.length < 3) throw new Error('Informe o motivo do cancelamento.');
+    const { error } = await sb.rpc('finance_cancel_transaction', { p_tx: x.id, p_reason: reason }); if (error) throw error;
+    toast('Lançamento cancelado.'); done();
+  } });
+}
+
+/* --- Contas a pagar e a receber --- */
+async function pageContas(params) {
+  shell('contas', spin);
+  await loadFinMeta();
+  $('#main').innerHTML = `${statusBanner()}${finTabs('contas')}${readOnlyNote()}
+    <div class="kpis" id="k"></div>
+    <div class="card">
+      <div class="toolbar"><input id="q" type="search" placeholder="Pesquisar descrição ou fornecedor" aria-label="Pesquisar">
+        <select id="tp" aria-label="Tipo"><option value="">Pagar e receber</option><option value="pagar" ${params.get('tipo') === 'pagar' ? 'selected' : ''}>A pagar</option><option value="receber" ${params.get('tipo') === 'receber' ? 'selected' : ''}>A receber</option></select>
+        <select id="ss" aria-label="Situação"><option value="aberto">Em aberto</option><option value="pago">Pagas / recebidas</option><option value="cancelado">Canceladas</option><option value="">Todas</option></select>
+        ${canEditFin() ? `<button class="btn danger" id="np">+ Conta a pagar</button><button class="btn" id="nr">+ Conta a receber</button>` : ''}
+      </div><div id="list">${spin}</div></div>`;
+  const today = ymd(new Date());
+  let timer;
+  const load = async () => {
+    const open = await sb.from('finance_payables').select('type,amount,due_date').eq('organization_id', S.org.id).eq('status', 'aberto').limit(5000);
+    if (!open.error) {
+      const sum = (t, late) => (open.data || []).filter(p => p.type === t && (!late || p.due_date < today)).reduce((s, p) => s + Number(p.amount), 0);
+      const cnt = t => (open.data || []).filter(p => p.type === t && p.due_date < today).length;
+      $('#k').innerHTML = `
+        <div class="kpi"><small>A pagar em aberto</small><strong class="mk">${brl(sum('pagar'))}</strong></div>
+        <div class="kpi"><small>A pagar vencidas</small><strong class="mk ${cnt('pagar') ? 'neg' : ''}">${brl(sum('pagar', true))}</strong><em>${cnt('pagar')} conta${cnt('pagar') === 1 ? '' : 's'}</em></div>
+        <div class="kpi"><small>A receber em aberto</small><strong class="mk">${brl(sum('receber'))}</strong></div>
+        <div class="kpi"><small>A receber vencidas</small><strong class="mk ${cnt('receber') ? 'neg' : ''}">${brl(sum('receber', true))}</strong><em>${cnt('receber')} conta${cnt('receber') === 1 ? '' : 's'}</em></div>`;
+    }
+    let q = sb.from('finance_payables').select('*').eq('organization_id', S.org.id).order('due_date', { ascending: $('#ss').value !== 'pago' }).limit(1000);
+    if ($('#tp').value) q = q.eq('type', $('#tp').value);
+    if ($('#ss').value) q = q.eq('status', $('#ss').value);
+    const t = $('#q').value.trim().replace(/[%,()]/g, '');
+    if (t) q = q.or(`description.ilike.%${t}%,counterparty.ilike.%${t}%`);
+    const { data, error } = await q;
+    if (error) { $('#list').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+    const rows = data || [];
+    const stPill = p => p.status === 'pago' ? `<span class="pill green">${p.type === 'pagar' ? 'Paga' : 'Recebida'} ${dateBR(p.paid_at)}</span>`
+      : p.status === 'cancelado' ? '<span class="pill">Cancelada</span>'
+      : p.due_date < today ? '<span class="pill red">Vencida</span>' : p.due_date === today ? '<span class="pill amber">Vence hoje</span>' : '<span class="pill blue">Em aberto</span>';
+    $('#list').innerHTML = rows.length ? `<div class="table-wrap"><table><thead><tr><th>Vencimento</th><th>Descrição</th><th class="hide-sm">Categoria</th><th class="num">Valor</th><th>Situação</th><th></th></tr></thead><tbody>
+      ${rows.map(p => `<tr><td style="white-space:nowrap">${dateBR(p.due_date)}</td>
+        <td><b>${esc(p.description)}</b><div class="muted" style="font-size:.82rem">${p.type === 'pagar' ? 'A pagar' : 'A receber'}${p.counterparty ? ' · ' + esc(p.counterparty) : ''}</div></td>
+        <td class="hide-sm">${esc(catName(p.category_id))}</td>
+        <td class="num"><span class="${p.type === 'receber' ? 'v-in' : 'v-out'}">${brl(p.status === 'pago' ? p.paid_amount ?? p.amount : p.amount)}</span></td>
+        <td>${stPill(p)}</td>
+        <td><div class="row-actions">${canEditFin() && p.status === 'aberto' ? `<button class="btn sm" data-pay="${p.id}">${p.type === 'pagar' ? 'Pagar' : 'Receber'}</button><button class="btn sm ghost" data-edit="${p.id}">Editar</button><button class="btn sm ghost" data-cancel="${p.id}">Cancelar</button>` : ''}</div></td></tr>`).join('')}
+      </tbody></table></div><p class="muted" style="font-size:.82rem;margin-top:10px">${rows.length} conta${rows.length > 1 ? 's' : ''}. Ao pagar ou receber, o lançamento entra no caixa automaticamente.</p>`
+      : '<div class="empty">Nenhuma conta encontrada.</div>';
+    const find = id => rows.find(p => p.id === id);
+    $('#list').querySelectorAll('[data-pay]').forEach(b => b.onclick = () => settleForm(find(b.dataset.pay), load));
+    $('#list').querySelectorAll('[data-edit]').forEach(b => b.onclick = () => payableForm(find(b.dataset.edit).type, find(b.dataset.edit), load));
+    $('#list').querySelectorAll('[data-cancel]').forEach(b => b.onclick = async () => {
+      const p = find(b.dataset.cancel);
+      if (!await confirmBox('Cancelar conta', `Cancelar "${p.description}" (${brl(p.amount)})? Ela sai da lista de contas em aberto.`, 'Cancelar conta', true)) return;
+      const { error } = await sb.from('finance_payables').update({ status: 'cancelado' }).eq('id', p.id).eq('status', 'aberto');
+      if (error) return toast(errMsg(error), 'err'); toast('Conta cancelada.'); load();
+    });
+  };
+  $('#q').oninput = () => { clearTimeout(timer); timer = setTimeout(load, 250); };
+  $('#tp').onchange = load; $('#ss').onchange = load;
+  if ($('#np')) $('#np').onclick = () => payableForm('pagar', null, load);
+  if ($('#nr')) $('#nr').onclick = () => payableForm('receber', null, load);
+  await load();
+}
+
+function payableForm(type, p, done) {
+  const ct = type === 'pagar' ? 'saida' : 'entrada';
+  const cats = FIN.categories.filter(c => c.type === ct && (c.is_active || c.id === p?.category_id));
+  if (!cats.length) return toast(`Cadastre uma categoria de ${ct} em "Caixas e categorias".`, 'err');
+  const v = k => esc(p?.[k] ?? '');
+  modal(p ? 'Editar conta' : type === 'pagar' ? 'Nova conta a pagar' : 'Nova conta a receber', `<div class="stack">
+    <div class="field"><label for="pd">Descrição *</label><input id="pd" name="description" value="${v('description')}" maxlength="200" required placeholder="${type === 'pagar' ? 'Ex.: Aluguel de dezembro' : 'Ex.: Aluguel do salão para evento'}"></div>
+    <div class="field"><label for="pc">${type === 'pagar' ? 'Fornecedor / favorecido' : 'Quem vai pagar'}</label><input id="pc" name="counterparty" value="${v('counterparty')}" maxlength="120"></div>
+    <div class="grid2"><div class="field"><label for="pv">Valor *</label><div class="money"><span>R$</span><input id="pv" name="amount" inputmode="decimal" value="${esc(moneyField(p?.amount))}" placeholder="0,00" autocomplete="off" required></div></div>
+      <div class="field"><label for="pdd">Vencimento *</label><input id="pdd" type="date" name="due_date" value="${v('due_date') || ymd(new Date())}" required></div></div>
+    <div class="field"><label for="pk">Categoria *</label><select id="pk" name="category_id">${cats.map(c => `<option value="${c.id}" ${c.id === p?.category_id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div>
+    <div class="field"><label for="po">Observações</label><textarea id="po" name="notes" maxlength="1000">${v('notes')}</textarea></div></div>`,
+  { submitLabel: p ? 'Salvar alterações' : 'Cadastrar', onSubmit: async fd => {
+    const amount = parseValor(fd.get('amount'));
+    const row = { description: (fd.get('description') || '').trim(), counterparty: (fd.get('counterparty') || '').trim() || null, amount,
+      due_date: fd.get('due_date'), category_id: fd.get('category_id'), notes: (fd.get('notes') || '').trim() || null };
+    if (row.description.length < 2) throw new Error('Informe a descrição.');
+    if (!(amount > 0)) throw new Error('Informe um valor maior que zero (ex.: 150,00).');
+    if (!row.due_date) throw new Error('Informe o vencimento.');
+    const r = p ? await sb.from('finance_payables').update(row).eq('id', p.id).eq('status', 'aberto')
+      : await sb.from('finance_payables').insert({ ...row, type, organization_id: S.org.id, created_by: S.user.id });
+    if (r.error) throw r.error; toast(p ? 'Conta atualizada.' : 'Conta cadastrada.'); done();
+  } });
+}
+
+function settleForm(p, done) {
+  const accs = FIN.accounts.filter(a => a.is_active);
+  if (!accs.length) return toast('Cadastre um caixa ativo em "Caixas e categorias".', 'err');
+  const verb = p.type === 'pagar' ? 'Pagar' : 'Receber';
+  modal(`${verb} conta`, `<div class="stack">
+    <p class="muted"><b>${esc(p.description)}</b> — vencimento ${dateBR(p.due_date)}. O valor entra no caixa como ${p.type === 'pagar' ? 'saída' : 'entrada'} na categoria ${esc(catName(p.category_id))}.</p>
+    <div class="grid2"><div class="field"><label for="sv">Valor ${p.type === 'pagar' ? 'pago' : 'recebido'} *</label><div class="money"><span>R$</span><input id="sv" name="amount" inputmode="decimal" value="${esc(moneyField(p.amount))}" autocomplete="off" required></div></div>
+      <div class="field"><label for="sd">Data *</label><input id="sd" type="date" name="date" value="${ymd(new Date())}" required></div></div>
+    <div class="grid2"><div class="field"><label for="sa">Caixa / conta *</label><select id="sa" name="account">${accs.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select></div>
+      <div class="field"><label for="sf">Forma de pagamento</label><select id="sf" name="method">${opts(PAY_METHODS, 'pix')}</select></div></div></div>`,
+  { submitLabel: `Confirmar ${verb.toLowerCase() === 'pagar' ? 'pagamento' : 'recebimento'}`, busyLabel: 'Registrando…', onSubmit: async fd => {
+    const amount = parseValor(fd.get('amount'));
+    if (!(amount > 0)) throw new Error('Informe um valor maior que zero.');
+    if (!fd.get('date')) throw new Error('Informe a data.');
+    const { error } = await sb.rpc('finance_settle_payable', { p_payable: p.id, p_account: fd.get('account'), p_paid_on: fd.get('date'), p_amount: amount, p_method: fd.get('method') || null });
+    if (error) throw error; toast(p.type === 'pagar' ? 'Pagamento registrado no caixa.' : 'Recebimento registrado no caixa.'); done();
+  } });
+}
+
+/* --- Caixas e categorias --- */
+async function pageFinConfig() {
+  shell('fin-config', spin);
+  await loadFinMeta();
+  const ed = canEditFin();
+  const catList = t => {
+    const list = FIN.categories.filter(c => c.type === t);
+    return `<div class="card"><div class="card-head"><h3>Categorias de ${t === 'entrada' ? 'entrada' : 'saída'}</h3>${ed ? `<button class="btn sm ghost" data-newcat="${t}">+ Nova</button>` : ''}</div>
+      ${list.length ? `<table><tbody>${list.map(c => `<tr><td>${esc(c.name)}</td><td>${c.is_active ? '' : '<span class="pill">Inativa</span>'}</td><td><div class="row-actions">${ed ? `<button class="btn sm ghost" data-cat="${c.id}">Editar</button>` : ''}</div></td></tr>`).join('')}</tbody></table>` : '<div class="empty">Nenhuma categoria.</div>'}</div>`;
+  };
+  $('#main').innerHTML = `${statusBanner()}${finTabs('fin-config')}${readOnlyNote()}
+    <div class="card" style="margin-bottom:14px"><div class="card-head"><div><h3>Caixas e contas</h3><p class="muted" style="font-size:.88rem">Onde o dinheiro da igreja fica: caixa em espécie, conta bancária, conta digital.</p></div>${ed ? '<button class="btn sm" id="na">+ Novo caixa</button>' : ''}</div>
+      <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Tipo</th><th class="num">Saldo inicial</th><th></th><th></th></tr></thead><tbody>
+      ${FIN.accounts.map(a => `<tr><td><b>${esc(a.name)}</b></td><td>${esc(ACC_KINDS.find(k => k[0] === a.kind)?.[1] || a.kind)}</td><td class="num">${brl(a.opening_balance)}</td>
+        <td>${a.is_active ? '<span class="pill green">Ativo</span>' : '<span class="pill">Inativo</span>'}</td><td><div class="row-actions">${ed ? `<button class="btn sm ghost" data-acc="${a.id}">Editar</button>` : ''}</div></td></tr>`).join('')}
+      </tbody></table></div></div>
+    <div class="grid2">${catList('entrada')}${catList('saida')}</div>`;
+  const again = () => pageFinConfig();
+  if ($('#na')) $('#na').onclick = () => accountForm(null, again);
+  $('#main').querySelectorAll('[data-acc]').forEach(b => b.onclick = () => accountForm(FIN.accounts.find(a => a.id === b.dataset.acc), again));
+  $('#main').querySelectorAll('[data-newcat]').forEach(b => b.onclick = () => categoryForm(b.dataset.newcat, null, again));
+  $('#main').querySelectorAll('[data-cat]').forEach(b => b.onclick = () => { const c = FIN.categories.find(x => x.id === b.dataset.cat); categoryForm(c.type, c, again); });
+}
+
+function accountForm(a, done) {
+  modal(a ? 'Editar caixa' : 'Novo caixa', `<div class="stack">
+    <div class="field"><label for="an">Nome *</label><input id="an" name="name" value="${esc(a?.name)}" maxlength="80" required placeholder="Ex.: Banco do Brasil, Caixa da cantina"></div>
+    <div class="grid2"><div class="field"><label for="ak">Tipo</label><select id="ak" name="kind">${opts(ACC_KINDS, a?.kind || 'banco')}</select></div>
+      <div class="field"><label for="ao">Saldo inicial</label><div class="money"><span>R$</span><input id="ao" name="opening_balance" inputmode="decimal" value="${esc(moneyField(a?.opening_balance ?? 0))}" autocomplete="off"></div>
+        <small>Valor que havia antes do primeiro lançamento no sistema.</small></div></div>
+    ${a ? `<label class="check"><input type="checkbox" name="is_active" ${a.is_active ? 'checked' : ''}> Caixa ativo (aparece nos novos lançamentos)</label>` : ''}</div>`,
+  { onSubmit: async fd => {
+    const name = (fd.get('name') || '').trim(); if (name.length < 2) throw new Error('Informe o nome do caixa.');
+    const ob = (fd.get('opening_balance') || '').trim() === '' ? 0 : parseValor(fd.get('opening_balance'));
+    if (!Number.isFinite(ob)) throw new Error('Saldo inicial inválido (ex.: 1.250,00).');
+    const row = { name, kind: fd.get('kind'), opening_balance: ob };
+    if (a) row.is_active = !!fd.get('is_active');
+    const r = a ? await sb.from('finance_accounts').update(row).eq('id', a.id)
+      : await sb.from('finance_accounts').insert({ ...row, organization_id: S.org.id, created_by: S.user.id });
+    if (r.error) throw r.error; toast(a ? 'Caixa atualizado.' : 'Caixa criado.'); done();
+  } });
+}
+
+function categoryForm(type, c, done) {
+  modal(c ? 'Editar categoria' : `Nova categoria de ${type === 'entrada' ? 'entrada' : 'saída'}`, `<div class="stack">
+    <div class="field"><label for="cn">Nome *</label><input id="cn" name="name" value="${esc(c?.name)}" maxlength="80" required></div>
+    ${c ? `<label class="check"><input type="checkbox" name="is_active" ${c.is_active ? 'checked' : ''}> Categoria ativa (aparece nos novos lançamentos)</label>` : ''}</div>`,
+  { onSubmit: async fd => {
+    const name = (fd.get('name') || '').trim(); if (name.length < 2) throw new Error('Informe o nome da categoria.');
+    const r = c ? await sb.from('finance_categories').update({ name, is_active: !!fd.get('is_active') }).eq('id', c.id)
+      : await sb.from('finance_categories').insert({ name, type, organization_id: S.org.id, created_by: S.user.id });
+    if (r.error) throw r.error; toast(c ? 'Categoria atualizada.' : 'Categoria criada.'); done();
+  } });
+}
+
+/* --- Exportação do caixa em PDF --- */
+function exportCaixaModal(d) {
+  modal('Exportar caixa em PDF', `<div class="stack">
+    <p class="muted">O PDF traz o saldo anterior, todos os lançamentos do período com o saldo linha a linha, os totais, o resumo por categoria e espaço para assinaturas, pronto para a prestação de contas.</p>
+    <div class="grid2"><div class="field"><label for="xs">De *</label><input id="xs" type="date" name="start" value="${esc(d.start)}" required></div>
+      <div class="field"><label for="xe">Até *</label><input id="xe" type="date" name="end" value="${esc(d.end)}" required></div></div>
+    <div class="field"><label for="xa">Caixa / conta</label><select id="xa" name="account"><option value="">Todos os caixas</option>${FIN.accounts.map(a => `<option value="${a.id}" ${a.id === d.account ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}</select></div></div>`,
+  { submitLabel: 'Baixar PDF', busyLabel: 'Gerando PDF…', onSubmit: async fd => {
+    const start = fd.get('start'), end = fd.get('end');
+    if (!start || !end || end < start) throw new Error('Escolha um período válido.');
+    const { data, error } = await sb.rpc('finance_cash_report', { p_org: S.org.id, p_start: start, p_end: end, p_account: fd.get('account') || null });
+    if (error) throw error;
+    const bytes = await buildCashPdf(data);
+    downloadFile(bytes, `caixa-${slug(S.org.name)}-${start}-a-${end}.pdf`, 'application/pdf');
+    toast('PDF gerado.');
+  } });
+}
+function downloadFile(bytes, name, type) {
+  const url = URL.createObjectURL(new Blob([bytes], { type }));
+  const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+async function buildCashPdf(r) {
+  let lib;
+  try { lib = await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm'); }
+  catch { throw new Error('Não foi possível carregar o gerador de PDF. Verifique sua conexão e tente novamente.'); }
+  const { PDFDocument, StandardFonts, rgb } = lib;
+  const doc = await PDFDocument.create();
+  const F = await doc.embedFont(StandardFonts.Helvetica), B = await doc.embedFont(StandardFonts.HelveticaBold);
+  const W = 595.28, H = 841.89, M = 36, CW = W - 2 * M;
+  const navy = rgb(0.043, 0.122, 0.227), muted = rgb(0.36, 0.4, 0.51), line = rgb(0.86, 0.88, 0.92), soft = rgb(0.955, 0.965, 0.98);
+  const green = rgb(0.08, 0.58, 0.36), red = rgb(0.82, 0.27, 0.23), gold = rgb(0.79, 0.64, 0.29);
+  const clean = s => String(s ?? '').normalize('NFC').replace(/[  ]/g, ' ').replace(/[−]/g, '-').replace(/[^\x20-\x7E\xA0-\xFF–—‘’“”•…]/g, '');
+  const fit = (s, font, size, w) => { s = clean(s); if (font.widthOfTextAtSize(s, size) <= w) return s; while (s.length && font.widthOfTextAtSize(s + '…', size) > w) s = s.slice(0, -1); return s + '…'; };
+  const money = n => clean(brl(n));
+  const title = `${r.igreja || ''}`, period = `${dateBR(r.inicio)} a ${dateBR(r.fim)}`;
+  doc.setTitle(`Relatório de caixa - ${clean(title)} - ${period}`); doc.setAuthor('Gestão do Reino'); doc.setCreator('Gestão do Reino'); doc.setProducer('Gestão do Reino');
+  let page, y;
+  const T = (s, x, yy, o = {}) => {
+    const font = o.font || F, size = o.size || 9, t = o.w ? fit(s, font, size, o.w) : clean(s);
+    page.drawText(t, { x: o.right ? x - font.widthOfTextAtSize(t, size) : x, y: yy, size, font, color: o.color || navy });
+  };
+  const hr = (yy, c = line, th = 0.6) => page.drawLine({ start: { x: M, y: yy }, end: { x: W - M, y: yy }, thickness: th, color: c });
+  const cols = [{ t: 'Data', w: 54 }, { t: 'Categoria', w: 100 }, { t: 'Descrição', w: 160 }, { t: 'Entrada', w: 70, r: 1 }, { t: 'Saída', w: 70, r: 1 }, { t: 'Saldo', w: CW - 454, r: 1 }];
+  const row = (vals, o = {}) => {
+    let x = M;
+    if (o.fill) page.drawRectangle({ x: M, y: y - 5, width: CW, height: 17, color: o.fill });
+    cols.forEach((c, i) => {
+      const v = vals[i]; if (v != null && v !== '') T(v, c.r ? x + c.w - 4 : x + 4, y, { w: c.w - 8, right: !!c.r, size: o.size || 8.5, font: o.bold ? B : F, color: (o.colors && o.colors[i]) || navy });
+      x += c.w;
+    });
+    y -= 17;
+  };
+  const head = () => { page.drawRectangle({ x: M, y: y - 6, width: CW, height: 19, color: soft }); row(cols.map(c => c.t), { bold: true, size: 8, colors: cols.map(() => muted) }); y -= 2; };
+  const newPage = (first, withHead = true) => {
+    page = doc.addPage([W, H]); y = H - M;
+    if (first) {
+      page.drawRectangle({ x: 0, y: H - 6, width: W, height: 6, color: gold });
+      T(title, M, y - 14, { font: B, size: 16, w: CW });
+      T('Relatório de caixa', M, y - 32, { size: 11, color: muted });
+      T(`Período: ${period}   ·   Caixa: ${r.conta || 'Todos os caixas'}`, M, y - 48, { size: 9.5, w: CW });
+      T(`Gerado em ${new Date(r.gerado_em || Date.now()).toLocaleString('pt-BR')} pelo Gestão do Reino`, M, y - 62, { size: 8, color: muted });
+      y -= 82;
+      const bw = (CW - 24) / 4;
+      [['Saldo anterior', r.saldo_inicial, navy], ['Entradas', r.total_entradas, green], ['Saídas', r.total_saidas, red], ['Saldo final', r.saldo_final, Number(r.saldo_final) < 0 ? red : navy]].forEach(([l, v, c], i) => {
+        const x = M + i * (bw + 8);
+        page.drawRectangle({ x, y: y - 40, width: bw, height: 44, color: soft, borderColor: line, borderWidth: 0.6 });
+        T(l, x + 10, y - 12, { size: 8, color: muted }); T(money(v), x + 10, y - 30, { font: B, size: 12.5, color: c, w: bw - 16 });
+      });
+      y -= 62;
+    } else {
+      T(`${title} - Relatório de caixa (${period})`, M, y - 8, { size: 8, color: muted, w: CW }); y -= 24;
+    }
+    if (withHead) head();
+  };
+  const need = h => { if (y - h < M + 24) newPage(false); };
+  newPage(true);
+  row([dateBR(r.inicio), '', 'Saldo anterior', '', '', money(r.saldo_inicial)], { bold: true });
+  hr(y + 12);
+  const lines = r.lancamentos || [];
+  lines.forEach(l => {
+    need(17);
+    row([dateBR(l.data), l.categoria, l.descricao || l.categoria, Number(l.entrada) ? money(l.entrada) : '', Number(l.saida) ? money(l.saida) : '', money(l.saldo)],
+      { colors: [null, null, null, green, red, Number(l.saldo) < 0 ? red : null] });
+    hr(y + 12);
+  });
+  if (!lines.length) { row(['', '', 'Nenhum lançamento no período.', '', '', ''], { colors: cols.map(() => muted) }); }
+  need(22);
+  y -= 2; hr(y + 14, navy, 0.9);
+  row(['', '', 'Totais do período', money(r.total_entradas), money(r.total_saidas), money(r.saldo_final)], { bold: true, fill: soft, colors: [null, null, null, green, red, Number(r.saldo_final) < 0 ? red : null] });
+
+  const cats = r.por_categoria || [];
+  if (cats.length) {
+    const ins = cats.filter(c => c.tipo === 'entrada'), outs = cats.filter(c => c.tipo === 'saida');
+    const block = Math.max(ins.length, outs.length) * 15 + 40;
+    if (y - block < M + 24) newPage(false, false);
+    y -= 18; T('Resumo por categoria', M, y, { font: B, size: 11 }); y -= 18;
+    const half = (CW - 20) / 2, top = y;
+    [[ins, 'Entradas', green, M], [outs, 'Saídas', red, M + half + 20]].forEach(([list, lab, c, x]) => {
+      let yy = top;
+      T(lab, x, yy, { font: B, size: 9, color: c }); yy -= 4;
+      page.drawLine({ start: { x, y: yy }, end: { x: x + half, y: yy }, thickness: 0.6, color: line }); yy -= 12;
+      if (!list.length) { T('Nenhuma', x, yy, { size: 8.5, color: muted }); yy -= 15; }
+      list.forEach(it => { T(it.categoria, x, yy, { size: 8.5, w: half - 90 }); T(money(it.total), x + half, yy, { size: 8.5, right: true }); yy -= 15; });
+      y = Math.min(y, yy);
+    });
+  }
+  if (y - 80 < M + 24) newPage(false, false);
+  y -= 64;
+  const sw = (CW - 40) / 2;
+  [['Tesoureiro(a)', M], ['Pastor(a) / Presidente', M + sw + 40]].forEach(([l, x]) => {
+    page.drawLine({ start: { x, y }, end: { x: x + sw, y }, thickness: 0.7, color: navy });
+    T(l, x + sw / 2 - F.widthOfTextAtSize(clean(l), 8.5) / 2, y - 12, { size: 8.5, color: muted });
+  });
+  const pages = doc.getPages();
+  pages.forEach((p, i) => {
+    const s = clean(`Gestão do Reino   ·   Página ${i + 1} de ${pages.length}`);
+    p.drawText(s, { x: W - M - F.widthOfTextAtSize(s, 7.5), y: 20, size: 7.5, font: F, color: muted });
+  });
+  return await doc.save();
 }
 
 /* ===== Versões ===== */
@@ -786,6 +1241,12 @@ async function render() {
     if (!S.org) return S.isAdmin && route !== 'criar-igreja' ? go('admin') : pageCriarIgreja();
     if (route === 'membros') return pageMembros(params);
     if (route === 'igreja') return pageIgreja();
+    if (['caixa', 'contas', 'fin-config'].includes(route)) {
+      if (!canSeeFin()) { toast('Seu perfil não tem acesso ao financeiro.', 'err'); return go('painel'); }
+      if (route === 'caixa') return await pageCaixa(params);
+      if (route === 'contas') return await pageContas(params);
+      return await pageFinConfig();
+    }
     return pagePainel();
   } catch (e) { toast(errMsg(e), 'err'); }
 }

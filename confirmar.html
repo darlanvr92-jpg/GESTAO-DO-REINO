@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Confirmar escala — Gestão do Reino</title>
+<meta name="theme-color" content="#0B1F3A">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+:root{--navy:#0B1F3A;--royal:#2453D6;--gold:#C9A24B;--green:#15935B;--red:#D2453B;--amber:#B7791F;--bg:#F4F6FA;--surface:#fff;--text:#14213A;--muted:#5B6782;--line:#E2E7F0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{width:min(640px,92%);margin:0 auto;padding:28px 0 48px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);text-decoration:none;margin-bottom:22px}
+.brand img{width:32px;height:32px;border-radius:9px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 10px 30px -18px rgba(11,31,58,.35)}
+.card+.card{margin-top:14px}
+h1{font-size:1.5rem;line-height:1.2;margin-bottom:6px} h2{font-size:1.1rem;margin-bottom:8px}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:12px;border:1px solid transparent;font:inherit;font-weight:650;cursor:pointer;background:var(--royal);color:#fff;text-decoration:none;width:100%}
+.btn:disabled{opacity:.6;cursor:wait} .btn.ghost{background:transparent;border-color:var(--line);color:var(--text)} .btn.green{background:var(--green)} .btn.red{background:#fff;color:var(--red);border-color:var(--red)} .btn.wa{background:#1FA855}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.field{display:grid;gap:6px;margin-top:14px} .field label{font-size:.88rem;font-weight:600}
+input,textarea{font:inherit;min-height:46px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;width:100%}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-size:.85rem;font-weight:650}
+.pill.green{background:#E6F6EE;color:var(--green)} .pill.red{background:#FCECEA;color:var(--red)} .pill.amber{background:#FBF1DF;color:var(--amber)}
+.info{display:grid;gap:10px;margin:16px 0} .info div{display:flex;gap:10px} .info b{min-width:92px;color:var(--muted);font-weight:600}
+.msg{padding:12px 14px;border-radius:10px;margin-top:14px;font-weight:600} .msg.ok{background:#E6F6EE;color:var(--green)} .msg.err{background:#FCECEA;color:var(--red)}
+.foot{text-align:center;margin-top:26px;font-size:.82rem;color:var(--muted)} .foot a{color:var(--muted)}
+.loading{text-align:center;padding:40px 0;color:var(--muted)}
+@media (max-width:480px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="brand" href="index.html"><img src="icons/icon-192.png" alt="">Gestão do Reino</a>
+<div id="app"><div class="card loading">Carregando…</div></div>
+<p class="foot">Feito com o <a href="index.html">Gestão do Reino</a> · <a href="privacidade.html">Privacidade</a></p>
+</div>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const sb = createClient('https://ifttmkpmwcjsyoxofmry.supabase.co', 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd', { auth: { persistSession: false } });
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const dt = v => v ? new Date(v).toLocaleString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' }) : '';
+const q = new URLSearchParams(location.search);
+const fail = t => $('#app').innerHTML = `<div class="card"><h1>Ops</h1><p class="muted">${esc(t)}</p></div>`;
+const err = e => (e?.message || String(e)).replace(/^.*?: /, '');
+
+const token = q.get('t');
+const ST = { pendente: ['Aguardando sua resposta', 'amber'], confirmado: ['Você confirmou', 'green'], recusado: ['Você avisou que não pode', 'red'] };
+async function show(note) {
+  if (!/^[0-9a-f-]{36}$/i.test(token || '')) return fail('Link de escala inválido. Peça um novo link ao líder do ministério.');
+  const { data, error } = await sb.rpc('schedule_get', { p_token: token });
+  if (error) return fail('Não foi possível abrir a escala. Verifique sua internet e tente de novo.');
+  if (!data) return fail('Escala não encontrada. Talvez você tenha sido removido(a) dela. Fale com o líder do ministério.');
+  const past = new Date(data.quando) < new Date(Date.now() - 12 * 3600e3), canceled = data.escala_status !== 'ativa';
+  $('#app').innerHTML = `<div class="card">
+    <p class="muted small">${esc(data.igreja)}</p>
+    <h1>Olá, ${esc(data.pessoa)}!</h1><p class="muted">Você foi escalado(a) no <b>${esc(data.ministerio)}</b>.</p>
+    <div class="info"><div><b>Quando</b><span>${esc(dt(data.quando))}</span></div><div><b>Culto</b><span>${esc(data.escala)}</span></div>
+      ${data.funcao ? `<div><b>Função</b><span>${esc(data.funcao)}</span></div>` : ''}${data.observacoes ? `<div><b>Recado</b><span>${esc(data.observacoes)}</span></div>` : ''}</div>
+    <span class="pill ${ST[data.status][1]}">${ST[data.status][0]}</span>
+    ${canceled ? '<div class="msg err">Esta escala foi cancelada pelo líder.</div>' : past ? '<p class="muted small" style="margin-top:14px">Esta escala já passou.</p>' : `
+      <div class="field"><label for="n">Recado para o líder (opcional)</label><input id="n" maxlength="300" placeholder="Ex.: chego 10 minutos atrasado"></div>
+      <div class="row"><button class="btn green" data-r="confirmado">${data.status === 'confirmado' ? 'Confirmado ✓' : 'Confirmo presença'}</button><button class="btn red" data-r="recusado">Não vou poder</button></div>`}
+    ${note ? `<div class="msg ${note[1]}">${esc(note[0])}</div>` : ''}</div>`;
+  document.querySelectorAll('[data-r]').forEach(b => b.onclick = async () => {
+    document.querySelectorAll('[data-r]').forEach(x => x.disabled = true);
+    const { error } = await sb.rpc('schedule_respond', { p_token: token, p_status: b.dataset.r, p_note: $('#n')?.value || null });
+    if (error) return show([err(error), 'err']);
+    show(b.dataset.r === 'confirmado' ? ['Presença confirmada. Obrigado por servir!', 'ok'] : ['Tudo bem, o líder foi avisado.', 'ok']);
+  });
+}
+show();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Igreja — Gestão do Reino</title>
+<meta name="theme-color" content="#0B1F3A">
+
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+:root{--navy:#0B1F3A;--royal:#2453D6;--gold:#C9A24B;--green:#15935B;--red:#D2453B;--amber:#B7791F;--bg:#F4F6FA;--surface:#fff;--text:#14213A;--muted:#5B6782;--line:#E2E7F0}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{width:min(640px,92%);margin:0 auto;padding:28px 0 48px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:var(--navy);text-decoration:none;margin-bottom:22px}
+.brand img{width:32px;height:32px;border-radius:9px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 10px 30px -18px rgba(11,31,58,.35)}
+.card+.card{margin-top:14px}
+h1{font-size:1.5rem;line-height:1.2;margin-bottom:6px} h2{font-size:1.1rem;margin-bottom:8px}
+.muted{color:var(--muted)} .small{font-size:.88rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 20px;border-radius:12px;border:1px solid transparent;font:inherit;font-weight:650;cursor:pointer;background:var(--royal);color:#fff;text-decoration:none;width:100%}
+.btn:disabled{opacity:.6;cursor:wait} .btn.ghost{background:transparent;border-color:var(--line);color:var(--text)} .btn.green{background:var(--green)} .btn.red{background:#fff;color:var(--red);border-color:var(--red)} .btn.wa{background:#1FA855}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.field{display:grid;gap:6px;margin-top:14px} .field label{font-size:.88rem;font-weight:600}
+input,textarea{font:inherit;min-height:46px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;width:100%}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-size:.85rem;font-weight:650}
+.pill.green{background:#E6F6EE;color:var(--green)} .pill.red{background:#FCECEA;color:var(--red)} .pill.amber{background:#FBF1DF;color:var(--amber)}
+.info{display:grid;gap:10px;margin:16px 0} .info div{display:flex;gap:10px} .info b{min-width:92px;color:var(--muted);font-weight:600}
+.msg{padding:12px 14px;border-radius:10px;margin-top:14px;font-weight:600} .msg.ok{background:#E6F6EE;color:var(--green)} .msg.err{background:#FCECEA;color:var(--red)}
+.foot{text-align:center;margin-top:26px;font-size:.82rem;color:var(--muted)} .foot a{color:var(--muted)}
+.loading{text-align:center;padding:40px 0;color:var(--muted)}
+@media (max-width:480px){.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<a class="brand" href="index.html"><img src="icons/icon-192.png" alt="">Gestão do Reino</a>
+<div id="app"><div class="card loading">Carregando…</div></div>
+<p class="foot">Feito com o <a href="index.html">Gestão do Reino</a> · <a href="privacidade.html">Privacidade</a></p>
+</div>
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+const sb = createClient('https://ifttmkpmwcjsyoxofmry.supabase.co', 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd', { auth: { persistSession: false } });
+const $ = s => document.querySelector(s);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const dt = v => v ? new Date(v).toLocaleString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' }) : '';
+const q = new URLSearchParams(location.search);
+const fail = t => $('#app').innerHTML = `<div class="card"><h1>Ops</h1><p class="muted">${esc(t)}</p></div>`;
+const err = e => (e?.message || String(e)).replace(/^.*?: /, '');
+
+const s = (q.get('s') || '').toLowerCase();
+(async () => {
+  if (!/^[a-z0-9-]{3,40}$/.test(s)) return fail('Página não encontrada.');
+  const { data, error } = await sb.rpc('church_site_get', { p_slug: s });
+  if (error) return fail('Não foi possível abrir a página. Verifique sua internet e tente de novo.');
+  if (!data) return fail('Esta página não existe ou ainda não foi publicada pela igreja.');
+  document.title = data.igreja;
+  const wa = String(data.whatsapp || '').replace(/\D/g, ''), waN = wa.length === 10 || wa.length === 11 ? '55' + wa : wa;
+  const map = [data.endereco, data.cidade].filter(Boolean).join(', ');
+  $('#app').innerHTML = `<div class="card" style="background:var(--navy);color:#fff;border:0"><h1 style="font-size:1.8rem">${esc(data.igreja)}</h1>${data.cidade ? `<p style="opacity:.8">${esc(data.cidade)}</p>` : ''}</div>
+    ${data.sobre ? `<div class="card"><h2>Sobre nós</h2><p style="white-space:pre-line">${esc(data.sobre)}</p></div>` : ''}
+    ${data.horarios ? `<div class="card"><h2>Horários dos cultos</h2><p style="white-space:pre-line">${esc(data.horarios)}</p></div>` : ''}
+    ${map ? `<div class="card"><h2>Onde estamos</h2><p>${esc(map)}</p><p style="margin-top:12px"><a class="btn ghost" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(map)}">Ver no mapa</a></p></div>` : ''}
+    ${(data.eventos || []).length ? `<div class="card"><h2>Próximos eventos</h2><div class="info">${data.eventos.map(e => `<div style="display:block"><b style="display:block;color:var(--text)">${esc(e.titulo)}</b><span class="muted small">${esc(dt(e.inicio))}${e.local ? ' · ' + esc(e.local) : ''}</span>${e.codigo ? ` · <a class="small" href="evento.html?c=${encodeURIComponent(e.codigo)}">Inscrever-se</a>` : ''}</div>`).join('')}</div></div>` : ''}
+    ${data.pix ? `<div class="card"><h2>Dízimos e ofertas</h2><p class="muted small">Chave Pix</p><p style="font-weight:700;word-break:break-all;margin:6px 0 12px">${esc(data.pix)}</p><button class="btn ghost" id="cp">Copiar chave Pix</button></div>` : ''}
+    <div class="card"><h2>Fale com a gente</h2><div style="display:grid;gap:10px;margin-top:8px">
+      ${waN ? `<a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/${waN}?text=${encodeURIComponent('Olá! Vim pela página da igreja.')}">WhatsApp</a>` : ''}
+      ${/^https?:\/\//.test(data.instagram || '') ? `<a class="btn ghost" target="_blank" rel="noopener" href="${esc(data.instagram)}">Instagram</a>` : ''}
+      ${/^https?:\/\//.test(data.youtube || '') ? `<a class="btn ghost" target="_blank" rel="noopener" href="${esc(data.youtube)}">YouTube</a>` : ''}</div></div>`;
+  $('#cp')?.addEventListener('click', async e => { try { await navigator.clipboard.writeText(data.pix); e.target.textContent = 'Chave copiada ✓'; } catch { prompt('Copie a chave Pix:', data.pix); } });
+})();
+
+</script>
+</body>
+</html>

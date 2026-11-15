@@ -6,7 +6,8 @@
 <title>Gestão do Reino — Sistema de gestão para igrejas</title>
 <meta name="description" content="Gestão do Reino: membros, células, finanças, eventos, escalas e comunicação da sua igreja em um só lugar. Teste grátis por 14 dias.">
 <meta name="theme-color" content="#1e1b4b">
-<link rel="manifest" href="/manifest.webmanifest">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231e1b4b'/%3E%3Cpath d='M14 44l4-22 9 10 5-14 5 14 9-10 4 22z' fill='%23f5b301'/%3E%3C/svg%3E">
 <meta property="og:title" content="Gestão do Reino — Sistema de gestão para igrejas">
 <meta property="og:description" content="Organize membros, células, finanças e eventos da sua igreja. Teste grátis por 14 dias.">
@@ -28,9 +29,10 @@
   .btn:hover{transform:translateY(-1px)}
   .btn-gold{background:var(--gold);color:var(--ink);box-shadow:0 8px 22px -8px rgba(245,179,1,.7)}
   .btn-gold:hover{background:#ffc21a}
-  .btn-ghost{border-color:rgba(255,255,255,.35);color:#fff}
+  .btn-ghost{border-color:rgba(255,255,255,.35);color:#fff;background:transparent}
   .btn-ghost:hover{background:rgba(255,255,255,.08)}
   .btn-dark{background:var(--royal);color:#fff}
+  button.btn{font-family:inherit}
   .btn-outline{border-color:var(--line);background:#fff;color:var(--royal)}
   .eyebrow{display:inline-block;font-size:.8rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--violet)}
   h1,h2,h3{line-height:1.15;letter-spacing:-.02em}
@@ -49,6 +51,7 @@
   .nav-cta{display:flex;gap:.6rem;align-items:center}
   .nav-cta .login{font-size:.95rem;opacity:.9;padding:.5rem .8rem}
   .menu-btn{display:none;background:none;border:0;color:#fff;cursor:pointer}
+  @media (max-width:620px){.hide-sm{display:none}}
 
   /* Hero */
   .hero{background:radial-gradient(1200px 500px at 80% -10%,rgba(79,70,229,.55),transparent 60%),linear-gradient(180deg,var(--royal),var(--ink));color:#fff;padding:88px 0 120px;overflow:hidden}
@@ -175,6 +178,22 @@
   .msg a{text-decoration:underline}
   button[disabled]{opacity:.6;cursor:wait}
 
+  .seals{display:flex;flex-wrap:wrap;gap:.5rem 1rem;margin-top:1rem;font-size:.85rem;opacity:.85}
+  .seals span{display:inline-flex;align-items:center;gap:.4rem}.seals span::before{content:"";width:16px;height:16px;border-radius:50%;background:rgba(245,179,1,.2) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f5b301' stroke-width='3.5'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/10px no-repeat}
+  .wa-float{position:fixed;right:18px;bottom:18px;z-index:60;width:58px;height:58px;border-radius:50%;background:#1FA855;display:grid;place-items:center;box-shadow:0 12px 26px -8px rgba(0,0,0,.45);transition:transform .15s}
+  .wa-float:hover{transform:scale(1.06)}
+  .cookie{position:fixed;left:18px;right:96px;bottom:18px;z-index:70;max-width:640px;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:16px 18px;box-shadow:0 20px 40px -18px rgba(15,13,46,.4);display:none}
+  .cookie p{font-size:.88rem;color:var(--muted)}.cookie .acts{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}.cookie .btn{padding:.55rem 1rem;font-size:.88rem}
+  .more{display:none}.plan.open .more{display:block}.plan ul .more{display:none}.plan.open ul .more{display:flex}
+  .see{background:none;border:0;color:var(--violet);font-weight:650;cursor:pointer;padding:0;margin:-.8rem 0 1.2rem;text-align:left;font:inherit;font-size:.92rem}
+  .plan.pop .see{color:var(--gold)}
+  .economy{font-size:.82rem;font-weight:700;color:var(--ok);min-height:1.2em}.plan.pop .economy{color:#86efac}
+  .shots{display:grid;grid-template-columns:1.4fr 1.4fr .75fr;gap:18px;margin-top:40px;align-items:start}
+  .shots figure{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+  .shots img{display:block;width:100%;height:auto;border-bottom:1px solid var(--line)}.shots figcaption{padding:12px 14px;font-size:.9rem;color:var(--muted);text-align:left}
+  .install-box{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.6rem;align-items:center}
+  .install-hint{font-size:.85rem;color:var(--muted);margin-top:.8rem;max-width:520px}
+  @media (max-width:960px){.shots{grid-template-columns:1fr}.cookie{right:18px;bottom:90px}}
   footer{padding:56px 0 36px;color:var(--muted);font-size:.92rem}
   .foot{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:32px}
   .foot h4{color:var(--ink);margin-bottom:.8rem;font-size:.95rem}
@@ -211,12 +230,14 @@
     </a>
     <ul id="menu">
       <li><a href="#recursos">Recursos</a></li>
+      <li><a href="#telas">Telas</a></li>
       <li><a href="#app">App</a></li>
       <li><a href="#planos">Planos</a></li>
       <li><a href="#faq">Dúvidas</a></li>
     </ul>
     <div class="nav-cta">
       <a href="app.html#entrar" class="login">Entrar</a>
+      <button class="btn btn-ghost hide-sm" data-install style="padding:.6rem 1rem">Baixar app</button>
       <a href="#teste" class="btn btn-gold">Teste grátis</a>
       <button class="menu-btn" aria-label="Abrir menu" onclick="document.getElementById('menu').classList.toggle('open')">
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -232,12 +253,13 @@
     <div>
       <span class="pill"><i></i> Feito para igrejas brasileiras</span>
       <h1>Sua igreja organizada para <em>cuidar de pessoas</em>, não de planilhas.</h1>
-      <p>Membros, células, dízimos e ofertas, eventos, escalas de ministério e comunicação: tudo no Gestão do Reino, no computador ou no celular.</p>
+      <p>Membros e famílias, escalas com confirmação pelo WhatsApp, células, eventos, escola bíblica e o financeiro com prestação de contas em PDF. Tudo no Gestão do Reino, no computador ou no app.</p>
       <div class="hero-actions">
         <a href="#teste" class="btn btn-gold">Começar teste grátis de 14 dias →</a>
-        <a href="#recursos" class="btn btn-ghost">Ver recursos</a>
+        <button class="btn btn-ghost" data-install>Baixar o app</button>
       </div>
-      <div class="hero-note"><span>Sem cartão de crédito</span><span>Cancele quando quiser</span><span>Suporte em português</span></div>
+      <div class="hero-note"><span>Sem cartão de crédito</span><span>Membros ilimitados</span><span>Cancele quando quiser</span></div>
+      <div class="seals"><span>Dados protegidos e isolados por igreja</span><span>Servidores no Brasil</span><span>Sem instalação no computador</span></div>
     </div>
 
     <div class="mock" aria-hidden="true">
@@ -260,7 +282,7 @@
 </section>
 
 <!-- NÚMEROS -->
-<div class="trust">
+<div class="trust" id="trust">
   <div class="wrap">
     <div><strong>14 dias</strong><small>de teste grátis</small></div>
     <div><strong>100% web</strong><small>+ app Android</small></div>
@@ -280,12 +302,12 @@
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-7 7-7s7 3 7 7"/><path d="M16 4a4 4 0 010 8M22 21c0-3-2-6-5-7"/></svg></div>
         <h3>Membros e visitantes</h3>
-        <p>Cadastro completo, famílias, aniversários, batismos, histórico e acompanhamento de novos convertidos.</p>
+        <p>Cadastro completo com famílias vinculadas, aniversários, conversão e batismo, e histórico pastoral com registros privados.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg></div>
         <h3>Células e grupos</h3>
-        <p>Líderes, multiplicação, presença em cada encontro e relatórios semanais enviados pelo celular.</p>
+        <p>Líderes, membros e lista de presença de cada encontro pelo celular, com a frequência nos relatórios.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="13" rx="2"/><path d="M2 10h20M6 15h4"/></svg></div>
@@ -295,17 +317,17 @@
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
         <h3>Eventos e agenda</h3>
-        <p>Calendário da igreja, inscrições online, controle de vagas e check-in na entrada.</p>
+        <p>Agenda da igreja e inscrição por link no WhatsApp, com controle de vagas, lista em PDF e presença.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2h9"/></svg></div>
         <h3>Ministérios e escalas</h3>
-        <p>Escalas de louvor, recepção, mídia e infantil, com confirmação de cada voluntário.</p>
+        <p>Monte a escala, envie pelo WhatsApp e cada voluntário confirma com um toque. Avisamos quando alguém está em duas escalas no mesmo dia.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-        <h3>Comunicação</h3>
-        <p>Avisos, mural e notificações para membros, líderes ou ministérios específicos.</p>
+        <h3>Site da igreja</h3>
+        <p>Página pública com horários, endereço, eventos com inscrição, Pix para ofertas e botão de WhatsApp, pronta para o Instagram.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
@@ -314,15 +336,30 @@
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
-        <h3>Permissões por função</h3>
-        <p>Pastor, secretaria, tesouraria e líderes: cada um vê apenas o que precisa.</p>
+        <h3>Patrimônio e histórico</h3>
+        <p>Inventário dos bens com foto e PDF, e o registro de quem criou ou alterou cada informação.</p>
       </div>
       <div class="feat">
         <div class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></div>
-        <h3>Sede e congregações</h3>
-        <p>Gerencie várias congregações com visão consolidada para a sede.</p>
+        <h3>Escola bíblica e discipulado</h3>
+        <p>Turmas com chamada, estudos e materiais, e o acompanhamento de cada discípulo e seus encontros.</p>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- VEJA POR DENTRO -->
+<section id="telas" style="padding-top:24px">
+  <div class="wrap center">
+    <span class="eyebrow">Veja por dentro</span>
+    <h2>Telas reais do sistema</h2>
+    <p class="lead">Escalas com confirmação pelo WhatsApp, caixa com saldo e prestação de contas, e o link que o voluntário abre no celular para confirmar.</p>
+    <div class="shots">
+      <figure><img src="img/tela-escalas.webp" alt="Tela de escalas com quem confirmou e aviso de conflito" loading="lazy" width="1200" height="760"><figcaption>Escalas: quem confirmou, quem não pode e aviso de conflito no mesmo dia.</figcaption></figure>
+      <figure><img src="img/tela-caixa.webp" alt="Tela do caixa com saldo, entradas, saídas e lançamentos" loading="lazy" width="1200" height="760"><figcaption>Caixa: saldo do período, entradas, saídas e PDF para a prestação de contas.</figcaption></figure>
+      <figure><img src="img/tela-confirmar.webp" alt="Página de confirmação da escala no celular" loading="lazy" width="700" height="1257" style="max-height:420px;object-fit:cover;object-position:top"><figcaption>No celular do voluntário: confirma com um toque, sem baixar nada.</figcaption></figure>
+    </div>
+    <p class="muted" style="font-size:.82rem;margin-top:14px">Imagens do sistema com dados de exemplo.</p>
   </div>
 </section>
 
@@ -330,20 +367,23 @@
 <section id="app" style="background:#fff">
   <div class="wrap split">
     <div>
-      <span class="eyebrow">App Android</span>
-      <h2>A igreja na palma da mão de cada membro</h2>
-      <p class="lead">Líderes registram presença da célula, voluntários confirmam escalas e membros acompanham a agenda, tudo pelo celular.</p>
+      <span class="eyebrow">App para celular</span>
+      <h2>Instale o app agora, direto do site</h2>
+      <p class="lead">Líderes registram presença da célula, voluntários confirmam escalas e a tesouraria lança o caixa, tudo pelo celular. Funciona em Android e iPhone.</p>
       <ul class="checks">
         <li>Relatório de célula em menos de um minuto</li>
         <li>Confirmação de escala com um toque</li>
-        <li>Inscrição em eventos e carteirinha de membro</li>
-        <li>Avisos e notificações da igreja</li>
-        <li>Funciona também no navegador do iPhone e do computador</li>
+        <li>Inscrição em eventos pelo link</li>
+        <li>Ícone na tela inicial e abertura em tela cheia</li>
+        <li>Funciona também no computador, pelo navegador</li>
       </ul>
-      <a class="gp" href="#teste" aria-label="Disponível em breve no Google Play">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 3l10 9-10 9z" fill="#34d399"/><path d="M4 3l13 7-3 2z" fill="#60a5fa"/><path d="M4 21l13-7-3-2z" fill="#f87171"/><path d="M17 10l3 2-3 2-3-2z" fill="#fbbf24"/></svg>
-        <span>Em breve no<b>Google Play</b></span>
-      </a>
+      <div class="install-box">
+        <button class="btn btn-dark" data-install>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Baixar o app
+        </button>
+        <a class="btn btn-outline" href="app.html#entrar">Abrir no navegador</a>
+      </div>
+      <p class="install-hint" id="ihint">No Android, toque em <b>Baixar o app</b> e confirme. No iPhone, abra no Safari, toque em <b>Compartilhar</b> e depois em <b>Adicionar à Tela de Início</b>. Em breve também na Google Play.</p>
     </div>
     <div class="phone" aria-hidden="true">
       <div class="screen">
@@ -381,60 +421,66 @@
     <p class="lead">Todos os planos começam com 14 dias grátis e acesso completo.</p>
     <div class="toggle" role="group" aria-label="Período de cobrança">
       <button class="on" data-period="m">Mensal</button>
-      <button data-period="a">Anual <span class="save">-2 meses</span></button>
+      <button data-period="a">Anual <span class="save">2 meses grátis</span></button>
     </div>
 
     <div class="plans">
       <div class="plan">
         <h3>Básico</h3>
-        <p class="muted">Para igrejas com uma congregação que querem organizar membros e finanças.</p>
-        <div class="price"><small>R$</small><strong data-m="19,90" data-a="19,90">19,90</strong><small class="per">/mês</small></div>
-        <p class="muted bill" data-m="cobrado mensalmente" data-a="R$ 238,80 por ano">cobrado mensalmente</p>
+        <p class="muted">Para igrejas com uma congregação.</p>
+        <div class="price"><small>R$</small><strong data-m="19,90" data-a="16,58">19,90</strong><small class="per">/mês</small></div>
+        <p class="muted bill" data-m="cobrado mensalmente" data-a="R$ 199 por ano">cobrado mensalmente</p>
+        <p class="economy" data-m="" data-a="2 meses grátis: economize R$ 39,80"></p>
         <ul>
-          <li>1 congregação</li>
-          <li>Cadastro de membros e departamentos</li>
-          <li>Controle de caixa: entradas e saídas</li>
-          <li>Contas a pagar e a receber</li>
-          <li>Exportação do caixa em PDF por período</li>
-          <li>Relatórios básicos</li>
-          <li>Até 3 usuários</li>
+          <li>Membros ilimitados</li>
+          <li>Escalas com confirmação pelo WhatsApp</li>
+          <li>Caixa, contas e PDF de prestação de contas</li>
+          <li class="more">1 congregação e até 3 usuários</li>
+          <li class="more">Famílias e histórico do membro</li>
+          <li class="more">Grupos e células com presença</li>
+          <li class="more">Eventos com inscrição online</li>
+          <li class="more">Escola bíblica, estudos e discipulado</li>
+          <li class="more">Patrimônio com PDF</li>
+          <li class="more">Site da igreja e app para celular</li>
         </ul>
+        <button class="see" type="button">Ver todos os recursos</button>
         <a href="#teste" data-plan="basico" class="btn btn-outline choose">Começar teste grátis</a>
       </div>
 
       <div class="plan pop">
         <span class="badge">Mais escolhido</span>
         <h3>Profissional</h3>
-        <p class="muted">Para igrejas com várias congregações e tesouraria organizada por fundos.</p>
+        <p class="muted">Para igrejas com congregações e tesouraria organizada.</p>
         <div class="price"><small>R$</small><strong data-m="49,90" data-a="41,58">49,90</strong><small class="per">/mês</small></div>
         <p class="muted bill" data-m="cobrado mensalmente" data-a="R$ 499 por ano">cobrado mensalmente</p>
+        <p class="economy" data-m="" data-a="2 meses grátis: economize R$ 99,80"></p>
         <ul>
-          <li>Múltiplas congregações</li>
-          <li>Até 10 usuários</li>
-          <li>Controle de caixa: entradas e saídas</li>
-          <li>Contas a pagar e a receber</li>
-          <li>Exportação do caixa em PDF por período</li>
-          <li>Tesouraria com fundos e aprovações</li>
-          <li>Relatórios completos e prestação de contas</li>
-          <li>Permissões avançadas</li>
+          <li>Tudo do Básico</li>
+          <li>Várias congregações e até 10 usuários</li>
+          <li>Histórico de alterações e permissões avançadas</li>
+          <li class="more">Tesouraria com fundos e aprovações</li>
+          <li class="more">Relatórios completos e prestação de contas</li>
+          <li class="more">Membros ilimitados</li>
         </ul>
+        <button class="see" type="button">Ver todos os recursos</button>
         <a href="#teste" data-plan="profissional" class="btn btn-gold choose">Começar teste grátis</a>
       </div>
 
       <div class="plan">
         <h3>Enterprise</h3>
-        <p class="muted">Para ministérios e convenções com muitas unidades e gestão centralizada.</p>
-        <div class="price"><small>R$</small><strong data-m="149" data-a="124,92">149</strong><small class="per">/mês</small></div>
-        <p class="muted bill" data-m="cobrado mensalmente" data-a="R$ 1.499 por ano">cobrado mensalmente</p>
+        <p class="muted">Para ministérios e convenções com muitas unidades.</p>
+        <div class="price"><small>R$</small><strong data-m="149" data-a="124,17">149</strong><small class="per">/mês</small></div>
+        <p class="muted bill" data-m="cobrado mensalmente" data-a="R$ 1.490 por ano">cobrado mensalmente</p>
+        <p class="economy" data-m="" data-a="2 meses grátis: economize R$ 298,00"></p>
         <ul>
+          <li>Tudo do Profissional</li>
           <li>Unidades e usuários ampliados</li>
-          <li>Administração centralizada</li>
-          <li>Controle de caixa, contas a pagar e a receber</li>
-          <li>Exportação do caixa em PDF por período</li>
-          <li>Relatórios gerenciais consolidados</li>
-          <li>Configurações personalizadas</li>
-          <li>Implantação assistida</li>
+          <li>Suporte prioritário e implantação assistida</li>
+          <li class="more">Administração centralizada</li>
+          <li class="more">Relatórios gerenciais consolidados</li>
+          <li class="more">Configurações personalizadas</li>
         </ul>
+        <button class="see" type="button">Ver todos os recursos</button>
         <a href="#teste" data-plan="enterprise" class="btn btn-dark choose">Começar teste grátis</a>
       </div>
     </div>
@@ -470,7 +516,9 @@
       <details><summary>Os dados da minha igreja ficam separados de outras igrejas?</summary><p>Sim. Cada igreja tem o próprio ambiente, isolado no banco de dados por regras de segurança. Ninguém de outra igreja tem acesso às suas informações.</p></details>
       <details><summary>O sistema segue a LGPD?</summary><p>Sim. Os dados ficam em servidores no Brasil (São Paulo), com acesso controlado por função, e você pode exportar ou excluir os dados quando quiser.</p></details>
       <details><summary>Consigo importar minha planilha de membros?</summary><p>Sim. Você envia a planilha em Excel ou CSV e o sistema faz a importação dos membros.</p></details>
-      <details><summary>Tem aplicativo?</summary><p>Sim. O app Android estará na Google Play, e o sistema também funciona no navegador do celular (inclusive iPhone), podendo ser instalado na tela inicial.</p></details>
+      <details><summary>Tem aplicativo?</summary><p>Sim. Instale agora pelo botão <b>Baixar o app</b>, no Android ou no iPhone: ele fica na tela inicial e abre em tela cheia. Em breve também na Google Play.</p></details>
+      <details><summary>Tem limite de membros?</summary><p>Não. Todos os planos têm membros ilimitados: a igreja cresce sem precisar trocar de plano.</p></details>
+      <details><summary>Como funciona a escala pelo WhatsApp?</summary><p>Você monta a escala e toca em WhatsApp ao lado de cada voluntário: a mensagem já sai pronta com um link. A pessoa confirma ou avisa que não pode com um toque, sem baixar nada, e você vê na hora quem confirmou.</p></details>
       <details><summary>Posso mudar de plano ou cancelar?</summary><p>A qualquer momento, direto no painel, sem multa e sem fidelidade.</p></details>
     </div>
   </div>
@@ -509,7 +557,7 @@
         </div>
         <button class="btn btn-gold" type="submit" id="btnSignup" style="justify-content:center">Criar conta e começar teste →</button>
         <div class="msg" id="msg" role="status"></div>
-        <p class="fine">Ao continuar, você concorda com os <a href="/termos" style="text-decoration:underline">Termos de Uso</a> e a <a href="/privacidade" style="text-decoration:underline">Política de Privacidade</a>.</p>
+        <p class="fine">Ao continuar, você concorda com os <a href="termos.html" style="text-decoration:underline">Termos de Uso</a> e a <a href="privacidade.html" style="text-decoration:underline">Política de Privacidade</a>.</p>
       </form>
     </div>
   </div>
@@ -528,18 +576,27 @@
       </div>
       <div><h4>Produto</h4><ul><li><a href="#recursos">Recursos</a></li><li><a href="#planos">Planos</a></li><li><a href="#app">App Android</a></li></ul></div>
       <div><h4>Empresa</h4><ul><li><a href="mailto:contato@gestaodoreino.com.br">Contato</a></li><li><a href="#faq">Dúvidas</a></li></ul></div>
-      <div><h4>Legal</h4><ul><li><a href="/termos">Termos de Uso</a></li><li><a href="/privacidade">Privacidade (LGPD)</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="termos.html">Termos de Uso</a></li><li><a href="privacidade.html">Privacidade (LGPD)</a></li></ul></div>
     </div>
     <div class="copy"><span>© <span id="ano"></span> Gestão do Reino. Todos os direitos reservados.</span><span><a href="app.html#entrar">Acessar o sistema</a></span></div>
   </div>
 </footer>
 
+<a class="wa-float" id="waf" target="_blank" rel="noopener" aria-label="Falar com a equipe no WhatsApp" href="#">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.6 11.6 0 0 0 4.4 3.9c1.7.7 2.3.8 3.1.6a2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.3-.2-.6-.3z"/></svg>
+</a>
+<div class="cookie" id="cookie" role="dialog" aria-label="Aviso de cookies">
+  <p>Usamos cookies essenciais para o site funcionar e, se você permitir, para medir nossos anúncios. Saiba mais na <a href="privacidade.html" style="text-decoration:underline">Política de Privacidade</a> (LGPD).</p>
+  <div class="acts"><button class="btn btn-gold" data-ck="all">Aceitar todos</button><button class="btn btn-outline" data-ck="essential">Só os essenciais</button></div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   /* ===== CONFIGURAÇÃO ===== */
   var SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd'; // chave pública (pode ficar no site)
   var APP_URL = 'app.html';   // endereço do sistema (mesma pasta do site)
+  var WHATSAPP_VENDAS = '5533997305310';   // WhatsApp do botão flutuante (DDI + DDD + número)
+  var META_PIXEL_ID = '';   // ID do Meta Pixel (anúncios do Instagram/Facebook); só carrega se a pessoa aceitar os cookies
   /* ======================== */
 
   document.getElementById('ano').textContent = new Date().getFullYear();
@@ -551,7 +608,46 @@
       b.classList.add('on');
       var p = b.dataset.period;
       document.querySelectorAll('.price strong').forEach(function(s){ s.textContent = s.dataset[p]; });
-      document.querySelectorAll('.bill').forEach(function(t){ t.textContent = t.dataset[p]; });
+      document.querySelectorAll('.bill,.economy').forEach(function(t){ t.textContent = t.dataset[p]; });
+    });
+  });
+
+  // Lista completa de recursos de cada plano
+  document.querySelectorAll('.see').forEach(function(b){
+    b.addEventListener('click', function(){ var pl = b.closest('.plan'); pl.classList.toggle('open'); b.textContent = pl.classList.contains('open') ? 'Ver menos' : 'Ver todos os recursos'; });
+  });
+
+  // WhatsApp de vendas
+  document.getElementById('waf').href = 'https://wa.me/' + WHATSAPP_VENDAS + '?text=' + encodeURIComponent('Olá! Vim pelo site do Gestão do Reino e quero saber mais sobre o sistema.');
+
+  // Aviso de cookies (LGPD) e medição de anúncios só com consentimento
+  function loadPixel(){
+    if (!META_PIXEL_ID) return;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', META_PIXEL_ID); fbq('track', 'PageView');
+  }
+  var ck = null; try { ck = localStorage.getItem('gr-cookies'); } catch (e) {}
+  if (!ck) document.getElementById('cookie').style.display = 'block'; else if (ck === 'all') loadPixel();
+  document.querySelectorAll('[data-ck]').forEach(function(b){
+    b.addEventListener('click', function(){ try { localStorage.setItem('gr-cookies', b.dataset.ck); } catch (e) {} document.getElementById('cookie').style.display = 'none'; if (b.dataset.ck === 'all') loadPixel(); });
+  });
+
+  // Instalar o app (PWA)
+  var installEvt = null;
+  var isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  var standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(function(){});
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); installEvt = e; });
+  window.addEventListener('appinstalled', function(){ installEvt = null; showHint('App instalado! Procure o ícone Gestão do Reino na tela inicial.'); });
+  function showHint(t){ var h = document.getElementById('ihint'); h.innerHTML = t; h.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+  document.querySelectorAll('[data-install]').forEach(function(b){
+    if (standalone) { b.textContent = 'Abrir o sistema'; }
+    b.addEventListener('click', function(){
+      if (standalone) { location.href = APP_URL; return; }
+      if (installEvt) { installEvt.prompt(); installEvt.userChoice.then(function(){ installEvt = null; }); return; }
+      location.hash = 'app';
+      showHint(isIOS ? 'No iPhone: abra este site no <b>Safari</b>, toque em <b>Compartilhar</b> (o quadrado com a seta) e depois em <b>Adicionar à Tela de Início</b>.'
+        : 'Toque nos <b>três pontinhos</b> do Chrome e escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>. No computador, use o ícone de instalar na barra de endereço.');
     });
   });
 
@@ -596,6 +692,13 @@
     await sb.auth.updateUser({ data: { igreja_pendente: null } });
     return true;
   }
+
+  // Prova social com números reais (só mostra a partir de 10 igrejas)
+  if (sb) sb.rpc('public_platform_stats').then(function(r){
+    var d = r && r.data; if (!d || d.igrejas < 10) return;
+    var f = function(n){ return Number(n).toLocaleString('pt-BR'); };
+    document.querySelector('#trust .wrap').innerHTML = '<div><strong>' + f(d.igrejas) + '</strong><small>igrejas usando</small></div><div><strong>' + f(d.membros) + '</strong><small>membros cadastrados</small></div><div><strong>' + f(d.eventos) + '</strong><small>eventos organizados</small></div><div><strong>14 dias</strong><small>de teste grátis</small></div>';
+  });
 
   // Volta do link de confirmação de e-mail: termina de criar a igreja
   if (sb) {

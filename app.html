@@ -7,6 +7,10 @@
 <meta name="theme-color" content="#0B1F3A">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1F3A'/%3E%3Cpath d='M16 42h32v5H16zM18 40l4-16 7 8 3-12 3 12 7-8 4 16z' fill='%23C9A24B'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -152,6 +156,16 @@ tr:last-child td{border-bottom:0}
 .v-out{color:var(--red);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
 tr.canceled td{opacity:.6}tr.canceled .v-in,tr.canceled .v-out{text-decoration:line-through}
 .kpi strong.mk{font-size:1.45rem}.kpi strong.pos{color:var(--green)}.kpi strong.neg{color:var(--red)}
+.grid2>*,.grid3>*{min-width:0}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;border:0}.fgrid .full{grid-column:1/-1}fieldset{border:0;min-width:0}
+.checklist{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;max-height:280px;overflow:auto;padding:10px;border:1px solid var(--line);border-radius:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.sched{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.sched-card{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--surface-2)}.sched-card header{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.sched-card.canceled{opacity:.6}
+.btn.wa{background:#1FA855;color:#fff}.btn.wa:hover{background:#178A45}
+.timeline-mini{display:grid;gap:12px;max-height:320px;overflow:auto;padding-left:14px;border-left:2px solid var(--line)}
+tr.canceled td{opacity:.6}
 @media (max-width:1000px){.kpis{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){
   .auth{grid-template-columns:1fr}.auth-side{display:none}
@@ -162,7 +176,7 @@ tr.canceled td{opacity:.6}tr.canceled .v-in,tr.canceled .v-out{text-decoration:l
   .top{padding:12px 16px}.top h1{font-size:1.1rem}
   main.content{padding:18px 14px}
   .user-btn span{display:none}
-  .grid2,.grid3{grid-template-columns:1fr}
+  .grid2,.grid3,.fgrid{grid-template-columns:1fr}.sched{grid-template-columns:1fr}
   .hide-sm{display:none}
   .mobile-only{display:block}
 }
@@ -178,7 +192,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* ===== Conexão com o banco (chave pública; a segurança fica nas políticas RLS) ===== */
 const SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd';
-const APP_VERSION = '0.4.1';
+const APP_VERSION = '0.5.0';
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
 /* ===== Utilidades ===== */
@@ -247,6 +261,17 @@ const I = {
   menu: icon('<path d="M4 7h16M4 12h16M4 17h16"/>'),
   cash: icon('<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 10v4M18 10v4"/>'),
   bill: icon('<path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6M9 13h7M9 17h5"/>'),
+  group: icon('<circle cx="12" cy="7" r="3"/><circle cx="5" cy="10" r="2"/><circle cx="19" cy="10" r="2"/><path d="M7 21v-2a5 5 0 0 1 10 0v2M2 19a3 3 0 0 1 3-3M22 19a3 3 0 0 0-3-3"/>'),
+  family: icon('<circle cx="8" cy="6" r="3"/><circle cx="16" cy="6" r="3"/><circle cx="12" cy="14" r="2"/><path d="M3 21v-3a5 5 0 0 1 5-5M21 21v-3a5 5 0 0 0-5-5M9 21v-1a3 3 0 0 1 6 0v1"/>'),
+  music: icon('<path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>'),
+  cal: icon('<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h2M14 14h2M8 18h2"/>'),
+  check: icon('<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/>'),
+  book: icon('<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>'),
+  box: icon('<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8M12 13v8"/>'),
+  report: icon('<path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6"/><rect x="12" y="8" width="3" height="10"/><rect x="17" y="5" width="3" height="13"/>'),
+  hist: icon('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>'),
+  globe: icon('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'),
+  phone: icon('<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/>'),
   moon: icon('<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>'),
 };
 const markSvg = '<svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 50h48v6H8zM11 46l6-26 11 13 4-19 4 19 11-13 6 26z" fill="#C9A24B"/></svg>';
@@ -382,18 +407,23 @@ const orgOperational = () => S.org && ['trial', 'active'].includes(S.org.status)
 const roleName = r => ({ admin: 'Administrador', pastor: 'Pastor', tesoureiro: 'Tesoureiro', secretario: 'Secretário', lider: 'Líder de departamento', visualizador: 'Visualizador' }[r] || r);
 
 /* ===== Layout interno ===== */
-const TITLES = { painel: 'Painel', membros: 'Membros', igreja: 'Minha igreja', versoes: 'Versões e atualizações', admin: 'Visão geral da plataforma', 'admin-igrejas': 'Igrejas clientes', 'admin-planos': 'Planos e preços', 'admin-financeiro': 'Financeiro da plataforma', 'criar-igreja': 'Cadastrar igreja', caixa: 'Financeiro — Caixa', contas: 'Financeiro — Contas a pagar e a receber', 'fin-config': 'Financeiro — Caixas e categorias' };
+const TITLES = { painel: 'Painel', membros: 'Membros', igreja: 'Minha igreja', versoes: 'Versões e atualizações', admin: 'Visão geral da plataforma', 'admin-igrejas': 'Igrejas clientes', 'admin-planos': 'Planos e preços', 'admin-financeiro': 'Financeiro da plataforma', 'criar-igreja': 'Cadastrar igreja', caixa: 'Financeiro — Caixa', contas: 'Financeiro — Contas a pagar e a receber', 'fin-config': 'Financeiro — Caixas e categorias', familias: 'Famílias', grupos: 'Grupos e células', ministerios: 'Ministérios', escalas: 'Escalas', eventos: 'Eventos', ensino: 'Ensino — Escola bíblica', estudos: 'Ensino — Estudos e materiais', discipulado: 'Ensino — Discipulado', patrimonio: 'Patrimônio', relatorios: 'Relatórios', historico: 'Histórico de alterações', site: 'Site da igreja' };
 function shell(route, inner) {
   const nav = (r, ic, label) => `<a class="nav ${route === r ? 'on' : ''}" href="#${r}">${ic}<span>${label}</span></a>`;
   const name = S.profile?.full_name || S.user.email;
   root.innerHTML = `<div class="shell">
     <aside class="side" id="side">
       <a class="brand" href="#painel"><span class="mark">${markSvg}</span>Gestão do Reino</a>
-      ${S.org ? `<div class="sec">${esc(S.org.name)}</div>${nav('painel', I.home, 'Painel')}${nav('membros', I.users, 'Membros')}${canSeeFin() ? `<div class="sec">Financeiro</div>${nav('caixa', I.cash, 'Caixa')}${nav('contas', I.bill, 'Contas a pagar e receber')}` : ''}${nav('igreja', I.church, 'Minha igreja')}`
+      ${S.org ? `<div class="sec">${esc(S.org.name)}</div>${nav('painel', I.home, 'Painel')}
+        <div class="sec">Pessoas</div>${nav('membros', I.users, 'Membros')}${nav('familias', I.family, 'Famílias')}${nav('grupos', I.group, 'Grupos e células')}
+        <div class="sec">Ministérios</div>${nav('ministerios', I.music, 'Ministérios')}${nav('escalas', I.check, 'Escalas')}${nav('eventos', I.cal, 'Eventos')}
+        <div class="sec">Ensino</div>${nav('ensino', I.book, 'Escola bíblica')}
+        ${canSeeFin() ? `<div class="sec">Financeiro</div>${nav('caixa', I.cash, 'Caixa')}${nav('contas', I.bill, 'Contas a pagar e receber')}` : ''}
+        <div class="sec">Administração</div>${nav('patrimonio', I.box, 'Patrimônio')}${nav('relatorios', I.report, 'Relatórios')}${nav('site', I.globe, 'Site da igreja')}${canAudit() ? nav('historico', I.hist, 'Histórico de alterações') : ''}${nav('igreja', I.church, 'Minha igreja')}`
         : (!S.isAdmin ? nav('criar-igreja', I.church, 'Cadastrar igreja') : '')}
       ${S.isAdmin ? `<div class="sec">Proprietário</div>${nav('admin', I.chart, 'Visão geral')}${nav('admin-financeiro', I.money, 'Financeiro')}${nav('admin-igrejas', I.church, 'Igrejas clientes')}${nav('admin-planos', I.tag, 'Planos e preços')}` : ''}
       ${S.isAdmin ? `<div class="sec">Sistema</div>${nav('versoes', I.ver, 'Versões e atualizações')}` : ''}
-      <div class="grow"></div><div class="ver">Versão ${APP_VERSION}</div>
+      <div class="grow"></div>${isStandalone() ? '' : `<a class="nav" href="#" data-install-nav>${I.phone}<span>Instalar o app</span></a>`}<div class="ver">Versão ${APP_VERSION}</div>
     </aside>
     <div>
       <div class="top">
@@ -404,12 +434,14 @@ function shell(route, inner) {
             <div class="menu hidden" id="um"><div class="who">${esc(S.user.email)}${S.role ? '<br>' + roleName(S.role) : ''}${S.isAdmin ? '<br>Proprietário da plataforma' : ''}</div>
               <button data-a="perfil">Meu perfil</button>
               <button data-a="senha">Alterar senha</button>
+              ${isStandalone() ? '' : '<button data-a="instalar">Instalar o app no celular</button>'}
               <button data-a="sair">Sair</button></div></div>
         </div>
       </div>
       <main class="content" id="main">${inner}</main>
     </div></div>`;
   $('#mt').onclick = () => $('#side').classList.toggle('open');
+  $('[data-install-nav]')?.addEventListener('click', e => { e.preventDefault(); installApp(); });
   $('#side').addEventListener('click', e => { if (e.target.closest('a.nav')) $('#side').classList.remove('open'); });
   $('#tt').onclick = () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
   $('#ub').onclick = e => { e.stopPropagation(); $('#um').classList.toggle('hidden'); };
@@ -418,6 +450,7 @@ function shell(route, inner) {
 }
 function userAction(a) {
   if (a === 'sair') return sb.auth.signOut();
+  if (a === 'instalar') return installApp();
   if (a === 'perfil') return modal('Meu perfil', `<div class="stack">
       <div class="field"><label>Nome completo</label><input name="full_name" value="${esc(S.profile?.full_name)}" required></div>
       <div class="field"><label>Telefone</label><input name="phone" value="${esc(S.profile?.phone)}" inputmode="tel"></div></div>`,
@@ -474,7 +507,17 @@ async function pagePainel() {
         ${bdays.length ? `<table><tbody>${bdays.map(b => `<tr><td>${esc(b.full_name)}</td><td class="muted" style="text-align:right">dia ${b.birth_date.slice(8)}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Nenhum aniversariante neste mês.</div>'}</div>
     </div>
     <div id="finCard"></div>
-    <div class="card" style="margin-top:14px"><h3>Próximos módulos</h3><p class="muted" style="margin-top:6px">Congregações, departamentos, tesouraria com fundos e aprovações e relatórios avançados estão em desenvolvimento.${S.isAdmin ? ' Acompanhe em <a href="#versoes">Versões e atualizações</a>.' : ''}</p></div>`;
+    <div class="grid2" style="margin-top:14px" id="agenda"></div>`;
+  {
+    const nowIso = new Date(Date.now() - 6 * 3600e3).toISOString();
+    const [{ data: evs }, { data: scs }] = await Promise.all([
+      sb.from('events').select('title,starts_at,location,status').eq('organization_id', org).eq('status', 'ativo').gte('starts_at', nowIso).order('starts_at').limit(5),
+      sb.from('schedules').select('id,title,starts_at,status').eq('organization_id', org).eq('status', 'ativa').gte('starts_at', nowIso).order('starts_at').limit(5)]);
+    if ($('#agenda')) $('#agenda').innerHTML = `<div class="card"><div class="card-head"><h3>Próximos eventos</h3><a class="btn sm ghost" href="#eventos">Ver agenda</a></div>
+      ${(evs || []).length ? `<table><tbody>${evs.map(e => `<tr><td>${esc(e.title)}</td><td class="muted" style="text-align:right">${new Date(e.starts_at).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Nenhum evento agendado.</div>'}</div>
+      <div class="card"><div class="card-head"><h3>Próximas escalas</h3><a class="btn sm ghost" href="#escalas">Ver escalas</a></div>
+      ${(scs || []).length ? `<table><tbody>${scs.map(e => `<tr><td>${esc(e.title)}</td><td class="muted" style="text-align:right">${new Date(e.starts_at).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Nenhuma escala marcada.</div>'}</div>`;
+  }
   if (canSeeFin()) {
     const [a, z] = monthRange();
     const [{ data: r }, { data: late }] = await Promise.all([
@@ -491,6 +534,7 @@ async function pagePainel() {
 const statusPill = s => `<span class="pill ${{ ativo: 'green', inativo: 'red', visitante: 'blue', transferido: 'amber' }[s] || ''}">${esc({ ativo: 'Ativo', inativo: 'Inativo', visitante: 'Visitante', transferido: 'Transferido' }[s] || s)}</span>`;
 
 async function pageMembros(params) {
+  try { await loadFamilies(); } catch {}
   shell('membros', `${statusBanner()}<div class="card">
     <div class="toolbar"><input id="q" type="search" placeholder="Pesquisar por nome ou telefone" aria-label="Pesquisar">
       <select id="fs" aria-label="Situação"><option value="">Todas as situações</option><option value="ativo">Ativos</option><option value="visitante">Visitantes</option><option value="inativo">Inativos</option><option value="transferido">Transferidos</option></select>
@@ -507,10 +551,11 @@ async function pageMembros(params) {
     $('#list').innerHTML = data.length ? `<div class="table-wrap"><table><thead><tr><th>Nome</th><th class="hide-sm">Telefone / WhatsApp</th><th class="hide-sm">Cargo ou função</th><th>Situação</th><th></th></tr></thead><tbody>
       ${data.map(r => `<tr><td><b>${esc(r.full_name)}</b>${r.email ? `<div class="muted" style="font-size:.82rem">${esc(r.email)}</div>` : ''}</td>
         <td class="hide-sm">${esc(r.whatsapp || r.phone || '—')}</td><td class="hide-sm">${esc(r.role_title || '—')}</td><td>${statusPill(r.status)}</td>
-        <td><div class="row-actions">${canEditMembers() && orgOperational() ? `<button class="btn sm ghost" data-edit="${r.id}">Editar</button>` : `<button class="btn sm ghost" data-view="${r.id}">Ver</button>`}</div></td></tr>`).join('')}
+        <td><div class="row-actions"><button class="btn sm ghost" data-hist="${r.id}">Histórico</button>${canEditMembers() && orgOperational() ? `<button class="btn sm ghost" data-edit="${r.id}">Editar</button>` : `<button class="btn sm ghost" data-view="${r.id}">Ver</button>`}</div></td></tr>`).join('')}
       </tbody></table></div><p class="muted" style="font-size:.82rem;margin-top:10px">${data.length} registro${data.length > 1 ? 's' : ''}</p>`
       : `<div class="empty">Nenhum membro encontrado.</div>`;
     $('#list').querySelectorAll('[data-edit],[data-view]').forEach(b => b.onclick = () => memberForm(data.find(x => x.id === (b.dataset.edit || b.dataset.view)), !!b.dataset.view, load));
+    $('#list').querySelectorAll('[data-hist]').forEach(b => b.onclick = () => memberHistory(data.find(x => x.id === b.dataset.hist)));
   };
   $('#q').oninput = () => { clearTimeout(timer); timer = setTimeout(load, 250); };
   $('#fs').onchange = load;
@@ -530,13 +575,19 @@ function memberForm(m, readOnly, reload) {
       <div class="field"><label>WhatsApp</label><input name="whatsapp" inputmode="tel" value="${v('whatsapp')}" maxlength="30"></div></div>
     <div class="field"><label>E-mail</label><input type="email" name="email" value="${v('email')}"></div>
     <div class="field"><label>Endereço</label><input name="address" value="${v('address')}" maxlength="300"></div>
-    <div class="grid2"><div class="field"><label>Data de ingresso</label><input type="date" name="joined_at" value="${v('joined_at')}"></div>
+    <div class="grid2"><div class="field"><label>Sexo</label><select name="gender">${sel('gender', [['', 'Não informado'], ['feminino', 'Feminino'], ['masculino', 'Masculino']])}</select></div>
+      <div class="field"><label>Família</label><select name="family_id"><option value="">Sem família vinculada</option>${FAMS.map(f => `<option value="${f.id}" ${m?.family_id === f.id ? 'selected' : ''}>${esc(f.name)}</option>`).join('')}</select></div></div>
+    <div class="grid2"><div class="field"><label>Papel na família</label><select name="family_role">${sel('family_role', [['', 'Não informado'], ['responsavel', 'Responsável'], ['conjuge', 'Cônjuge'], ['filho', 'Filho(a)'], ['outro', 'Outro']])}</select></div>
+      <div class="field"><label>Data de conversão</label><input type="date" name="converted_at" value="${v('converted_at')}"></div></div>
+    <div class="grid2"><div class="field"><label>Data de batismo</label><input type="date" name="baptized_at" value="${v('baptized_at')}"></div>
+      <div class="field"><label>Data de ingresso</label><input type="date" name="joined_at" value="${v('joined_at')}"></div></div>
+    <div class="grid2">
       <div class="field"><label>Cargo ou função</label><input name="role_title" value="${v('role_title')}" maxlength="80" placeholder="Ex.: Diácono, Professor EBD"></div></div>
     <div class="field"><label>Situação</label><select name="status">${sel('status', [['ativo', 'Ativo'], ['visitante', 'Visitante'], ['inativo', 'Inativo'], ['transferido', 'Transferido']])}</select></div>
     <div class="field"><label>Observações</label><textarea name="notes" maxlength="2000">${v('notes')}</textarea></div>
     ${m ? `<p class="muted" style="font-size:.8rem">Cadastrado em ${dateBR(m.created_at)} · atualizado em ${dateBR(m.updated_at)}</p>` : ''}</fieldset>`,
     { submitLabel: m ? 'Salvar alterações' : 'Cadastrar', onSubmit: async fd => {
-      const row = {}; for (const k of ['full_name', 'birth_date', 'marital_status', 'phone', 'whatsapp', 'email', 'address', 'joined_at', 'role_title', 'status', 'notes']) { const x = (fd.get(k) || '').trim(); row[k] = x || null; }
+      const row = {}; for (const k of ['full_name', 'birth_date', 'marital_status', 'phone', 'whatsapp', 'email', 'address', 'joined_at', 'role_title', 'status', 'notes', 'gender', 'family_id', 'family_role', 'converted_at', 'baptized_at']) { const x = (fd.get(k) || '').trim(); row[k] = x || null; }
       if (!row.full_name || row.full_name.length < 3) throw new Error('Informe o nome completo (mínimo 3 letras).');
       if (row.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(row.email)) throw new Error('E-mail inválido.');
       row.status = row.status || 'ativo';
@@ -654,7 +705,7 @@ async function pageCaixa(params) {
       ${rows.map(x => `<tr class="${x.status === 'cancelado' ? 'canceled' : ''}">
         <td style="white-space:nowrap">${dateBR(x.occurred_on)}</td>
         <td><b>${esc(x.description || catName(x.category_id))}</b>
-          <div class="muted" style="font-size:.82rem">${esc(catName(x.category_id))}${x.member_id ? ' · ' + esc(mem[x.member_id] || 'Membro') : ''}${x.document ? ' · Doc. ' + esc(x.document) : ''}${x.payable_id ? ' · baixa de conta' : ''}</div>
+          <div class="muted" style="font-size:.82rem">${esc(catName(x.category_id))}${x.member_id ? ' · ' + esc(mem[x.member_id] || 'Membro') : ''}${x.document ? ' · Doc. ' + esc(x.document) : ''}${x.payable_id ? ' · baixa de conta' : ''}${x.attachment_path ? ` · <a href="#" data-file="${esc(x.attachment_path)}">comprovante</a>` : ''}</div>
           ${x.status === 'cancelado' ? `<div style="font-size:.8rem;margin-top:3px"><span class="pill red">Cancelado</span> <span class="muted">${esc(x.cancel_reason || '')}</span></div>` : ''}</td>
         <td class="hide-sm">${esc(accName(x.account_id))}</td><td class="hide-sm">${esc(payName(x.payment_method))}</td>
         <td class="num"><span class="${x.type === 'entrada' ? 'v-in' : 'v-out'}">${x.type === 'entrada' ? '+' : '−'} ${brl(x.amount)}</span></td>
@@ -691,11 +742,12 @@ async function txForm(type, done) {
       <div class="field"><label for="td">Data *</label><input id="td" type="date" name="occurred_on" value="${ymd(new Date())}" required></div></div>
     <div class="grid2"><div class="field"><label for="tc">Categoria *</label><select id="tc" name="category_id">${cats.map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>
       <div class="field"><label for="ta">Caixa / conta *</label><select id="ta" name="account_id">${accs.map(a => `<option value="${a.id}">${esc(a.name)}</option>`).join('')}</select></div></div>
+    <div class="field"><label for="tfile">Comprovante (foto ou PDF)</label><input id="tfile" type="file" name="attachment" accept="image/*,application/pdf"><small>Opcional, até 10 MB.</small></div>
     <div class="grid2"><div class="field"><label for="tf">Forma de pagamento</label><select id="tf" name="payment_method">${opts(PAY_METHODS, '')}</select></div>
       <div class="field"><label for="tn">Documento / recibo</label><input id="tn" name="document" maxlength="60" placeholder="Nº do recibo ou nota"></div></div>
     ${type === 'entrada' && mem.length ? `<div class="field"><label for="tm">Membro (dízimo ou oferta identificada)</label><select id="tm" name="member_id"><option value="">Não identificado</option>${mem.map(m => `<option value="${m.id}">${esc(m.full_name)}</option>`).join('')}</select></div>` : ''}
     <div class="field"><label for="tx">Descrição</label><input id="tx" name="description" maxlength="200" placeholder="${type === 'entrada' ? 'Ex.: Dízimos do culto de domingo' : 'Ex.: Conta de luz de novembro'}"></div></div>`,
-  { submitLabel: 'Lançar', onSubmit: async fd => {
+  { submitLabel: 'Lançar', onSubmit: async (fd, form) => {
     const amount = parseValor(fd.get('amount'));
     if (!(amount > 0)) throw new Error('Informe um valor maior que zero (ex.: 150,00).');
     if (amount >= 1e12) throw new Error('Valor alto demais.');
@@ -703,6 +755,7 @@ async function txForm(type, done) {
     const row = { organization_id: S.org.id, created_by: S.user.id, type, amount, occurred_on: fd.get('occurred_on'),
       category_id: fd.get('category_id'), account_id: fd.get('account_id'), payment_method: fd.get('payment_method') || null,
       document: (fd.get('document') || '').trim() || null, description: (fd.get('description') || '').trim() || null, member_id: fd.get('member_id') || null };
+    const file = form.elements.attachment?.files?.[0]; if (file) row.attachment_path = await uploadFile(file, 'financeiro');
     const { error } = await sb.from('finance_transactions').insert(row); if (error) throw error;
     toast(type === 'entrada' ? 'Entrada lançada.' : 'Saída lançada.'); done();
   } });
@@ -758,7 +811,7 @@ async function pageContas(params) {
       : p.due_date < today ? '<span class="pill red">Vencida</span>' : p.due_date === today ? '<span class="pill amber">Vence hoje</span>' : '<span class="pill blue">Em aberto</span>';
     $('#list').innerHTML = rows.length ? `<div class="table-wrap"><table><thead><tr><th>Vencimento</th><th>Descrição</th><th class="hide-sm">Categoria</th><th class="num">Valor</th><th>Situação</th><th></th></tr></thead><tbody>
       ${rows.map(p => `<tr><td style="white-space:nowrap">${dateBR(p.due_date)}</td>
-        <td><b>${esc(p.description)}</b><div class="muted" style="font-size:.82rem">${p.type === 'pagar' ? 'A pagar' : 'A receber'}${p.counterparty ? ' · ' + esc(p.counterparty) : ''}</div></td>
+        <td><b>${esc(p.description)}</b><div class="muted" style="font-size:.82rem">${p.type === 'pagar' ? 'A pagar' : 'A receber'}${p.counterparty ? ' · ' + esc(p.counterparty) : ''}${p.attachment_path ? ` · <a href="#" data-file="${esc(p.attachment_path)}">anexo</a>` : ''}</div></td>
         <td class="hide-sm">${esc(catName(p.category_id))}</td>
         <td class="num"><span class="${p.type === 'receber' ? 'v-in' : 'v-out'}">${brl(p.status === 'pago' ? p.paid_amount ?? p.amount : p.amount)}</span></td>
         <td>${stPill(p)}</td>
@@ -793,14 +846,16 @@ function payableForm(type, p, done) {
     <div class="grid2"><div class="field"><label for="pv">Valor *</label><div class="money"><span>R$</span><input id="pv" name="amount" inputmode="decimal" value="${esc(moneyField(p?.amount))}" placeholder="0,00" autocomplete="off" required></div></div>
       <div class="field"><label for="pdd">Vencimento *</label><input id="pdd" type="date" name="due_date" value="${v('due_date') || ymd(new Date())}" required></div></div>
     <div class="field"><label for="pk">Categoria *</label><select id="pk" name="category_id">${cats.map(c => `<option value="${c.id}" ${c.id === p?.category_id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</select></div>
+    <div class="field"><label for="pfile">Boleto, nota ou comprovante</label><input id="pfile" type="file" name="attachment" accept="image/*,application/pdf">${p?.attachment_path ? `<small>Arquivo atual: <a href="#" data-file="${esc(p.attachment_path)}">abrir</a></small>` : '<small>Opcional, até 10 MB.</small>'}</div>
     <div class="field"><label for="po">Observações</label><textarea id="po" name="notes" maxlength="1000">${v('notes')}</textarea></div></div>`,
-  { submitLabel: p ? 'Salvar alterações' : 'Cadastrar', onSubmit: async fd => {
+  { submitLabel: p ? 'Salvar alterações' : 'Cadastrar', onSubmit: async (fd, form) => {
     const amount = parseValor(fd.get('amount'));
     const row = { description: (fd.get('description') || '').trim(), counterparty: (fd.get('counterparty') || '').trim() || null, amount,
       due_date: fd.get('due_date'), category_id: fd.get('category_id'), notes: (fd.get('notes') || '').trim() || null };
     if (row.description.length < 2) throw new Error('Informe a descrição.');
     if (!(amount > 0)) throw new Error('Informe um valor maior que zero (ex.: 150,00).');
     if (!row.due_date) throw new Error('Informe o vencimento.');
+    const file = form.elements.attachment?.files?.[0]; if (file) row.attachment_path = await uploadFile(file, 'financeiro');
     const r = p ? await sb.from('finance_payables').update(row).eq('id', p.id).eq('status', 'aberto')
       : await sb.from('finance_payables').insert({ ...row, type, organization_id: S.org.id, created_by: S.user.id });
     if (r.error) throw r.error; toast(p ? 'Conta atualizada.' : 'Conta cadastrada.'); done();
@@ -1002,6 +1057,670 @@ async function buildCashPdf(r) {
   });
   return await doc.save();
 }
+
+/* ===== Base dos módulos (listas, formulários, arquivos, PDF) ===== */
+const hasRole = (...r) => r.includes(S.role);
+const canPeople = () => hasRole('admin', 'pastor', 'secretario') && orgOperational();
+const canMin = () => hasRole('admin', 'pastor', 'secretario', 'lider') && orgOperational();
+const canAsset = () => hasRole('admin', 'pastor', 'secretario', 'tesoureiro') && orgOperational();
+const canAudit = () => hasRole('admin', 'pastor');
+const WEEKDAYS = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+const WD_OPTS = WEEKDAYS.map((d, i) => [String(i), d]);
+const pad2 = n => String(n).padStart(2, '0');
+const toLocalDT = v => { if (!v) return ''; const d = new Date(v); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}T${pad2(d.getHours())}:${pad2(d.getMinutes())}`; };
+const dtBR = v => v ? new Date(v).toLocaleString('pt-BR', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+const phoneDigits = p => { let d = String(p || '').replace(/\D/g, ''); if (d.length === 10 || d.length === 11) d = '55' + d; return d.length >= 12 ? d : ''; };
+const waLink = (phone, text) => `https://wa.me/${phoneDigits(phone)}?text=${encodeURIComponent(text)}`;
+const publicUrl = path => new URL(path, location.href).href;
+async function copyText(t, msg = 'Copiado.') { try { await navigator.clipboard.writeText(t); toast(msg); } catch { prompt('Copie o texto:', t); } }
+
+let MEM = [];
+async function loadMembers() {
+  const { data, error } = await sb.from('members').select('id,full_name,whatsapp,phone,status,birth_date,gender,created_at,family_id,family_role,baptized_at').eq('organization_id', S.org.id).order('full_name').limit(5000);
+  if (error) throw error; MEM = data || []; return MEM;
+}
+const memName = id => MEM.find(m => m.id === id)?.full_name || '—';
+const memberSelect = (name, sel, empty = 'Selecione', only) => `<select name="${name}"><option value="">${esc(empty)}</option>${(only || MEM).filter(m => m.status !== 'inativo' || m.id === sel).map(m => `<option value="${m.id}" ${m.id === sel ? 'selected' : ''}>${esc(m.full_name)}</option>`).join('')}</select>`;
+
+function fld(f, v) {
+  const id = 'f_' + f.k, val = v ?? f.def ?? '';
+  let inp;
+  switch (f.type) {
+    case 'textarea': inp = `<textarea id="${id}" name="${f.k}" maxlength="${f.max || 1000}" ${f.ph ? `placeholder="${esc(f.ph)}"` : ''}>${esc(val)}</textarea>`; break;
+    case 'select': inp = `<select id="${id}" name="${f.k}">${f.empty !== undefined ? `<option value="">${esc(f.empty)}</option>` : ''}${opts(f.opts, val)}</select>`; break;
+    case 'member': inp = memberSelect(f.k, val, f.empty || 'Selecione').replace('<select ', `<select id="${id}" `); break;
+    case 'bool': return `<label class="check full"><input type="checkbox" name="${f.k}" ${val === '' ? (f.def ? 'checked' : '') : val ? 'checked' : ''}> ${esc(f.label)}</label>`;
+    case 'money': inp = `<div class="money"><span>R$</span><input id="${id}" name="${f.k}" inputmode="decimal" value="${esc(val === '' ? '' : moneyField(val))}" autocomplete="off" placeholder="0,00"></div>`; break;
+    case 'datetime': inp = `<input id="${id}" type="datetime-local" name="${f.k}" value="${esc(toLocalDT(val))}">`; break;
+    case 'time': inp = `<input id="${id}" type="time" name="${f.k}" value="${esc(String(val).slice(0, 5))}">`; break;
+    case 'file': inp = `<input id="${id}" type="file" name="${f.k}" accept="image/*,application/pdf">${val ? `<small>Arquivo atual: <a href="#" data-file="${esc(val)}">abrir</a>. Envie outro para substituir.</small>` : '<small>Foto ou PDF, até 10 MB.</small>'}`; break;
+    default: inp = `<input id="${id}" type="${f.type || 'text'}" name="${f.k}" value="${esc(val)}" ${f.max ? `maxlength="${f.max}"` : ''} ${f.min != null ? `min="${f.min}"` : ''} ${f.ph ? `placeholder="${esc(f.ph)}"` : ''} ${f.type === 'number' ? 'inputmode="numeric"' : ''}>`;
+  }
+  return `<div class="field ${f.full ? 'full' : ''}"><label for="${id}">${esc(f.label)}${f.req ? ' *' : ''}</label>${inp}${f.help ? `<small>${esc(f.help)}</small>` : ''}</div>`;
+}
+function readFields(fields, fd, form) {
+  const row = {};
+  for (const f of fields) {
+    if (f.type === 'file' || f.skip) continue;
+    let v;
+    if (f.type === 'bool') v = !!form.elements[f.k]?.checked;
+    else {
+      const raw = (fd.get(f.k) ?? '').toString().trim();
+      if (raw === '') v = null;
+      else if (f.type === 'number') { v = Number(raw); if (!Number.isFinite(v)) throw new Error(`${f.label}: número inválido.`); }
+      else if (f.type === 'money') { v = parseValor(raw); if (!Number.isFinite(v) || v < 0) throw new Error(`${f.label}: valor inválido (ex.: 1.250,00).`); }
+      else if (f.type === 'datetime') { const d = new Date(raw); if (isNaN(d)) throw new Error(`${f.label}: data inválida.`); v = d.toISOString(); }
+      else if (f.type === 'select' && f.num) v = Number(raw);
+      else v = raw;
+    }
+    if (f.req && (v === null || v === '')) throw new Error(`Informe: ${f.label.toLowerCase()}.`);
+    if (f.type === 'url' && v && !/^https?:\/\//i.test(v)) throw new Error(`${f.label}: o link deve começar com https://`);
+    row[f.k] = v;
+  }
+  return row;
+}
+async function uploadFile(file, folder) {
+  if (!file || !file.size) return null;
+  if (file.size > 10 * 1024 * 1024) throw new Error('Arquivo maior que 10 MB.');
+  const ext = (file.name.split('.').pop() || 'bin').toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 5) || 'bin';
+  const path = `${S.org.id}/${folder}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await sb.storage.from('anexos').upload(path, file, { contentType: file.type || undefined, upsert: false });
+  if (error) throw error;
+  return path;
+}
+async function openFile(path) {
+  const w = window.open('', '_blank');
+  const { data, error } = await sb.storage.from('anexos').createSignedUrl(path, 300);
+  if (error || !data?.signedUrl) { w?.close(); return toast('Não foi possível abrir o arquivo.', 'err'); }
+  if (w) w.location = data.signedUrl; else location.href = data.signedUrl;
+}
+document.addEventListener('click', e => { const a = e.target.closest('[data-file]'); if (a) { e.preventDefault(); openFile(a.dataset.file); } });
+
+function recordForm({ title, fields, rec, table, extra = {}, folder, editable = true, onSaved, before, intro = '' }) {
+  const o = modal(title, `${intro}<fieldset ${editable ? '' : 'disabled'} class="fgrid">${fields.map(f => fld(f, rec?.[f.k])).join('')}</fieldset>`, {
+    submitLabel: rec ? 'Salvar alterações' : 'Cadastrar', onSubmit: async (fd, form) => {
+      const row = readFields(fields, fd, form);
+      for (const f of fields.filter(x => x.type === 'file')) { const file = form.elements[f.k]?.files?.[0]; if (file) row[f.k] = await uploadFile(file, folder || table); }
+      if (before) await before(row, rec);
+      const r = rec ? await sb.from(table).update(row).eq('id', rec.id) : await sb.from(table).insert({ ...row, ...extra, organization_id: S.org.id });
+      if (r.error) throw r.error;
+      toast(rec ? 'Alterações salvas.' : 'Cadastro feito.'); onSaved && onSaved();
+    } });
+  if (!editable) o.querySelector('[type=submit]')?.remove();
+  return o;
+}
+
+/* Lista genérica com pesquisa, filtros, formulário e ações por linha */
+async function listPage(cfg) {
+  const { route, table, columns, fields, order = 'name', asc = true, search, filters = [], canEdit = () => false, newLabel = '+ Novo', formTitle = 'Cadastro',
+    actions = [], intro = '', tabs = '', empty = 'Nenhum registro ainda.', extra = {}, folder, before, top, afterLoad, select = '*' } = cfg;
+  shell(route, spin);
+  await loadMembers();
+  if (cfg.prepare) await cfg.prepare();
+  const ed = canEdit();
+  $('#main').innerHTML = `${statusBanner()}${tabs}${intro ? `<p class="muted" style="margin-bottom:14px">${intro}</p>` : ''}<div id="top"></div>
+    <div class="card"><div class="toolbar">
+      ${search ? `<input id="q" type="search" placeholder="Pesquisar" aria-label="Pesquisar">` : ''}
+      ${filters.map((f, i) => `<select data-flt="${i}" aria-label="${esc(f.label)}">${opts(typeof f.opts === 'function' ? f.opts() : f.opts, f.def ?? '')}</select>`).join('')}
+      ${(cfg.tools || []).map((t, i) => `<button class="btn ghost" data-tool="${i}">${esc(t.label)}</button>`).join('')}
+      ${ed ? `<button class="btn" id="add">${esc(newLabel)}</button>` : ''}
+    </div><div id="list">${spin}</div></div>`;
+  let rows = [], timer;
+  const open = r => recordForm({ title: r ? (ed ? `Editar ${formTitle.toLowerCase()}` : formTitle) : `Novo cadastro — ${formTitle.toLowerCase()}`, fields: typeof fields === 'function' ? fields(r) : fields, rec: r, table, extra, folder, editable: ed, onSaved: load, before });
+  const load = async () => {
+    let q = sb.from(table).select(select).eq('organization_id', S.org.id).order(order, { ascending: asc }).limit(cfg.limit || 1000);
+    filters.forEach((f, i) => { const v = $(`[data-flt="${i}"]`).value; if (v !== '') q = f.apply(q, v); });
+    const t = search ? $('#q').value.trim().replace(/[%,()]/g, '') : '';
+    if (t) q = q.or(search.map(c => `${c}.ilike.%${t}%`).join(','));
+    const { data, error } = await q;
+    if (error) { $('#list').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+    rows = data || [];
+    if (afterLoad) await afterLoad(rows);
+    if (top) $('#top').innerHTML = top(rows) || '';
+    $('#list').innerHTML = rows.length ? `<div class="table-wrap"><table><thead><tr>${columns.map(c => `<th class="${c.cls || ''}">${esc(c.t)}</th>`).join('')}<th></th></tr></thead><tbody>
+      ${rows.map(r => `<tr class="${cfg.rowCls ? cfg.rowCls(r) : ''}">${columns.map(c => `<td class="${c.cls || ''}">${c.v(r)}</td>`).join('')}
+        <td><div class="row-actions">${actions.filter(a => !a.show || a.show(r)).map(a => `<button class="btn sm ${a.primary ? '' : 'ghost'}" data-act="${actions.indexOf(a)}" data-id="${r.id}">${esc(typeof a.label === 'function' ? a.label(r) : a.label)}</button>`).join('')}
+          <button class="btn sm ghost" data-open="${r.id}">${ed ? 'Editar' : 'Ver'}</button></div></td></tr>`).join('')}
+      </tbody></table></div><p class="muted" style="font-size:.82rem;margin-top:10px">${rows.length} registro${rows.length > 1 ? 's' : ''}</p>`
+      : `<div class="empty">${empty}</div>`;
+    $('#list').querySelectorAll('[data-open]').forEach(b => b.onclick = () => open(rows.find(r => r.id === b.dataset.open)));
+    $('#list').querySelectorAll('[data-act]').forEach(b => b.onclick = () => actions[b.dataset.act].run(rows.find(r => r.id === b.dataset.id), load));
+  };
+  if (search) $('#q').oninput = () => { clearTimeout(timer); timer = setTimeout(load, 250); };
+  $('#main').querySelectorAll('[data-flt]').forEach(s => s.onchange = load);
+  $('#main').querySelectorAll('[data-tool]').forEach(b => b.onclick = () => cfg.tools[b.dataset.tool].run(rows, load));
+  if ($('#add')) $('#add').onclick = () => open(null);
+  await load();
+  return { load, rows: () => rows };
+}
+
+/* Vincular pessoas (equipe, membros do grupo, alunos) */
+async function linkMembersModal({ title, table, parentKey, parentId, withRole = false, rolePh = 'Função', editable, onChange }) {
+  const { data, error } = await sb.from(table).select('*').eq('organization_id', S.org.id).eq(parentKey, parentId);
+  if (error) return toast(errMsg(error), 'err');
+  const cur = (data || []).sort((a, b) => memName(a.member_id).localeCompare(memName(b.member_id)));
+  const inSet = new Set(cur.map(c => c.member_id));
+  const o = modal(title, `<div class="stack">
+    ${cur.length ? `<table><tbody>${cur.map(c => `<tr><td>${esc(memName(c.member_id))}</td>${withRole ? `<td class="muted">${esc(c.role || '')}</td>` : ''}<td><div class="row-actions">${editable ? `<button type="button" class="btn sm ghost" data-rm="${c.id}">Remover</button>` : ''}</div></td></tr>`).join('')}</tbody></table>` : '<div class="empty" style="padding:16px">Ninguém adicionado ainda.</div>'}
+    ${editable ? `<div class="fgrid"><div class="field"><label>Adicionar pessoa</label>${memberSelect('member_id', '', 'Selecione o membro', MEM.filter(m => !inSet.has(m.id)))}</div>
+      ${withRole ? `<div class="field"><label>${esc(rolePh.split(' (')[0])}</label><input name="role" maxlength="60" placeholder="${esc(rolePh)}"></div>` : ''}</div>` : ''}
+    <p class="muted" style="font-size:.82rem">${cur.length} pessoa${cur.length === 1 ? '' : 's'}</p></div>`,
+  { submitLabel: 'Adicionar', onSubmit: async fd => {
+    const member_id = fd.get('member_id'); if (!member_id) throw new Error('Escolha um membro.');
+    const row = { organization_id: S.org.id, [parentKey]: parentId, member_id };
+    if (withRole) row.role = (fd.get('role') || '').trim() || null;
+    const { error } = await sb.from(table).insert(row); if (error) throw error;
+    toast('Pessoa adicionada.'); onChange && onChange();
+    setTimeout(() => linkMembersModal({ title, table, parentKey, parentId, withRole, rolePh, editable, onChange }), 0);
+  } });
+  if (!editable) o.querySelector('[type=submit]')?.remove();
+  o.querySelectorAll('[data-rm]').forEach(b => b.onclick = async () => {
+    const { error } = await sb.from(table).delete().eq('id', b.dataset.rm); if (error) return toast(errMsg(error), 'err');
+    o.remove(); toast('Pessoa removida.'); onChange && onChange();
+    linkMembersModal({ title, table, parentKey, parentId, withRole, rolePh, editable, onChange });
+  });
+}
+
+/* Lista de presença (grupos e aulas) */
+async function attendanceModal({ title, people, table, extra, dateKey, topicKey, onSaved }) {
+  if (!people.length) return toast('Adicione pessoas antes de registrar a presença.', 'err');
+  modal(title, `<div class="stack">
+    <div class="fgrid"><div class="field"><label>Data *</label><input type="date" name="d" value="${ymd(new Date())}" required></div>
+      <div class="field"><label>Visitantes</label><input type="number" name="v" min="0" max="999" value="0" inputmode="numeric"></div>
+      ${topicKey ? `<div class="field full"><label>Tema / lição</label><input name="t" maxlength="200"></div>` : ''}</div>
+    <div class="field"><label>Presentes</label><div class="checklist">${people.map(p => `<label class="check"><input type="checkbox" name="p" value="${p}" checked> ${esc(memName(p))}</label>`).join('')}</div>
+      <small><a href="#" data-none>Desmarcar todos</a></small></div>
+    <div class="field"><label>Observações</label><textarea name="n" maxlength="1000"></textarea></div></div>`,
+  { submitLabel: 'Registrar', onSubmit: async fd => {
+    if (!fd.get('d')) throw new Error('Informe a data.');
+    const v = Number(fd.get('v') || 0); if (!(v >= 0 && v <= 999)) throw new Error('Número de visitantes inválido.');
+    const row = { organization_id: S.org.id, ...extra, [dateKey]: fd.get('d'), visitors: v, present_ids: fd.getAll('p'), notes: (fd.get('n') || '').trim() || null };
+    if (topicKey) row[topicKey] = (fd.get('t') || '').trim() || null;
+    const { error } = await sb.from(table).insert(row); if (error) throw error;
+    toast(`Presença registrada: ${row.present_ids.length} de ${people.length}.`); onSaved && onSaved();
+  } }).querySelector('[data-none]').onclick = e => { e.preventDefault(); e.target.closest('form').querySelectorAll('[name=p]').forEach(c => c.checked = false); };
+}
+async function attendanceHistory({ title, table, key, id, dateKey, total, topicKey }) {
+  const { data, error } = await sb.from(table).select('*').eq('organization_id', S.org.id).eq(key, id).order(dateKey, { ascending: false }).limit(30);
+  if (error) return toast(errMsg(error), 'err');
+  const rows = data || [];
+  const o = modal(title, rows.length ? `<div class="table-wrap"><table><thead><tr><th>Data</th>${topicKey ? '<th>Tema</th>' : ''}<th class="num">Presentes</th><th class="num">Visitantes</th></tr></thead><tbody>
+    ${rows.map(r => `<tr><td>${dateBR(r[dateKey])}</td>${topicKey ? `<td>${esc(r[topicKey] || '—')}</td>` : ''}<td class="num">${(r.present_ids || []).length}${total ? ` de ${total}` : ''}</td><td class="num">${r.visitors || 0}</td></tr>`).join('')}
+    </tbody></table></div><p class="muted" style="font-size:.82rem;margin-top:8px">Média de presença: ${(rows.reduce((s, r) => s + (r.present_ids || []).length, 0) / rows.length).toFixed(1)} pessoa(s) por encontro.</p>`
+    : '<div class="empty">Nenhum registro ainda.</div>', { submitLabel: 'Fechar', onSubmit: async () => {} });
+  o.querySelector('[data-close].btn')?.remove();
+}
+
+/* PDF de tabela simples (inventário, aniversariantes, membros) */
+async function pdfTable({ title, subtitle, cols, rows, total, file }) {
+  let lib; try { lib = await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm'); } catch { throw new Error('Não foi possível carregar o gerador de PDF. Verifique sua conexão.'); }
+  const { PDFDocument, StandardFonts, rgb } = lib;
+  const doc = await PDFDocument.create(); const F = await doc.embedFont(StandardFonts.Helvetica), B = await doc.embedFont(StandardFonts.HelveticaBold);
+  const W = 595.28, H = 841.89, M = 36, CW = W - 2 * M, navy = rgb(0.043, 0.122, 0.227), muted = rgb(0.36, 0.4, 0.51), line = rgb(0.86, 0.88, 0.92), soft = rgb(0.955, 0.965, 0.98), gold = rgb(0.79, 0.64, 0.29);
+  const clean = s => String(s ?? '').normalize('NFC').replace(/[  ]/g, ' ').replace(/[^\x20-\x7E\xA0-\xFF–—‘’“”•…]/g, '');
+  const fit = (s, f, z, w) => { s = clean(s); if (f.widthOfTextAtSize(s, z) <= w) return s; while (s.length && f.widthOfTextAtSize(s + '…', z) > w) s = s.slice(0, -1); return s + '…'; };
+  const sum = cols.reduce((s, c) => s + c.w, 0); cols = cols.map(c => ({ ...c, w: c.w * CW / sum }));
+  let page, y;
+  const T = (s, x, yy, o = {}) => { const f = o.font || F, z = o.size || 8.5, t = o.w ? fit(s, f, z, o.w) : clean(s); page.drawText(t, { x: o.right ? x - f.widthOfTextAtSize(t, z) : x, y: yy, size: z, font: f, color: o.color || navy }); };
+  const row = (vals, o = {}) => { let x = M; if (o.fill) page.drawRectangle({ x: M, y: y - 5, width: CW, height: 17, color: o.fill }); cols.forEach((c, i) => { if (vals[i] != null && vals[i] !== '') T(vals[i], c.r ? x + c.w - 4 : x + 4, y, { w: c.w - 8, right: !!c.r, font: o.bold ? B : F, color: o.color }); x += c.w; }); y -= 17; };
+  const newPage = first => {
+    page = doc.addPage([W, H]); y = H - M;
+    if (first) { page.drawRectangle({ x: 0, y: H - 6, width: W, height: 6, color: gold }); T(S.org.name, M, y - 14, { font: B, size: 15, w: CW }); T(title, M, y - 31, { size: 11, color: muted }); if (subtitle) T(subtitle, M, y - 46, { size: 8.5, color: muted, w: CW }); y -= 66; }
+    else { T(`${S.org.name} - ${title}`, M, y - 8, { size: 8, color: muted, w: CW }); y -= 24; }
+    page.drawRectangle({ x: M, y: y - 6, width: CW, height: 19, color: soft }); row(cols.map(c => c.t), { bold: true, color: muted }); y -= 2;
+  };
+  newPage(true);
+  rows.forEach(r => { if (y < M + 40) newPage(false); row(r); page.drawLine({ start: { x: M, y: y + 12 }, end: { x: W - M, y: y + 12 }, thickness: 0.5, color: line }); });
+  if (!rows.length) row(cols.map((c, i) => i === 0 ? 'Nenhum registro.' : ''), { color: muted });
+  if (total) { if (y < M + 40) newPage(false); y -= 2; row(total, { bold: true, fill: soft }); }
+  const pages = doc.getPages(); pages.forEach((p, i) => { const s = clean(`Gestão do Reino · Gerado em ${new Date().toLocaleString('pt-BR')} · Página ${i + 1} de ${pages.length}`); p.drawText(s, { x: W - M - F.widthOfTextAtSize(s, 7.5), y: 20, size: 7.5, font: F, color: muted }); });
+  downloadFile(await doc.save(), `${file}-${slug(S.org.name)}-${ymd(new Date())}.pdf`, 'application/pdf');
+}
+const barsSvg = (labels, values, color = 'var(--royal)', fmt = v => v) => {
+  const max = Math.max(1, ...values), W = 560, H = 170, bw = W / Math.max(1, values.length);
+  return `<svg viewBox="0 0 ${W} ${H + 34}" width="100%" role="img" style="max-width:100%">${values.map((v, i) => { const h = Math.round((v / max) * H); return `<g><rect x="${i * bw + 6}" y="${H - h + 14}" width="${Math.max(bw - 12, 2)}" height="${Math.max(h, 1)}" rx="4" fill="${color}"><title>${esc(labels[i])}: ${esc(fmt(v))}</title></rect>
+    <text x="${i * bw + bw / 2}" y="${H - h + 9}" text-anchor="middle" font-size="11" fill="var(--muted)">${v ? esc(fmt(v)) : ''}</text>
+    <text x="${i * bw + bw / 2}" y="${H + 30}" text-anchor="middle" font-size="11" fill="var(--muted)">${esc(labels[i])}</text></g>`; }).join('')}</svg>`;
+};
+
+/* ===== Pessoas: famílias e histórico ===== */
+const FAM_ROLES = [['responsavel', 'Responsável'], ['conjuge', 'Cônjuge'], ['filho', 'Filho(a)'], ['outro', 'Outro']];
+let FAMS = [];
+async function loadFamilies() { const { data } = await sb.from('families').select('id,name').eq('organization_id', S.org.id).order('name'); FAMS = data || []; return FAMS; }
+async function pageFamilias() {
+  await listPage({ route: 'familias', table: 'families', formTitle: 'Família', newLabel: '+ Nova família', search: ['name'], canEdit: canPeople,
+    intro: 'Agrupe os membros por família para saber quem é cônjuge, filho e responsável.',
+    columns: [{ t: 'Família', v: r => `<b>${esc(r.name)}</b>` }, { t: 'Integrantes', v: r => { const m = MEM.filter(x => x.family_id === r.id); return m.length ? esc(m.map(x => x.full_name.split(' ')[0]).join(', ')) : '<span class="muted">Ninguém ainda</span>'; } }],
+    fields: [{ k: 'name', label: 'Nome da família', req: true, max: 120, full: true, ph: 'Ex.: Família Souza' }, { k: 'notes', label: 'Observações', type: 'textarea', full: true }],
+    actions: [{ label: 'Integrantes', primary: true, run: r => familyMembers(r) }], empty: 'Nenhuma família cadastrada.' });
+}
+async function familyMembers(f) {
+  await loadMembers();
+  const cur = MEM.filter(m => m.family_id === f.id), ed = canPeople();
+  const o = modal(`Integrantes — ${f.name}`, `<div class="stack">
+    ${cur.length ? `<table><tbody>${cur.map(m => `<tr><td>${esc(m.full_name)}</td><td class="muted">${esc(FAM_ROLES.find(x => x[0] === m.family_role)?.[1] || '')}</td><td><div class="row-actions">${ed ? `<button type="button" class="btn sm ghost" data-rm="${m.id}">Tirar da família</button>` : ''}</div></td></tr>`).join('')}</tbody></table>` : '<div class="empty" style="padding:16px">Nenhum integrante ainda.</div>'}
+    ${ed ? `<div class="fgrid"><div class="field"><label>Adicionar membro</label>${memberSelect('member_id', '', 'Selecione o membro', MEM.filter(m => m.family_id !== f.id))}</div>
+      <div class="field"><label>Papel na família</label><select name="role">${opts(FAM_ROLES, 'conjuge')}</select></div></div><small class="muted">Se o membro já estiver em outra família, ele muda para esta.</small>` : ''}</div>`,
+  { submitLabel: 'Adicionar', onSubmit: async fd => {
+    if (!fd.get('member_id')) throw new Error('Escolha um membro.');
+    const { error } = await sb.from('members').update({ family_id: f.id, family_role: fd.get('role') }).eq('id', fd.get('member_id')); if (error) throw error;
+    toast('Integrante adicionado.'); setTimeout(() => familyMembers(f), 0);
+  } });
+  if (!ed) o.querySelector('[type=submit]')?.remove();
+  o.querySelectorAll('[data-rm]').forEach(b => b.onclick = async () => {
+    const { error } = await sb.from('members').update({ family_id: null, family_role: null }).eq('id', b.dataset.rm); if (error) return toast(errMsg(error), 'err');
+    o.remove(); familyMembers(f);
+  });
+}
+const EV_KINDS = [['conversao', 'Conversão'], ['batismo', 'Batismo'], ['cargo', 'Cargo ou função'], ['transferencia_entrada', 'Chegou transferido'], ['transferencia_saida', 'Saiu transferido'], ['visita', 'Visita pastoral'], ['aconselhamento', 'Aconselhamento'], ['observacao', 'Observação']];
+async function memberHistory(m) {
+  const { data, error } = await sb.from('member_events').select('*').eq('organization_id', S.org.id).eq('member_id', m.id).order('happened_on', { ascending: false });
+  if (error) return toast(errMsg(error), 'err');
+  const ed = canPeople(), pastoral = hasRole('admin', 'pastor');
+  const o = modal(`Histórico — ${m.full_name}`, `<div class="stack">
+    ${(data || []).length ? `<div class="timeline-mini">${data.map(e => `<div><b>${dateBR(e.happened_on)} · ${esc(EV_KINDS.find(k => k[0] === e.kind)?.[1] || e.kind)}</b>${e.is_private ? ' <span class="pill amber">Pastoral</span>' : ''}<div class="muted">${esc(e.description || '')}</div></div>`).join('')}</div>` : '<div class="empty" style="padding:16px">Nenhum registro no histórico.</div>'}
+    ${ed ? `<div class="fgrid"><div class="field"><label>Novo registro</label><select name="kind">${opts(EV_KINDS, 'observacao')}</select></div>
+      <div class="field"><label>Data</label><input type="date" name="d" value="${ymd(new Date())}"></div>
+      <div class="field full"><label>Descrição</label><input name="desc" maxlength="1000" placeholder="Ex.: Batizado no culto de domingo"></div>
+      ${pastoral ? '<label class="check full"><input type="checkbox" name="priv"> Registro pastoral (só pastor e administrador veem)</label>' : ''}</div>` : ''}</div>`,
+  { submitLabel: 'Adicionar ao histórico', onSubmit: async (fd, form) => {
+    const row = { organization_id: S.org.id, member_id: m.id, kind: fd.get('kind'), happened_on: fd.get('d') || ymd(new Date()), description: (fd.get('desc') || '').trim() || null, is_private: !!form.elements.priv?.checked };
+    const { error } = await sb.from('member_events').insert(row); if (error) throw error;
+    if (row.kind === 'batismo' && !m.baptized_at) await sb.from('members').update({ baptized_at: row.happened_on }).eq('id', m.id);
+    toast('Registro adicionado.'); setTimeout(() => memberHistory(m), 0);
+  } });
+  if (!ed) o.querySelector('[type=submit]')?.remove();
+}
+
+/* ===== Ministérios e escalas ===== */
+let MINS = [];
+async function loadMinistries() { const { data } = await sb.from('ministries').select('*').eq('organization_id', S.org.id).order('name'); MINS = data || []; return MINS; }
+async function pageMinisterios() {
+  let counts = {};
+  await listPage({ route: 'ministerios', table: 'ministries', formTitle: 'Ministério', newLabel: '+ Novo ministério', search: ['name'], canEdit: canMin,
+    intro: 'Cadastre os ministérios e as equipes. As escalas usam essas equipes.',
+    filters: [{ label: 'Situação', opts: [['true', 'Ativos'], ['false', 'Inativos'], ['', 'Todos']], def: 'true', apply: (q, v) => q.eq('is_active', v === 'true') }],
+    afterLoad: async rows => { const { data } = await sb.from('ministry_members').select('ministry_id').eq('organization_id', S.org.id); counts = {}; (data || []).forEach(x => counts[x.ministry_id] = (counts[x.ministry_id] || 0) + 1); },
+    columns: [{ t: 'Ministério', v: r => `<b>${esc(r.name)}</b>${r.description ? `<div class="muted" style="font-size:.82rem">${esc(r.description)}</div>` : ''}` },
+      { t: 'Líder', cls: 'hide-sm', v: r => esc(r.leader_member_id ? memName(r.leader_member_id) : '—') },
+      { t: 'Equipe', v: r => `${counts[r.id] || 0} pessoa${counts[r.id] === 1 ? '' : 's'}` },
+      { t: 'Situação', cls: 'hide-sm', v: r => r.is_active ? '<span class="pill green">Ativo</span>' : '<span class="pill">Inativo</span>' }],
+    fields: r => [{ k: 'name', label: 'Nome', req: true, max: 80, ph: 'Ex.: Louvor' }, { k: 'leader_member_id', label: 'Líder', type: 'member', empty: 'Sem líder definido' },
+      { k: 'description', label: 'Descrição', type: 'textarea', max: 500, full: true }, ...(r ? [{ k: 'is_active', label: 'Ministério ativo', type: 'bool' }] : [])],
+    actions: [{ label: 'Equipe', primary: true, run: (r, load) => linkMembersModal({ title: `Equipe — ${r.name}`, table: 'ministry_members', parentKey: 'ministry_id', parentId: r.id, withRole: true, rolePh: 'Função (ex.: Vocal, Teclado, Som)', editable: canMin(), onChange: load }) },
+      { label: 'Escalas', run: r => go(`escalas?min=${r.id}`) }],
+    empty: 'Nenhum ministério cadastrado. Comece pelo Louvor, Recepção ou Mídia.' });
+}
+
+const ASG_PILL = { pendente: ['Aguardando', 'amber'], confirmado: ['Confirmado', 'green'], recusado: ['Não pode', 'red'] };
+async function pageEscalas(params) {
+  shell('escalas', spin);
+  await Promise.all([loadMembers(), loadMinistries()]);
+  const ed = canMin();
+  $('#main').innerHTML = `${statusBanner()}
+    <p class="muted" style="margin-bottom:14px">Monte a escala, envie pelo WhatsApp e acompanhe quem confirmou. Cada pessoa recebe um link para responder, sem precisar de login.</p>
+    <div class="card"><div class="toolbar">
+      <select id="fm" aria-label="Ministério"><option value="">Todos os ministérios</option>${MINS.map(m => `<option value="${m.id}" ${params.get('min') === m.id ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}</select>
+      <select id="fp" aria-label="Período"><option value="next">Próximas</option><option value="past">Anteriores</option></select>
+      ${ed ? '<button class="btn" id="add">+ Nova escala</button>' : ''}</div><div id="list">${spin}</div></div>`;
+  const load = async () => {
+    const now = new Date(Date.now() - 6 * 3600e3).toISOString();
+    let q = sb.from('schedules').select('*').eq('organization_id', S.org.id).limit(200);
+    q = $('#fp').value === 'next' ? q.gte('starts_at', now).order('starts_at', { ascending: true }) : q.lt('starts_at', now).order('starts_at', { ascending: false });
+    if ($('#fm').value) q = q.eq('ministry_id', $('#fm').value);
+    const { data, error } = await q;
+    if (error) { $('#list').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+    const sc = data || [];
+    const ids = sc.map(s => s.id);
+    const { data: asg } = ids.length ? await sb.from('schedule_assignments').select('*').eq('organization_id', S.org.id).in('schedule_id', ids) : { data: [] };
+    const byS = {}; (asg || []).forEach(a => (byS[a.schedule_id] = byS[a.schedule_id] || []).push(a));
+    const day = s => toLocalDT(s.starts_at).slice(0, 10);
+    const conflicts = new Set();
+    sc.forEach(s => (byS[s.id] || []).forEach(a => sc.forEach(o => { if (o.id !== s.id && o.status === 'ativa' && day(o) === day(s) && (byS[o.id] || []).some(b => b.member_id === a.member_id)) conflicts.add(a.member_id + '|' + day(s)); })));
+    $('#list').innerHTML = sc.length ? `<div class="sched">${sc.map(s => { const a = byS[s.id] || [], ok = a.filter(x => x.status === 'confirmado').length; const conf = a.filter(x => conflicts.has(x.member_id + '|' + day(s)));
+      return `<article class="sched-card ${s.status === 'cancelada' ? 'canceled' : ''}"><header><div><b>${esc(s.title)}</b><div class="muted" style="font-size:.85rem">${esc(MINS.find(m => m.id === s.ministry_id)?.name || '')} · ${dtBR(s.starts_at)}</div></div>
+        ${s.status === 'cancelada' ? '<span class="pill">Cancelada</span>' : `<span class="pill ${a.length && ok === a.length ? 'green' : 'amber'}">${ok} de ${a.length} confirmado${a.length === 1 ? '' : 's'}</span>`}</header>
+        ${a.length ? `<div class="chips">${a.map(x => `<span class="pill ${ASG_PILL[x.status][1]}" title="${esc(ASG_PILL[x.status][0])}">${esc(memName(x.member_id).split(' ')[0])}${x.role ? ' · ' + esc(x.role) : ''}</span>`).join('')}</div>` : '<p class="muted" style="font-size:.88rem">Ninguém escalado ainda.</p>'}
+        ${conf.length ? `<p style="font-size:.85rem;color:var(--red);margin-top:6px">Atenção: ${esc(conf.map(x => memName(x.member_id).split(' ')[0]).join(', '))} também está em outra escala neste dia.</p>` : ''}
+        <div class="row-actions" style="justify-content:flex-start;margin-top:10px"><button class="btn sm" data-p="${s.id}">Pessoas e WhatsApp</button>${ed ? `<button class="btn sm ghost" data-e="${s.id}">Editar</button>` : ''}</div></article>`; }).join('')}</div>`
+      : `<div class="empty">Nenhuma escala ${$('#fp').value === 'next' ? 'futura' : 'anterior'}.${ed && !MINS.length ? '<br><br>Cadastre primeiro um ministério em <a href="#ministerios">Ministérios</a>.' : ''}</div>`;
+    $('#list').querySelectorAll('[data-p]').forEach(b => b.onclick = () => scheduleAssignments(sc.find(s => s.id === b.dataset.p), load));
+    $('#list').querySelectorAll('[data-e]').forEach(b => b.onclick = () => scheduleForm(sc.find(s => s.id === b.dataset.e), load));
+  };
+  $('#fm').onchange = load; $('#fp').onchange = load;
+  if ($('#add')) $('#add').onclick = () => MINS.length ? scheduleForm(null, load) : toast('Cadastre um ministério primeiro.', 'err');
+  await load();
+}
+function scheduleForm(s, done) {
+  const actives = MINS.filter(m => m.is_active || m.id === s?.ministry_id);
+  recordForm({ title: s ? 'Editar escala' : 'Nova escala', table: 'schedules', rec: s, onSaved: done, editable: canMin(),
+    fields: [{ k: 'ministry_id', label: 'Ministério', type: 'select', req: true, opts: actives.map(m => [m.id, m.name]), def: $('#fm')?.value || actives[0]?.id },
+      { k: 'starts_at', label: 'Data e horário', type: 'datetime', req: true }, { k: 'title', label: 'Culto ou evento', req: true, max: 120, full: true, ph: 'Ex.: Culto de domingo à noite' },
+      { k: 'notes', label: 'Observações para a equipe', type: 'textarea', full: true, ph: 'Ex.: Ensaio às 17h. Repertório no grupo.' },
+      ...(s ? [{ k: 'status', label: 'Situação', type: 'select', opts: [['ativa', 'Ativa'], ['cancelada', 'Cancelada']] }] : [])] });
+}
+async function scheduleAssignments(s, done) {
+  const { data, error } = await sb.from('schedule_assignments').select('*').eq('organization_id', S.org.id).eq('schedule_id', s.id);
+  if (error) return toast(errMsg(error), 'err');
+  const { data: team } = await sb.from('ministry_members').select('member_id,role').eq('organization_id', S.org.id).eq('ministry_id', s.ministry_id);
+  const cur = (data || []).sort((a, b) => memName(a.member_id).localeCompare(memName(b.member_id))), ed = canMin() && s.status === 'ativa';
+  const min = MINS.find(m => m.id === s.ministry_id)?.name || '';
+  const msg = a => { const p = MEM.find(m => m.id === a.member_id); return `Olá, ${(p?.full_name || '').split(' ')[0]}! Você está escalado(a) no ${min}: ${s.title}, ${dtBR(s.starts_at)}${a.role ? `, como ${a.role}` : ''}.${s.notes ? ` ${s.notes}` : ''} Confirme aqui: ${publicUrl('confirmar.html?t=' + a.token)}`; };
+  const inSet = new Set(cur.map(c => c.member_id)), teamIds = (team || []).map(t => t.member_id);
+  const cands = [...MEM.filter(m => teamIds.includes(m.id) && !inSet.has(m.id)), ...MEM.filter(m => !teamIds.includes(m.id) && !inSet.has(m.id))];
+  const o = modal(`${s.title} — ${dtBR(s.starts_at)}`, `<div class="stack">
+    ${cur.length ? `<div class="table-wrap"><table><tbody>${cur.map(a => { const p = MEM.find(m => m.id === a.member_id); const ph = phoneDigits(p?.whatsapp || p?.phone);
+      return `<tr><td><b>${esc(memName(a.member_id))}</b><div class="muted" style="font-size:.8rem">${esc(a.role || '')}${a.response_note ? ' · “' + esc(a.response_note) + '”' : ''}</div></td>
+      <td><span class="pill ${ASG_PILL[a.status][1]}">${ASG_PILL[a.status][0]}</span></td>
+      <td><div class="row-actions"><a class="btn sm wa" target="_blank" rel="noopener" href="${esc(waLink(p?.whatsapp || p?.phone, msg(a)))}" title="${ph ? 'Abrir conversa no WhatsApp' : 'Sem telefone: escolha o contato no WhatsApp'}">WhatsApp</a>
+        <button type="button" class="btn sm ghost" data-cp="${a.id}">Copiar link</button>${ed ? `<button type="button" class="btn sm ghost" data-rm="${a.id}">Remover</button>` : ''}</div></td></tr>`; }).join('')}</tbody></table></div>
+      <button type="button" class="btn ghost sm" data-all>Copiar mensagem para o grupo do ministério</button>` : '<div class="empty" style="padding:16px">Ninguém escalado ainda.</div>'}
+    ${ed ? `<div class="fgrid"><div class="field"><label>Escalar pessoa</label><select name="member_id"><option value="">Selecione</option>
+      ${teamIds.length ? `<optgroup label="Equipe do ministério">${cands.filter(m => teamIds.includes(m.id)).map(m => `<option value="${m.id}">${esc(m.full_name)}</option>`).join('')}</optgroup>` : ''}
+      <optgroup label="Outros membros">${cands.filter(m => !teamIds.includes(m.id) && m.status !== 'inativo').map(m => `<option value="${m.id}">${esc(m.full_name)}</option>`).join('')}</optgroup></select></div>
+      <div class="field"><label>Função</label><input name="role" maxlength="60" placeholder="Ex.: Vocal"></div></div>` : ''}</div>`,
+  { submitLabel: 'Escalar', onSubmit: async fd => {
+    const member_id = fd.get('member_id'); if (!member_id) throw new Error('Escolha uma pessoa.');
+    const role = (fd.get('role') || '').trim() || (team || []).find(t => t.member_id === member_id)?.role || null;
+    const { error } = await sb.from('schedule_assignments').insert({ organization_id: S.org.id, schedule_id: s.id, member_id, role }); if (error) throw error;
+    const d = toLocalDT(s.starts_at).slice(0, 10);
+    const { data: other } = await sb.from('schedule_assignments').select('schedule_id').eq('organization_id', S.org.id).eq('member_id', member_id).neq('schedule_id', s.id);
+    if ((other || []).length) { const { data: os } = await sb.from('schedules').select('starts_at,title,status').eq('organization_id', S.org.id).in('id', other.map(x => x.schedule_id)); const c = (os || []).find(x => x.status === 'ativa' && toLocalDT(x.starts_at).slice(0, 10) === d); if (c) toast(`Atenção: ${memName(member_id)} também está escalado(a) em "${c.title}" neste dia.`, 'info'); }
+    toast('Pessoa escalada. Agora envie pelo WhatsApp.'); done && done(); setTimeout(() => scheduleAssignments(s, done), 0);
+  } });
+  if (!ed) o.querySelector('[type=submit]')?.remove();
+  o.querySelectorAll('[data-cp]').forEach(b => b.onclick = () => copyText(publicUrl('confirmar.html?t=' + cur.find(a => a.id === b.dataset.cp).token), 'Link de confirmação copiado.'));
+  o.querySelector('[data-all]')?.addEventListener('click', () => copyText(`*${min} — ${s.title}*\n${dtBR(s.starts_at)}\n${s.notes ? s.notes + '\n' : ''}\n${cur.map(a => `• ${memName(a.member_id)}${a.role ? ` (${a.role})` : ''}: ${publicUrl('confirmar.html?t=' + a.token)}`).join('\n')}\n\nCada um confirme no seu link, por favor.`, 'Mensagem copiada. Cole no grupo do WhatsApp.'));
+  o.querySelectorAll('[data-rm]').forEach(b => b.onclick = async () => { const { error } = await sb.from('schedule_assignments').delete().eq('id', b.dataset.rm); if (error) return toast(errMsg(error), 'err'); o.remove(); done && done(); scheduleAssignments(s, done); });
+}
+
+/* ===== Grupos e células ===== */
+const GROUP_KINDS = [['celula', 'Célula'], ['pequeno_grupo', 'Pequeno grupo'], ['departamento', 'Departamento'], ['outro', 'Outro']];
+async function pageGrupos() {
+  let gm = {};
+  await listPage({ route: 'grupos', table: 'groups', formTitle: 'Grupo', newLabel: '+ Novo grupo', search: ['name', 'address'], canEdit: canMin,
+    intro: 'Células, pequenos grupos e departamentos, com membros e lista de presença de cada encontro.',
+    filters: [{ label: 'Situação', opts: [['true', 'Ativos'], ['false', 'Inativos'], ['', 'Todos']], def: 'true', apply: (q, v) => q.eq('is_active', v === 'true') }],
+    afterLoad: async () => { const { data } = await sb.from('group_members').select('group_id,member_id').eq('organization_id', S.org.id); gm = {}; (data || []).forEach(x => (gm[x.group_id] = gm[x.group_id] || []).push(x.member_id)); },
+    columns: [{ t: 'Grupo', v: r => `<b>${esc(r.name)}</b><div class="muted" style="font-size:.82rem">${esc(GROUP_KINDS.find(k => k[0] === r.kind)?.[1] || '')}${r.address ? ' · ' + esc(r.address) : ''}</div>` },
+      { t: 'Líder', cls: 'hide-sm', v: r => esc(r.leader_member_id ? memName(r.leader_member_id) : '—') },
+      { t: 'Encontro', cls: 'hide-sm', v: r => r.weekday != null ? `${WEEKDAYS[r.weekday]}${r.meet_time ? ' ' + String(r.meet_time).slice(0, 5) : ''}` : '—' },
+      { t: 'Membros', v: r => String((gm[r.id] || []).length) }],
+    fields: r => [{ k: 'name', label: 'Nome', req: true, max: 80, ph: 'Ex.: Célula Vida Nova' }, { k: 'kind', label: 'Tipo', type: 'select', opts: GROUP_KINDS, def: 'celula' },
+      { k: 'leader_member_id', label: 'Líder', type: 'member', empty: 'Sem líder definido' }, { k: 'weekday', label: 'Dia do encontro', type: 'select', num: true, opts: WD_OPTS, empty: 'Não definido' },
+      { k: 'meet_time', label: 'Horário', type: 'time' }, { k: 'address', label: 'Endereço', max: 300 }, ...(r ? [{ k: 'is_active', label: 'Grupo ativo', type: 'bool' }] : [])],
+    actions: [{ label: 'Presença', primary: true, show: () => canMin(), run: (r, load) => attendanceModal({ title: `Encontro — ${r.name}`, people: gm[r.id] || [], table: 'group_meetings', extra: { group_id: r.id }, dateKey: 'met_on', onSaved: load }) },
+      { label: 'Membros', run: (r, load) => linkMembersModal({ title: `Membros — ${r.name}`, table: 'group_members', parentKey: 'group_id', parentId: r.id, editable: canMin(), onChange: load }) },
+      { label: 'Encontros', run: r => attendanceHistory({ title: `Encontros — ${r.name}`, table: 'group_meetings', key: 'group_id', id: r.id, dateKey: 'met_on', total: (gm[r.id] || []).length }) }],
+    empty: 'Nenhum grupo cadastrado.' });
+}
+
+/* ===== Eventos ===== */
+async function pageEventos() {
+  let regs = {};
+  await listPage({ route: 'eventos', table: 'events', formTitle: 'Evento', newLabel: '+ Novo evento', search: ['title', 'location'], canEdit: canMin, order: 'starts_at', asc: false,
+    intro: 'Agenda da igreja com inscrições pelo link: compartilhe no WhatsApp e acompanhe a lista e as vagas.',
+    filters: [{ label: 'Período', opts: [['next', 'Próximos'], ['past', 'Anteriores'], ['', 'Todos']], def: 'next', apply: (q, v) => v === 'next' ? q.gte('starts_at', new Date(Date.now() - 6 * 3600e3).toISOString()) : q.lt('starts_at', new Date().toISOString()) }],
+    afterLoad: async rows => { const { data } = await sb.from('event_registrations').select('event_id,status').eq('organization_id', S.org.id).neq('status', 'cancelado'); regs = {}; (data || []).forEach(x => regs[x.event_id] = (regs[x.event_id] || 0) + 1); },
+    rowCls: r => r.status === 'cancelado' ? 'canceled' : '',
+    columns: [{ t: 'Data', v: r => `<span style="white-space:nowrap">${dtBR(r.starts_at)}</span>` }, { t: 'Evento', v: r => `<b>${esc(r.title)}</b>${r.location ? `<div class="muted" style="font-size:.82rem">${esc(r.location)}</div>` : ''}${r.status === 'cancelado' ? ' <span class="pill red">Cancelado</span>' : ''}` },
+      { t: 'Inscritos', v: r => r.registration_open || regs[r.id] ? `${regs[r.id] || 0}${r.capacity ? ` de ${r.capacity}` : ''}` : '<span class="muted">Sem inscrição</span>' }],
+    fields: r => [{ k: 'title', label: 'Nome do evento', req: true, max: 120, full: true, ph: 'Ex.: Retiro de jovens' }, { k: 'starts_at', label: 'Início', type: 'datetime', req: true }, { k: 'ends_at', label: 'Término', type: 'datetime' },
+      { k: 'location', label: 'Local', max: 200 }, { k: 'capacity', label: 'Vagas (deixe vazio se não houver limite)', type: 'number', min: 1 },
+      { k: 'description', label: 'Descrição', type: 'textarea', max: 2000, full: true }, { k: 'registration_open', label: 'Inscrições abertas pelo link', type: 'bool' },
+      { k: 'is_public', label: 'Mostrar no site da igreja', type: 'bool', def: true }, ...(r ? [{ k: 'status', label: 'Situação', type: 'select', opts: [['ativo', 'Ativo'], ['cancelado', 'Cancelado']] }] : [])],
+    before: row => { if (row.ends_at && row.ends_at < row.starts_at) throw new Error('O término precisa ser depois do início.'); },
+    actions: [{ label: 'Inscrições', primary: true, run: (r, load) => eventRegistrations(r, load) },
+      { label: 'Link', show: r => r.status === 'ativo', run: r => eventShare(r) }],
+    empty: 'Nenhum evento neste período.' });
+}
+function eventShare(e) {
+  const url = publicUrl('evento.html?c=' + e.public_code), text = `${e.title} — ${dtBR(e.starts_at)}${e.location ? ` · ${e.location}` : ''}. ${e.registration_open ? 'Inscreva-se' : 'Saiba mais'}: ${url}`;
+  const o = modal('Compartilhar evento', `<div class="stack"><p class="muted">${e.registration_open ? 'Quem abrir o link consegue se inscrever, sem precisar de conta.' : 'As inscrições estão fechadas: o link mostra só as informações do evento. Para abrir, edite o evento.'}</p>
+    <input readonly value="${esc(url)}" onclick="this.select()"><div class="row-actions" style="justify-content:flex-start">
+    <a class="btn wa" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(text)}">Enviar no WhatsApp</a><button type="button" class="btn ghost" data-cp>Copiar link</button><a class="btn ghost" target="_blank" rel="noopener" href="${esc(url)}">Abrir página</a></div></div>`,
+  { submitLabel: 'Fechar', onSubmit: async () => {} });
+  o.querySelector('[data-cp]').onclick = () => copyText(url, 'Link copiado.');
+}
+async function eventRegistrations(e, done) {
+  const { data, error } = await sb.from('event_registrations').select('*').eq('organization_id', S.org.id).eq('event_id', e.id).order('created_at');
+  if (error) return toast(errMsg(error), 'err');
+  const rows = data || [], ed = canMin(), active = rows.filter(r => r.status !== 'cancelado');
+  const o = modal(`Inscrições — ${e.title}`, `<div class="stack">
+    <p class="muted">${active.length} inscrito${active.length === 1 ? '' : 's'}${e.capacity ? ` de ${e.capacity} vagas` : ''} · ${rows.filter(r => r.status === 'presente').length} presente(s)</p>
+    ${rows.length ? `<div class="table-wrap"><table><tbody>${rows.map(r => `<tr class="${r.status === 'cancelado' ? 'canceled' : ''}"><td><b>${esc(r.name)}</b><div class="muted" style="font-size:.8rem">${esc([r.phone, r.email].filter(Boolean).join(' · '))}${r.source === 'link' ? ' · pelo link' : ''}</div></td>
+      <td>${ed ? `<select data-st="${r.id}" aria-label="Situação">${opts([['inscrito', 'Inscrito'], ['presente', 'Presente'], ['cancelado', 'Cancelado']], r.status)}</select>` : esc(r.status)}</td></tr>`).join('')}</tbody></table></div>
+      <button type="button" class="btn ghost sm" data-pdf>Baixar lista em PDF</button>` : '<div class="empty" style="padding:16px">Nenhuma inscrição ainda.</div>'}
+    ${ed ? `<div class="fgrid"><div class="field"><label>Inscrever membro</label>${memberSelect('member_id', '', 'Selecione')}</div><div class="field"><label>Ou nome de visitante</label><input name="name" maxlength="120"></div></div>` : ''}</div>`,
+  { submitLabel: 'Inscrever', onSubmit: async fd => {
+    const mid = fd.get('member_id'), p = MEM.find(m => m.id === mid), name = p?.full_name || (fd.get('name') || '').trim();
+    if (!name || name.length < 3) throw new Error('Escolha um membro ou digite o nome.');
+    if (e.capacity && active.length >= e.capacity) throw new Error('As vagas deste evento esgotaram.');
+    const { error } = await sb.from('event_registrations').insert({ organization_id: S.org.id, event_id: e.id, name, member_id: mid || null, phone: p?.whatsapp || p?.phone || null });
+    if (error) throw error; toast('Inscrição feita.'); done && done(); setTimeout(() => eventRegistrations(e, done), 0);
+  } });
+  if (!ed) o.querySelector('[type=submit]')?.remove();
+  o.querySelectorAll('[data-st]').forEach(s => s.onchange = async () => { const { error } = await sb.from('event_registrations').update({ status: s.value }).eq('id', s.dataset.st); if (error) toast(errMsg(error), 'err'); else { toast('Situação atualizada.'); done && done(); } });
+  o.querySelector('[data-pdf]')?.addEventListener('click', () => pdfTable({ title: `Inscritos — ${e.title}`, subtitle: `${dtBR(e.starts_at)}${e.location ? ' · ' + e.location : ''}`, file: 'inscritos',
+    cols: [{ t: 'Nome', w: 4 }, { t: 'Contato', w: 3 }, { t: 'Situação', w: 1.5 }, { t: 'Presença', w: 1.5 }], rows: rows.filter(r => r.status !== 'cancelado').map(r => [r.name, [r.phone, r.email].filter(Boolean).join(' · '), r.status === 'presente' ? 'Presente' : 'Inscrito', '']) }).catch(err => toast(errMsg(err), 'err')));
+}
+
+/* ===== Ensino: escola bíblica, estudos, discipulado ===== */
+const ensinoTabs = r => `<nav class="tabs" aria-label="Ensino">${[['ensino', 'Escola bíblica'], ['estudos', 'Estudos e materiais'], ['discipulado', 'Discipulado']].map(([k, l]) => `<a href="#${k}" class="${k === r ? 'on' : ''}">${l}</a>`).join('')}</nav>`;
+let CLASSES = [];
+async function pageEnsino() {
+  let cs = {};
+  await listPage({ route: 'ensino', table: 'classes', formTitle: 'Turma', newLabel: '+ Nova turma', search: ['name'], canEdit: canMin, tabs: ensinoTabs('ensino'),
+    filters: [{ label: 'Situação', opts: [['true', 'Ativas'], ['false', 'Inativas'], ['', 'Todas']], def: 'true', apply: (q, v) => q.eq('is_active', v === 'true') }],
+    afterLoad: async () => { const { data } = await sb.from('class_students').select('class_id,member_id').eq('organization_id', S.org.id); cs = {}; (data || []).forEach(x => (cs[x.class_id] = cs[x.class_id] || []).push(x.member_id)); },
+    columns: [{ t: 'Turma', v: r => `<b>${esc(r.name)}</b>${r.description ? `<div class="muted" style="font-size:.82rem">${esc(r.description)}</div>` : ''}` },
+      { t: 'Professor', cls: 'hide-sm', v: r => esc(r.teacher_member_id ? memName(r.teacher_member_id) : '—') }, { t: 'Dia', cls: 'hide-sm', v: r => r.weekday != null ? WEEKDAYS[r.weekday] : '—' }, { t: 'Alunos', v: r => String((cs[r.id] || []).length) }],
+    fields: r => [{ k: 'name', label: 'Nome da turma', req: true, max: 80, ph: 'Ex.: Jovens, Adultos, Crianças' }, { k: 'teacher_member_id', label: 'Professor(a)', type: 'member', empty: 'Não definido' },
+      { k: 'weekday', label: 'Dia da aula', type: 'select', num: true, opts: WD_OPTS, def: '0', empty: 'Não definido' }, { k: 'description', label: 'Descrição', max: 500 }, ...(r ? [{ k: 'is_active', label: 'Turma ativa', type: 'bool' }] : [])],
+    actions: [{ label: 'Chamada', primary: true, show: () => canMin(), run: (r, load) => attendanceModal({ title: `Aula — ${r.name}`, people: cs[r.id] || [], table: 'class_lessons', extra: { class_id: r.id }, dateKey: 'taught_on', topicKey: 'topic', onSaved: load }) },
+      { label: 'Alunos', run: (r, load) => linkMembersModal({ title: `Alunos — ${r.name}`, table: 'class_students', parentKey: 'class_id', parentId: r.id, editable: canMin(), onChange: load }) },
+      { label: 'Aulas', run: r => attendanceHistory({ title: `Aulas — ${r.name}`, table: 'class_lessons', key: 'class_id', id: r.id, dateKey: 'taught_on', topicKey: 'topic', total: (cs[r.id] || []).length }) }],
+    empty: 'Nenhuma turma cadastrada.' });
+}
+async function pageEstudos() {
+  await listPage({ route: 'estudos', table: 'studies', formTitle: 'Estudo', newLabel: '+ Novo estudo', search: ['title', 'content'], canEdit: canMin, tabs: ensinoTabs('estudos'), order: 'created_at', asc: false, folder: 'estudos',
+    prepare: async () => { const { data } = await sb.from('classes').select('id,name').eq('organization_id', S.org.id).order('name'); CLASSES = data || []; },
+    columns: [{ t: 'Estudo', v: r => `<b>${esc(r.title)}</b>${r.content ? `<div class="muted" style="font-size:.82rem">${esc(r.content.slice(0, 120))}${r.content.length > 120 ? '…' : ''}</div>` : ''}` },
+      { t: 'Turma', cls: 'hide-sm', v: r => esc(CLASSES.find(c => c.id === r.class_id)?.name || 'Todas') },
+      { t: 'Material', v: r => [r.link ? `<a href="${esc(r.link)}" target="_blank" rel="noopener">Link</a>` : '', r.file_path ? `<a href="#" data-file="${esc(r.file_path)}">Arquivo</a>` : ''].filter(Boolean).join(' · ') || '—' }],
+    fields: () => [{ k: 'title', label: 'Título', req: true, max: 160, full: true }, { k: 'class_id', label: 'Turma', type: 'select', opts: CLASSES.map(c => [c.id, c.name]), empty: 'Todas as turmas' },
+      { k: 'link', label: 'Link (vídeo, PDF, site)', type: 'url', ph: 'https://' }, { k: 'file_path', label: 'Arquivo', type: 'file' }, { k: 'content', label: 'Texto do estudo', type: 'textarea', max: 20000, full: true }],
+    empty: 'Nenhum estudo ou material cadastrado.' });
+}
+async function pageDiscipulado() {
+  let meet = {};
+  await listPage({ route: 'discipulado', table: 'discipleships', formTitle: 'Discipulado', newLabel: '+ Novo discipulado', canEdit: canMin, tabs: ensinoTabs('discipulado'), order: 'started_on', asc: false,
+    intro: 'Acompanhe quem discipula quem e registre os encontros.',
+    filters: [{ label: 'Situação', opts: [['ativo', 'Ativos'], ['pausado', 'Pausados'], ['concluido', 'Concluídos'], ['', 'Todos']], def: 'ativo', apply: (q, v) => q.eq('status', v) }],
+    afterLoad: async () => { const { data } = await sb.from('discipleship_meetings').select('discipleship_id,met_on').eq('organization_id', S.org.id); meet = {}; (data || []).forEach(x => { const m = meet[x.discipleship_id] = meet[x.discipleship_id] || { n: 0, last: '' }; m.n++; if (x.met_on > m.last) m.last = x.met_on; }); },
+    columns: [{ t: 'Discípulo', v: r => `<b>${esc(memName(r.disciple_member_id))}</b><div class="muted" style="font-size:.82rem">com ${esc(memName(r.mentor_member_id))}</div>` },
+      { t: 'Desde', cls: 'hide-sm', v: r => dateBR(r.started_on) }, { t: 'Encontros', v: r => meet[r.id] ? `${meet[r.id].n} · último ${dateBR(meet[r.id].last)}` : '0' },
+      { t: 'Situação', cls: 'hide-sm', v: r => `<span class="pill ${{ ativo: 'green', pausado: 'amber', concluido: 'blue' }[r.status]}">${{ ativo: 'Ativo', pausado: 'Pausado', concluido: 'Concluído' }[r.status]}</span>` }],
+    fields: [{ k: 'disciple_member_id', label: 'Discípulo', type: 'member', req: true }, { k: 'mentor_member_id', label: 'Discipulador', type: 'member', req: true },
+      { k: 'started_on', label: 'Início', type: 'date', def: ymd(new Date()) }, { k: 'status', label: 'Situação', type: 'select', opts: [['ativo', 'Ativo'], ['pausado', 'Pausado'], ['concluido', 'Concluído']], def: 'ativo' },
+      { k: 'notes', label: 'Observações', type: 'textarea', full: true }],
+    before: row => { if (row.mentor_member_id === row.disciple_member_id) throw new Error('Discipulador e discípulo precisam ser pessoas diferentes.'); },
+    actions: [{ label: 'Encontros', primary: true, run: (r, load) => discipleshipMeetings(r, load) }], empty: 'Nenhum discipulado neste filtro.' });
+}
+async function discipleshipMeetings(d, done) {
+  const { data, error } = await sb.from('discipleship_meetings').select('*').eq('organization_id', S.org.id).eq('discipleship_id', d.id).order('met_on', { ascending: false });
+  if (error) return toast(errMsg(error), 'err');
+  const ed = canMin();
+  const o = modal(`Encontros — ${memName(d.disciple_member_id)}`, `<div class="stack">
+    ${(data || []).length ? `<div class="timeline-mini">${data.map(m => `<div><b>${dateBR(m.met_on)}${m.topic ? ' · ' + esc(m.topic) : ''}</b><div class="muted">${esc(m.notes || '')}</div></div>`).join('')}</div>` : '<div class="empty" style="padding:16px">Nenhum encontro registrado.</div>'}
+    ${ed ? `<div class="fgrid"><div class="field"><label>Data</label><input type="date" name="d" value="${ymd(new Date())}"></div><div class="field"><label>Tema</label><input name="t" maxlength="200"></div>
+      <div class="field full"><label>Anotações</label><textarea name="n" maxlength="2000"></textarea></div></div>` : ''}</div>`,
+  { submitLabel: 'Registrar encontro', onSubmit: async fd => {
+    const { error } = await sb.from('discipleship_meetings').insert({ organization_id: S.org.id, discipleship_id: d.id, met_on: fd.get('d') || ymd(new Date()), topic: (fd.get('t') || '').trim() || null, notes: (fd.get('n') || '').trim() || null });
+    if (error) throw error; toast('Encontro registrado.'); done && done(); setTimeout(() => discipleshipMeetings(d, done), 0);
+  } });
+  if (!ed) o.querySelector('[type=submit]')?.remove();
+}
+
+/* ===== Patrimônio ===== */
+const COND = [['novo', 'Novo'], ['bom', 'Bom'], ['regular', 'Regular'], ['ruim', 'Ruim'], ['baixado', 'Baixado']];
+async function pagePatrimonio() {
+  const ctx = await listPage({ route: 'patrimonio', table: 'assets', formTitle: 'Bem', newLabel: '+ Novo bem', search: ['name', 'category', 'location', 'code'], canEdit: canAsset, folder: 'patrimonio',
+    intro: 'Inventário dos bens da igreja, com valor, local, estado e foto. Exporte em PDF para assembleias e auditorias.',
+    filters: [{ label: 'Estado', opts: [['ativos', 'Em uso'], ['baixado', 'Baixados'], ['', 'Todos']], def: 'ativos', apply: (q, v) => v === 'ativos' ? q.neq('condition', 'baixado') : q.eq('condition', v) }],
+    top: rows => `<div class="kpis"><div class="kpi"><small>Bens na lista</small><strong class="mk">${rows.length}</strong></div>
+      <div class="kpi"><small>Valor total</small><strong class="mk">${brl(rows.reduce((s, r) => s + Number(r.value || 0), 0))}</strong></div>
+      <div class="kpi"><small>Precisam de atenção</small><strong class="mk ${rows.filter(r => r.condition === 'ruim').length ? 'neg' : ''}">${rows.filter(r => r.condition === 'ruim').length}</strong><em>em estado ruim</em></div></div>`,
+    columns: [{ t: 'Bem', v: r => `<b>${esc(r.name)}</b><div class="muted" style="font-size:.82rem">${esc([r.code, r.category].filter(Boolean).join(' · '))}${r.photo_path ? ` · <a href="#" data-file="${esc(r.photo_path)}">foto</a>` : ''}</div>` },
+      { t: 'Local', cls: 'hide-sm', v: r => esc(r.location || '—') }, { t: 'Valor', cls: 'num', v: r => r.value != null ? brl(r.value) : '—' },
+      { t: 'Estado', v: r => `<span class="pill ${{ novo: 'green', bom: 'green', regular: 'amber', ruim: 'red', baixado: '' }[r.condition]}">${COND.find(c => c[0] === r.condition)[1]}</span>` }],
+    fields: [{ k: 'name', label: 'Nome do bem', req: true, max: 120, full: true, ph: 'Ex.: Mesa de som Behringer X32' }, { k: 'category', label: 'Categoria', max: 60, ph: 'Ex.: Som, Móveis, Instrumentos' },
+      { k: 'location', label: 'Local', max: 120, ph: 'Ex.: Templo, Salão, Secretaria' }, { k: 'code', label: 'Código / plaqueta', max: 60 }, { k: 'acquired_on', label: 'Data de compra', type: 'date' },
+      { k: 'value', label: 'Valor', type: 'money' }, { k: 'condition', label: 'Estado', type: 'select', opts: COND, def: 'bom' }, { k: 'photo_path', label: 'Foto ou nota fiscal', type: 'file' },
+      { k: 'notes', label: 'Observações', type: 'textarea', full: true }],
+    tools: [{ label: 'Exportar PDF', run: rows => pdfTable({ title: 'Inventário de patrimônio', subtitle: `${rows.length} bens`, file: 'patrimonio',
+      cols: [{ t: 'Bem', w: 4 }, { t: 'Código', w: 1.4 }, { t: 'Categoria', w: 1.6 }, { t: 'Local', w: 1.8 }, { t: 'Estado', w: 1.1 }, { t: 'Compra', w: 1.3 }, { t: 'Valor', w: 1.7, r: 1 }],
+      rows: rows.map(r => [r.name, r.code || '', r.category || '', r.location || '', COND.find(c => c[0] === r.condition)[1], r.acquired_on ? dateBR(r.acquired_on) : '', r.value != null ? brl(r.value) : '']),
+      total: ['Total', '', '', '', '', '', brl(rows.reduce((s, r) => s + Number(r.value || 0), 0))] }).catch(e => toast(errMsg(e), 'err')) }],
+    empty: 'Nenhum bem cadastrado.' });
+}
+
+/* ===== Relatórios ===== */
+async function pageRelatorios() {
+  shell('relatorios', spin);
+  await loadMembers();
+  const now = new Date(), act = MEM.filter(m => m.status === 'ativo');
+  const months = [...Array(12)].map((_, i) => new Date(now.getFullYear(), now.getMonth() - 11 + i, 1));
+  const mlabel = d => d.toLocaleDateString('pt-BR', { month: 'short' }).replace('.', '');
+  const newBy = months.map(d => MEM.filter(m => (m.created_at || '').slice(0, 7) === ymd(d).slice(0, 7)).length);
+  const age = m => { if (!m.birth_date) return null; const b = new Date(m.birth_date + 'T12:00'); let a = now.getFullYear() - b.getFullYear(); if (now < new Date(now.getFullYear(), b.getMonth(), b.getDate())) a--; return a; };
+  const bands = [['0–12', 0, 12], ['13–17', 13, 17], ['18–29', 18, 29], ['30–44', 30, 44], ['45–59', 45, 59], ['60+', 60, 200]];
+  const ages = bands.map(([, a, b]) => act.filter(m => { const x = age(m); return x != null && x >= a && x <= b; }).length);
+  const bdays = MEM.filter(m => m.status !== 'inativo' && m.birth_date && Number(m.birth_date.slice(5, 7)) === now.getMonth() + 1).sort((a, b) => a.birth_date.slice(8).localeCompare(b.birth_date.slice(8)));
+  const since90 = ymd(new Date(Date.now() - 90 * 864e5));
+  const [{ data: gs }, { data: meets }, { data: gmem }, { data: asg }] = await Promise.all([
+    sb.from('groups').select('id,name').eq('organization_id', S.org.id).eq('is_active', true),
+    sb.from('group_meetings').select('group_id,present_ids,visitors,met_on').eq('organization_id', S.org.id).gte('met_on', since90),
+    sb.from('group_members').select('group_id').eq('organization_id', S.org.id),
+    sb.from('schedule_assignments').select('status,schedule_id').eq('organization_id', S.org.id)]);
+  const gfreq = (gs || []).map(g => { const ms = (meets || []).filter(x => x.group_id === g.id), tot = (gmem || []).filter(x => x.group_id === g.id).length; const avg = ms.length ? ms.reduce((s, x) => s + (x.present_ids || []).length, 0) / ms.length : 0; return { name: g.name, n: ms.length, avg, pct: tot ? Math.round(avg / tot * 100) : 0, vis: ms.reduce((s, x) => s + (x.visitors || 0), 0) }; });
+  const asgS = { total: (asg || []).length, ok: (asg || []).filter(a => a.status === 'confirmado').length };
+  let finHtml = '';
+  if (canSeeFin()) {
+    const from = ymd(new Date(now.getFullYear(), now.getMonth() - 5, 1));
+    const { data: tx } = await sb.from('finance_transactions').select('type,amount,occurred_on,category_id').eq('organization_id', S.org.id).eq('status', 'confirmado').gte('occurred_on', from).limit(20000);
+    const m6 = months.slice(6), ins = m6.map(d => (tx || []).filter(t => t.type === 'entrada' && t.occurred_on.slice(0, 7) === ymd(d).slice(0, 7)).reduce((s, t) => s + Number(t.amount), 0));
+    const outs = m6.map(d => (tx || []).filter(t => t.type === 'saida' && t.occurred_on.slice(0, 7) === ymd(d).slice(0, 7)).reduce((s, t) => s + Number(t.amount), 0));
+    const k = n => n >= 1000 ? (n / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + ' mil' : n.toLocaleString('pt-BR', { maximumFractionDigits: 0 });
+    finHtml = `<div class="card"><div class="card-head"><h3>Financeiro — últimos 6 meses</h3><a class="btn sm ghost" href="#caixa">Abrir caixa</a></div>
+      <p class="muted" style="font-size:.85rem">Entradas</p>${barsSvg(m6.map(mlabel), ins, 'var(--green)', k)}<p class="muted" style="font-size:.85rem;margin-top:8px">Saídas</p>${barsSvg(m6.map(mlabel), outs, 'var(--red)', k)}</div>`;
+  }
+  $('#main').innerHTML = `${statusBanner()}
+    <div class="kpis"><div class="kpi"><small>Membros ativos</small><strong class="mk">${act.length}</strong><em>${MEM.filter(m => m.status === 'visitante').length} visitante(s)</em></div>
+      <div class="kpi"><small>Novos em 12 meses</small><strong class="mk">${newBy.reduce((a, b) => a + b, 0)}</strong></div>
+      <div class="kpi"><small>Batizados</small><strong class="mk">${act.filter(m => m.baptized_at).length}</strong><em>${act.length ? Math.round(act.filter(m => m.baptized_at).length / act.length * 100) : 0}% dos ativos</em></div>
+      <div class="kpi"><small>Escalas confirmadas</small><strong class="mk">${asgS.total ? Math.round(asgS.ok / asgS.total * 100) : 0}%</strong><em>${asgS.ok} de ${asgS.total}</em></div></div>
+    <div class="grid2">
+      <div class="card"><h3>Novos cadastros por mês</h3>${barsSvg(months.map(mlabel), newBy)}</div>
+      <div class="card"><h3>Faixa etária dos ativos</h3>${barsSvg(bands.map(b => b[0]), ages, 'var(--gold)')}<p class="muted" style="font-size:.8rem">${act.filter(m => !m.birth_date).length} sem data de nascimento.</p></div>
+      <div class="card"><div class="card-head"><h3>Aniversariantes de ${now.toLocaleDateString('pt-BR', { month: 'long' })}</h3><button class="btn sm ghost" id="pdfB">PDF</button></div>
+        ${bdays.length ? `<table><tbody>${bdays.map(b => `<tr><td>${esc(b.full_name)}</td><td class="num muted">dia ${b.birth_date.slice(8)}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Nenhum aniversariante.</div>'}</div>
+      <div class="card"><h3>Frequência dos grupos (90 dias)</h3>
+        ${gfreq.length ? `<div class="table-wrap"><table><thead><tr><th>Grupo</th><th class="num">Encontros</th><th class="num">Média</th><th class="num">Visitantes</th></tr></thead><tbody>${gfreq.map(g => `<tr><td>${esc(g.name)}</td><td class="num">${g.n}</td><td class="num">${g.avg.toFixed(1)} (${g.pct}%)</td><td class="num">${g.vis}</td></tr>`).join('')}</tbody></table></div>` : '<div class="empty">Nenhum grupo ativo.</div>'}</div>
+    </div>
+    <div style="margin-top:14px">${finHtml}</div>
+    <div class="card" style="margin-top:14px"><div class="card-head"><h3>Lista de membros</h3><button class="btn sm ghost" id="pdfM">Baixar PDF</button></div><p class="muted">Todos os membros ativos e visitantes, com telefone e data de nascimento.</p></div>`;
+  $('#pdfB').onclick = () => pdfTable({ title: `Aniversariantes de ${now.toLocaleDateString('pt-BR', { month: 'long' })}`, file: 'aniversariantes', cols: [{ t: 'Dia', w: 1 }, { t: 'Nome', w: 5 }, { t: 'WhatsApp / telefone', w: 3 }],
+    rows: bdays.map(b => [b.birth_date.slice(8), b.full_name, b.whatsapp || b.phone || '']) }).catch(e => toast(errMsg(e), 'err'));
+  $('#pdfM').onclick = () => pdfTable({ title: 'Lista de membros', file: 'membros', cols: [{ t: 'Nome', w: 5 }, { t: 'Situação', w: 1.6 }, { t: 'WhatsApp / telefone', w: 2.6 }, { t: 'Nascimento', w: 1.6 }],
+    rows: MEM.filter(m => m.status !== 'inativo').map(m => [m.full_name, ({ ativo: 'Ativo', visitante: 'Visitante', transferido: 'Transferido' })[m.status] || m.status, m.whatsapp || m.phone || '', m.birth_date ? dateBR(m.birth_date) : '']) }).catch(e => toast(errMsg(e), 'err'));
+}
+
+/* ===== Histórico de alterações ===== */
+const ENTITY = { members: 'Membros', families: 'Famílias', member_events: 'Histórico de membro', ministries: 'Ministérios', ministry_members: 'Equipes', schedules: 'Escalas', schedule_assignments: 'Pessoas na escala',
+  groups: 'Grupos', group_members: 'Membros de grupo', group_meetings: 'Encontros de grupo', events: 'Eventos', event_registrations: 'Inscrições', classes: 'Turmas', class_students: 'Alunos', class_lessons: 'Aulas',
+  studies: 'Estudos', discipleships: 'Discipulados', discipleship_meetings: 'Encontros de discipulado', assets: 'Patrimônio', church_sites: 'Site da igreja', organizations: 'Igreja',
+  finance_accounts: 'Caixas', finance_categories: 'Categorias', finance_transactions: 'Lançamentos do caixa', finance_payables: 'Contas a pagar e receber' };
+const ACT = { insert: ['Criou', 'green'], update: ['Alterou', 'blue'], delete: ['Excluiu', 'red'] };
+async function pageHistorico() {
+  shell('historico', spin);
+  const { data: team } = await sb.from('organization_members').select('user_id').eq('organization_id', S.org.id);
+  const { data: profs } = await sb.from('profiles').select('id,full_name').in('id', (team || []).map(t => t.user_id));
+  const who = id => !id ? 'Pelo link público' : profs?.find(p => p.id === id)?.full_name || 'Usuário';
+  const [d1] = monthRange();
+  $('#main').innerHTML = `${statusBanner()}<p class="muted" style="margin-bottom:14px">Tudo o que foi criado, alterado ou excluído no sistema, por quem e quando. Os registros não podem ser apagados.</p>
+    <div class="card"><div class="toolbar"><select id="fe" aria-label="Área"><option value="">Todas as áreas</option>${Object.entries(ENTITY).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select>
+      <div class="field"><label for="hd1">De</label><input type="date" id="hd1" value="${d1}"></div><div class="field"><label for="hd2">Até</label><input type="date" id="hd2" value="${ymd(new Date())}"></div></div><div id="list">${spin}</div></div>`;
+  const label = d => d?.full_name || d?.name || d?.title || d?.description || d?.slug || (d?.amount != null ? brl(d.amount) : '');
+  const load = async () => {
+    let q = sb.from('audit_logs').select('*').eq('organization_id', S.org.id).gte('created_at', new Date($('#hd1').value + 'T00:00').toISOString()).lte('created_at', new Date($('#hd2').value + 'T23:59:59').toISOString()).order('created_at', { ascending: false }).limit(500);
+    if ($('#fe').value) q = q.eq('entity', $('#fe').value);
+    const { data, error } = await q;
+    if (error) { $('#list').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+    const rows = data || [];
+    $('#list').innerHTML = rows.length ? `<div class="table-wrap"><table><thead><tr><th>Quando</th><th>Quem</th><th>O quê</th><th></th></tr></thead><tbody>${rows.map(r => { const d = r.action === 'update' ? r.data?.depois : r.data;
+      return `<tr><td style="white-space:nowrap">${new Date(r.created_at).toLocaleString('pt-BR')}</td><td>${esc(who(r.actor_id))}</td>
+        <td><span class="pill ${ACT[r.action]?.[1] || ''}">${ACT[r.action]?.[0] || esc(r.action)}</span> ${esc(ENTITY[r.entity] || r.entity)}<div class="muted" style="font-size:.82rem">${esc(String(label(d) || '').slice(0, 90))}</div></td>
+        <td><div class="row-actions">${r.action === 'update' ? `<button class="btn sm ghost" data-d="${r.id}">Ver mudança</button>` : ''}</div></td></tr>`; }).join('')}</tbody></table></div><p class="muted" style="font-size:.82rem;margin-top:10px">${rows.length} registro(s)${rows.length === 500 ? ' (mostrando os 500 mais recentes)' : ''}</p>`
+      : '<div class="empty">Nenhuma alteração neste período.</div>';
+    $('#list').querySelectorAll('[data-d]').forEach(b => b.onclick = () => { const r = rows.find(x => String(x.id) === b.dataset.d), a = r.data?.antes || {}, d = r.data?.depois || {};
+      const keys = Object.keys(d).filter(k => !['updated_at', 'created_at'].includes(k) && JSON.stringify(a[k]) !== JSON.stringify(d[k]));
+      modal('O que mudou', keys.length ? `<table><thead><tr><th>Campo</th><th>Antes</th><th>Depois</th></tr></thead><tbody>${keys.map(k => `<tr><td>${esc(k)}</td><td class="muted">${esc(JSON.stringify(a[k] ?? '—'))}</td><td>${esc(JSON.stringify(d[k] ?? '—'))}</td></tr>`).join('')}</tbody></table>` : '<p class="muted">Nenhum campo relevante mudou.</p>', { submitLabel: 'Fechar', onSubmit: async () => {} }); });
+  };
+  ['#fe', '#hd1', '#hd2'].forEach(s => $(s).onchange = load);
+  await load();
+}
+
+/* ===== Site da igreja ===== */
+async function pageSite() {
+  shell('site', spin);
+  const { data: site, error } = await sb.from('church_sites').select('*').eq('organization_id', S.org.id).maybeSingle();
+  if (error) { $('#main').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+  const ed = canPeople(), v = k => esc(site?.[k] ?? '');
+  const url = site ? publicUrl('igreja.html?s=' + site.slug) : '';
+  $('#main').innerHTML = `${statusBanner()}
+    <div class="grid2" style="align-items:start"><div class="card"><h3>Página pública da igreja</h3><p class="muted" style="margin:6px 0 16px">Uma página simples com horários, endereço, eventos, Pix e WhatsApp, para divulgar no Instagram e no Google.</p>
+      <form id="sf" class="stack" novalidate><fieldset ${ed ? '' : 'disabled'} class="fgrid">
+        <div class="field full"><label for="sl">Endereço da página *</label><input id="sl" name="slug" value="${v('slug') || esc(slug(S.org.name).slice(0, 40))}" maxlength="40" required><small>Só letras minúsculas, números e hífen. Ex.: batista-vida-nova</small></div>
+        <label class="check full"><input type="checkbox" name="enabled" ${site?.enabled ? 'checked' : ''}> Página publicada (visível para qualquer pessoa)</label>
+        <div class="field full"><label>Sobre a igreja</label><textarea name="about" maxlength="2000">${v('about')}</textarea></div>
+        <div class="field full"><label>Horários dos cultos</label><textarea name="service_times" maxlength="1000" placeholder="Domingo: 9h (EBD) e 18h (culto)&#10;Quarta: 19h30 (oração)">${v('service_times')}</textarea></div>
+        <div class="field"><label>Endereço</label><input name="address" maxlength="300" value="${v('address')}"></div><div class="field"><label>Cidade / UF</label><input name="city" maxlength="100" value="${v('city')}"></div>
+        <div class="field"><label>WhatsApp da secretaria</label><input name="whatsapp" maxlength="30" inputmode="tel" value="${v('whatsapp')}"></div><div class="field"><label>Chave Pix para ofertas</label><input name="pix_key" maxlength="140" value="${v('pix_key')}"></div>
+        <div class="field"><label>Instagram (link)</label><input name="instagram" maxlength="200" value="${v('instagram')}" placeholder="https://instagram.com/..."></div><div class="field"><label>YouTube (link)</label><input name="youtube" maxlength="200" value="${v('youtube')}" placeholder="https://youtube.com/..."></div>
+      </fieldset><div class="form-err" data-err></div>${ed ? '<button class="btn" type="submit">Salvar página</button>' : ''}</form></div>
+      <div class="card"><h3>Link da página</h3>${site ? `<p style="margin:8px 0;word-break:break-all"><a href="${esc(url)}" target="_blank" rel="noopener">${esc(url)}</a></p>
+        <p class="muted" style="font-size:.88rem">${site.enabled ? 'A página está publicada.' : 'A página ainda não está publicada: marque a opção e salve.'}</p>
+        <div class="row-actions" style="justify-content:flex-start;margin-top:10px"><button class="btn ghost sm" id="cpu">Copiar link</button><a class="btn ghost sm" target="_blank" rel="noopener" href="${esc(url)}">Ver página</a></div>`
+        : '<p class="muted" style="margin-top:8px">Salve a página para gerar o link.</p>'}
+        <p class="muted" style="font-size:.85rem;margin-top:14px">Os eventos marcados como “Mostrar no site da igreja” aparecem automaticamente, com o botão de inscrição quando ela estiver aberta.</p></div></div>`;
+  if ($('#cpu')) $('#cpu').onclick = () => copyText(url, 'Link copiado.');
+  $('#sf').onsubmit = async e => {
+    e.preventDefault(); const f = e.target, fd = new FormData(f), err = $('[data-err]', f), btn = $('[type=submit]', f);
+    const row = { slug: (fd.get('slug') || '').trim().toLowerCase(), enabled: !!f.elements.enabled.checked };
+    for (const k of ['about', 'service_times', 'address', 'city', 'whatsapp', 'pix_key', 'instagram', 'youtube']) row[k] = (fd.get(k) || '').trim() || null;
+    if (!/^[a-z0-9][a-z0-9-]{1,38}[a-z0-9]$/.test(row.slug)) { err.textContent = 'Endereço inválido: use de 3 a 40 letras minúsculas, números ou hífen.'; return; }
+    for (const k of ['instagram', 'youtube']) if (row[k] && !/^https?:\/\//i.test(row[k])) { err.textContent = 'Os links precisam começar com https://'; return; }
+    btn.disabled = true; err.textContent = '';
+    const r = site ? await sb.from('church_sites').update(row).eq('organization_id', S.org.id) : await sb.from('church_sites').insert({ ...row, organization_id: S.org.id });
+    btn.disabled = false;
+    if (r.error) { err.textContent = /duplicate|23505/.test(r.error.message) ? 'Esse endereço já está em uso por outra igreja. Escolha outro.' : errMsg(r.error); return; }
+    toast('Página salva.'); pageSite();
+  };
+}
+
+/* ===== Instalar o app (PWA) ===== */
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; document.querySelectorAll('[data-install]').forEach(b => b.classList.remove('hidden')); });
+window.addEventListener('appinstalled', () => { installEvt = null; document.querySelectorAll('[data-install]').forEach(b => b.classList.add('hidden')); toast('App instalado! Procure o ícone Gestão do Reino na tela inicial.'); });
+const isStandalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+async function installApp() {
+  if (installEvt) { installEvt.prompt(); await installEvt.userChoice; installEvt = null; return; }
+  const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  modal('Instalar o app', `<div class="stack"><p>${ios ? 'No iPhone, abra este site no <b>Safari</b>, toque em <b>Compartilhar</b> (o quadrado com a seta) e depois em <b>Adicionar à Tela de Início</b>.'
+    : 'No Android, abra no <b>Chrome</b>, toque nos <b>três pontinhos</b> e depois em <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.'}</p><p class="muted" style="font-size:.88rem">O app abre em tela cheia, com ícone próprio, e funciona como um aplicativo.</p></div>`, { submitLabel: 'Entendi', onSubmit: async () => {} });
+}
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 
 /* ===== Versões ===== */
 async function pageVersoes() {
@@ -1241,6 +1960,9 @@ async function render() {
     if (!S.org) return S.isAdmin && route !== 'criar-igreja' ? go('admin') : pageCriarIgreja();
     if (route === 'membros') return pageMembros(params);
     if (route === 'igreja') return pageIgreja();
+    const MODS = { familias: pageFamilias, grupos: pageGrupos, ministerios: pageMinisterios, escalas: () => pageEscalas(params), eventos: pageEventos, ensino: pageEnsino, estudos: pageEstudos,
+      discipulado: pageDiscipulado, patrimonio: pagePatrimonio, relatorios: pageRelatorios, site: pageSite, historico: () => canAudit() ? pageHistorico() : go('painel') };
+    if (MODS[route]) return await MODS[route]();
     if (['caixa', 'contas', 'fin-config'].includes(route)) {
       if (!canSeeFin()) { toast('Seu perfil não tem acesso ao financeiro.', 'err'); return go('painel'); }
       if (route === 'caixa') return await pageCaixa(params);

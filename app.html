@@ -178,7 +178,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* ===== Conexão com o banco (chave pública; a segurança fica nas políticas RLS) ===== */
 const SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd';
-const APP_VERSION = '0.4.0';
+const APP_VERSION = '0.4.1';
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
 /* ===== Utilidades ===== */
@@ -392,7 +392,7 @@ function shell(route, inner) {
       ${S.org ? `<div class="sec">${esc(S.org.name)}</div>${nav('painel', I.home, 'Painel')}${nav('membros', I.users, 'Membros')}${canSeeFin() ? `<div class="sec">Financeiro</div>${nav('caixa', I.cash, 'Caixa')}${nav('contas', I.bill, 'Contas a pagar e receber')}` : ''}${nav('igreja', I.church, 'Minha igreja')}`
         : (!S.isAdmin ? nav('criar-igreja', I.church, 'Cadastrar igreja') : '')}
       ${S.isAdmin ? `<div class="sec">Proprietário</div>${nav('admin', I.chart, 'Visão geral')}${nav('admin-financeiro', I.money, 'Financeiro')}${nav('admin-igrejas', I.church, 'Igrejas clientes')}${nav('admin-planos', I.tag, 'Planos e preços')}` : ''}
-      <div class="sec">Sistema</div>${nav('versoes', I.ver, 'Versões e atualizações')}
+      ${S.isAdmin ? `<div class="sec">Sistema</div>${nav('versoes', I.ver, 'Versões e atualizações')}` : ''}
       <div class="grow"></div><div class="ver">Versão ${APP_VERSION}</div>
     </aside>
     <div>
@@ -474,7 +474,7 @@ async function pagePainel() {
         ${bdays.length ? `<table><tbody>${bdays.map(b => `<tr><td>${esc(b.full_name)}</td><td class="muted" style="text-align:right">dia ${b.birth_date.slice(8)}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Nenhum aniversariante neste mês.</div>'}</div>
     </div>
     <div id="finCard"></div>
-    <div class="card" style="margin-top:14px"><h3>Próximos módulos</h3><p class="muted" style="margin-top:6px">Congregações, departamentos, tesouraria com fundos e aprovações e relatórios avançados estão em desenvolvimento. Acompanhe em <a href="#versoes">Versões e atualizações</a>.</p></div>`;
+    <div class="card" style="margin-top:14px"><h3>Próximos módulos</h3><p class="muted" style="margin-top:6px">Congregações, departamentos, tesouraria com fundos e aprovações e relatórios avançados estão em desenvolvimento.${S.isAdmin ? ' Acompanhe em <a href="#versoes">Versões e atualizações</a>.' : ''}</p></div>`;
   if (canSeeFin()) {
     const [a, z] = monthRange();
     const [{ data: r }, { data: late }] = await Promise.all([
@@ -1237,7 +1237,7 @@ async function render() {
       if (route === 'admin-planos') return pageAdminPlanos();
       if (route === 'admin-financeiro') return pageAdminFinanceiro();
     }
-    if (route === 'versoes') return pageVersoes();
+    if (route === 'versoes') return S.isAdmin ? pageVersoes() : go(S.org ? 'painel' : 'criar-igreja');
     if (!S.org) return S.isAdmin && route !== 'criar-igreja' ? go('admin') : pageCriarIgreja();
     if (route === 'membros') return pageMembros(params);
     if (route === 'igreja') return pageIgreja();

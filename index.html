@@ -6,12 +6,19 @@
 <title>Gestão do Reino — Sistema de gestão para igrejas</title>
 <meta name="description" content="Gestão do Reino: membros, células, finanças, eventos, escalas e comunicação da sua igreja em um só lugar. Teste grátis por 14 dias.">
 <meta name="theme-color" content="#1e1b4b">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231e1b4b'/%3E%3Cpath d='M14 44l4-22 9 10 5-14 5 14 9-10 4 22z' fill='%23f5b301'/%3E%3C/svg%3E">
 <meta property="og:title" content="Gestão do Reino — Sistema de gestão para igrejas">
 <meta property="og:description" content="Organize membros, células, finanças e eventos da sua igreja. Teste grátis por 14 dias.">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://darlanvr92-jpg.github.io/GESTAO-DO-REINO/img/og.jpg">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+
 <style>
   :root{
     --ink:#0f0d2e; --royal:#1e1b4b; --royal-2:#312e81; --violet:#4f46e5;
@@ -218,6 +225,58 @@
     .mock-kpis{grid-template-columns:1fr 1fr}
     .nav-cta .btn{padding:.6rem 1rem;font-size:.9rem}
   }
+
+  /* ===== Visual 0.7 — moderno ===== */
+  :root{--violet:#5B4BF5;--grad:linear-gradient(135deg,#4F46E5 0%,#7C3AED 55%,#C026D3 100%);--gold:#F7B500}
+  body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  h1,h2,h3,.brand,.trust strong{font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;font-weight:800;letter-spacing:-.03em}
+  h2{font-size:clamp(2rem,3.6vw,2.9rem)}
+  .eyebrow{background:linear-gradient(135deg,#EEF0FF,#F5EEFF);color:#5B3FE0;padding:.35rem .85rem;border-radius:999px;letter-spacing:.1em;font-size:.74rem}
+  header{background:rgba(16,13,52,.94);backdrop-filter:saturate(1.8) blur(16px);-webkit-backdrop-filter:saturate(1.8) blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
+  .btn-gold{background:linear-gradient(135deg,#FFD24D,#F7B500);box-shadow:0 10px 28px -10px rgba(247,181,0,.9),inset 0 1px 0 rgba(255,255,255,.5)}
+  .btn-gold:hover{background:linear-gradient(135deg,#FFDB6B,#FFC21A);box-shadow:0 16px 34px -10px rgba(247,181,0,.95)}
+  .btn-dark{background:var(--grad);box-shadow:0 10px 24px -10px rgba(91,63,224,.8)}
+  .hero{position:relative;background:
+     radial-gradient(900px 520px at 85% -5%,rgba(124,58,237,.65),transparent 60%),
+     radial-gradient(700px 480px at -5% 30%,rgba(79,70,229,.55),transparent 60%),
+     radial-gradient(600px 400px at 60% 110%,rgba(192,38,211,.35),transparent 60%),
+     linear-gradient(180deg,#14113F,#0A0826)}
+  .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:48px 48px;-webkit-mask-image:radial-gradient(ellipse at 50% 30%,#000 30%,transparent 75%);mask-image:radial-gradient(ellipse at 50% 30%,#000 30%,transparent 75%);pointer-events:none}
+  .hero .wrap{position:relative}
+  .hero h1{font-size:clamp(2.5rem,5.4vw,4.1rem);line-height:1.04}
+  .hero h1 em{background:linear-gradient(90deg,#FFD24D,#FF9F43 60%,#FF6FB5);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .pill{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.18);backdrop-filter:blur(6px)}
+  .pill i{box-shadow:0 0 0 4px rgba(247,181,0,.25);animation:pulse 2s infinite}
+  @keyframes pulse{50%{box-shadow:0 0 0 8px rgba(247,181,0,0)}}
+  .mock{border-radius:24px;box-shadow:0 50px 100px -30px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.12),0 0 80px -10px rgba(124,58,237,.6);animation:float 6s ease-in-out infinite}
+  @keyframes float{50%{transform:rotate(-1.2deg) translateY(-10px)}}
+  .bars div{background:var(--grad)}
+  .trust{background:#fff}
+  .trust strong{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:2.3rem}
+  .feat{border-radius:22px;position:relative;overflow:hidden}
+  .feat::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .25s}
+  .feat:hover::before{opacity:1}
+  .feat:hover{box-shadow:0 24px 50px -24px rgba(91,63,224,.45);transform:translateY(-4px)}
+  .ico{background:var(--grad);color:#fff;box-shadow:0 10px 22px -10px rgba(124,58,237,.9);border-radius:16px}
+  .step{border-radius:22px;box-shadow:0 1px 2px rgba(16,24,48,.04),0 12px 30px -20px rgba(30,27,75,.35)}
+  .step::before{background:var(--grad);color:#fff;box-shadow:0 8px 18px -6px rgba(124,58,237,.8)}
+  .phone{box-shadow:0 50px 90px -30px rgba(30,27,75,.7),0 0 0 1px rgba(255,255,255,.06),0 0 90px -20px rgba(124,58,237,.55)}
+  .screen-head{background:var(--grad)}
+  .promise{background:linear-gradient(180deg,#fff,#F6F4FF)}
+  .promises{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px;text-align:left}
+  .pr{background:#fff;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 12px 30px -22px rgba(30,27,75,.4);transition:transform .2s,box-shadow .2s}
+  .pr:hover{transform:translateY(-4px);box-shadow:0 24px 50px -24px rgba(91,63,224,.45)}
+  .pr-ic{width:52px;height:52px;border-radius:16px;background:var(--grad);color:#fff;display:grid;place-items:center;font-family:"Plus Jakarta Sans",sans-serif;font-weight:800;font-size:1.2rem;margin-bottom:16px;box-shadow:0 10px 22px -10px rgba(124,58,237,.9)}
+  .pr h3{font-size:1.15rem;margin-bottom:.35rem}.pr p{color:var(--muted);font-size:.95rem}
+  @media (max-width:900px){.promises{grid-template-columns:1fr 1fr}}
+  @media (max-width:560px){.promises{grid-template-columns:1fr}}
+
+  .plan{box-shadow:0 12px 30px -22px rgba(30,27,75,.4);transition:transform .2s,box-shadow .2s}
+  .plan:not(.pop):hover{transform:translateY(-4px);box-shadow:0 24px 50px -24px rgba(91,63,224,.45)}
+  .plan.pop{background:radial-gradient(500px 260px at 100% 0,rgba(192,38,211,.45),transparent 60%),linear-gradient(160deg,#3B2BB8,#1A1452);border:0;box-shadow:0 40px 80px -30px rgba(91,63,224,.85),0 0 0 1px rgba(255,255,255,.08)}
+  .cta{background:radial-gradient(600px 300px at 100% 0,rgba(192,38,211,.45),transparent 60%),radial-gradient(500px 300px at 0 100%,rgba(79,70,229,.6),transparent 60%),linear-gradient(135deg,#1A1452,#0A0826);box-shadow:0 40px 80px -40px rgba(30,27,75,.8)}
+  .shots figure{border-radius:20px;box-shadow:0 30px 60px -30px rgba(30,27,75,.45);transition:transform .25s}
+  .shots figure:hover{transform:translateY(-6px)}
 </style>
 </head>
 <body>
@@ -389,7 +448,7 @@
     <div class="shots">
       <figure><img src="img/tela-escalas.webp" alt="Tela de escalas com quem confirmou e aviso de conflito" loading="lazy" width="1200" height="760"><figcaption>Escalas: quem confirmou, quem não pode e aviso de conflito no mesmo dia.</figcaption></figure>
       <figure><img src="img/tela-caixa.webp" alt="Tela do caixa com saldo, entradas, saídas e lançamentos" loading="lazy" width="1200" height="760"><figcaption>Caixa: saldo do período, entradas, saídas e PDF para a prestação de contas.</figcaption></figure>
-      <figure><img src="img/tela-confirmar.webp" alt="Página de confirmação da escala no celular" loading="lazy" width="700" height="1257" style="max-height:420px;object-fit:cover;object-position:top"><figcaption>No celular do voluntário: confirma com um toque, sem baixar nada.</figcaption></figure>
+      <figure><img src="img/tela-confirmar.webp" alt="Página de confirmação da escala no celular" loading="lazy" width="700" height="1514" style="max-height:420px;object-fit:cover;object-position:top"><figcaption>No celular do voluntário: confirma com um toque, sem baixar nada.</figcaption></figure>
     </div>
     <p class="muted" style="font-size:.82rem;margin-top:14px">Imagens do sistema com dados de exemplo.</p>
   </div>
@@ -522,22 +581,23 @@
 
     <div class="enterprise">
       <div><strong>Convenção, ministério ou rede de igrejas?</strong><p class="muted">Condições especiais para muitas igrejas, com implantação assistida.</p></div>
-      <a href="mailto:contato@gestaodoreino.com.br" class="btn btn-outline">Falar com a equipe</a>
+      <a href="https://wa.me/5533997305310?text=Ol%C3%A1!%20Quero%20uma%20proposta%20do%20Gest%C3%A3o%20do%20Reino%20para%20conven%C3%A7%C3%A3o%2C%20minist%C3%A9rio%20ou%20rede%20de%20igrejas." target="_blank" rel="noopener" class="btn btn-outline">Falar com a equipe</a>
     </div>
   </div>
 </section>
 
-<!-- DEPOIMENTOS -->
-<section style="background:#fff">
+<!-- GARANTIAS (os depoimentos reais entram aqui quando houver autorização das igrejas) -->
+<section class="promise">
   <div class="wrap center">
-    <span class="eyebrow">Depoimentos</span>
-    <h2>Feito para quem serve</h2>
-    <div class="quotes" style="text-align:left">
-      <div class="quote"><div class="stars">★★★★★</div><p>[Depoimento de pastor sobre a organização dos membros e das células.]</p><div class="who"><div class="av">P</div><div><b>[Nome do pastor]</b><small>[Igreja · Cidade/UF]</small></div></div></div>
-      <div class="quote"><div class="stars">★★★★★</div><p>[Depoimento da tesouraria sobre a prestação de contas e os relatórios financeiros.]</p><div class="who"><div class="av">T</div><div><b>[Nome do tesoureiro]</b><small>[Igreja · Cidade/UF]</small></div></div></div>
-      <div class="quote"><div class="stars">★★★★★</div><p>[Depoimento de líder de ministério sobre as escalas pelo app.]</p><div class="who"><div class="av">L</div><div><b>[Nome do líder]</b><small>[Igreja · Cidade/UF]</small></div></div></div>
+    <span class="eyebrow">Sem risco</span>
+    <h2>Experimente com tranquilidade</h2>
+    <p class="lead">Você testa com os dados da sua igreja e só decide depois de ver funcionando.</p>
+    <div class="promises">
+      <div class="pr"><div class="pr-ic">14</div><h3>14 dias grátis</h3><p>Todos os recursos do plano liberados. Não pedimos cartão para começar.</p></div>
+      <div class="pr"><div class="pr-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></div><h3>Sem fidelidade</h3><p>Cancele quando quiser, sem multa. Nada de contrato longo.</p></div>
+      <div class="pr"><div class="pr-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><h3>Dados protegidos</h3><p>Cada igreja vê só os próprios dados. Servidores no Brasil e respeito à LGPD.</p></div>
+      <div class="pr"><div class="pr-ic"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.6 7.3L3 21l2.2-5.2A8.5 8.5 0 1 1 21 11.5z"/></svg></div><h3>Ajuda de gente</h3><p>Suporte pelo WhatsApp, em português, para tirar dúvidas e importar seus membros.</p></div>
     </div>
-    <p class="sample">Espaço reservado: substitua por depoimentos reais de igrejas clientes, com autorização.</p>
   </div>
 </section>
 

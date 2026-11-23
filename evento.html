@@ -8,6 +8,7 @@
 
 <link rel="icon" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#0B1F3A;--royal:#2453D6;--gold:#C9A24B;--green:#15935B;--red:#D2453B;--amber:#B7791F;--bg:#F4F6FA;--surface:#fff;--text:#14213A;--muted:#5B6782;--line:#E2E7F0}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -31,6 +32,20 @@ input,textarea{font:inherit;min-height:46px;padding:10px 12px;border-radius:10px
 .foot{text-align:center;margin-top:26px;font-size:.82rem;color:var(--muted)} .foot a{color:var(--muted)}
 .loading{text-align:center;padding:40px 0;color:var(--muted)}
 @media (max-width:480px){.row{grid-template-columns:1fr}}
+
+/* Visual 0.7 */
+:root{--royal:#3355F0;--grad:linear-gradient(135deg,#3355F0,#6A4BEF)}
+body{background:radial-gradient(900px 340px at 50% -80px,rgba(106,75,239,.28),transparent 70%),radial-gradient(600px 300px at 0 0,rgba(51,85,240,.18),transparent 70%),var(--bg);min-height:100vh}
+h1,h2,.brand{font-family:"Plus Jakarta Sans",Inter,system-ui,sans-serif;letter-spacing:-.02em}
+h1{font-weight:800}
+.card{border-radius:22px;box-shadow:0 1px 2px rgba(16,24,48,.04),0 20px 40px -24px rgba(30,40,110,.35)}
+.btn{background:var(--grad);box-shadow:0 8px 18px -8px rgba(51,85,240,.7);transition:transform .12s,filter .2s}
+.btn:hover{filter:brightness(1.07);transform:translateY(-1px)}
+.btn.green{background:linear-gradient(135deg,#22C55E,#15935B);box-shadow:0 8px 18px -8px rgba(21,147,91,.7)}
+.btn.wa{background:linear-gradient(135deg,#2BCB6A,#16A34A)}
+.btn.ghost,.btn.red{box-shadow:none;background:#fff}
+input,textarea,select{border-radius:12px}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--royal);box-shadow:0 0 0 4px rgba(51,85,240,.15)}
 </style>
 </head>
 <body>

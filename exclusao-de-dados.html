@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exclusão de conta e de dados — Gestão do Reino</title>
+<meta name="theme-color" content="#0B1F3A">
+<link rel="icon" href="icons/icon-192.png">
+<style>
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#F4F6FA;color:#14213A;line-height:1.65;margin:0}
+.wrap{width:min(760px,92%);margin:0 auto;padding:28px 0 56px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;color:#0B1F3A;text-decoration:none;margin-bottom:22px}
+.brand img{width:32px;height:32px;border-radius:9px}
+article{background:#fff;border:1px solid #E2E7F0;border-radius:18px;padding:32px}
+h1{font-size:1.8rem;line-height:1.2;margin:0 0 6px} h2{font-size:1.15rem;margin:28px 0 8px}
+p,li{color:#2B3852} ul{padding-left:20px} .muted{color:#5B6782;font-size:.9rem}
+nav{display:flex;gap:16px;margin-top:20px;font-size:.92rem} a{color:#2453D6}
+@media (max-width:560px){article{padding:22px}}
+</style>
+</head>
+<body><div class="wrap"><a class="brand" href="index.html"><img src="icons/icon-192.png" alt="">Gestão do Reino</a>
+<article><h1>Exclusão de conta e de dados</h1><p class="muted">Gestão do Reino · última atualização: 23 de novembro de 2026</p>
+<p>Você pode pedir a exclusão da sua conta ou dos seus dados pessoais a qualquer momento. Esta página explica como fazer e o que acontece com os dados.</p>
+<h2>1. Excluir a conta da igreja</h2><p>Quem pode pedir: o administrador da igreja. Todos os dados da igreja (membros, finanças, escalas, eventos, arquivos) são excluídos.</p>
+<ul><li>Antes, se quiser, exporte o que precisar: PDF do caixa, lista de membros, inventário e certificados.</li><li>Envie o pedido pelo formulário abaixo, informando o nome da igreja e o e-mail de administrador.</li><li>Confirmamos o pedido com o administrador e excluímos tudo em até 15 dias.</li></ul>
+<h2>2. Excluir só o seu usuário</h2><p>Se você usa o sistema convidado por uma igreja, peça ao administrador dela para remover seu acesso, ou envie o pedido abaixo. O seu login e dados de perfil (nome, e-mail, telefone) são excluídos.</p>
+<h2>3. Sou membro e quero excluir meus dados</h2><p>Os dados de membros são cadastrados e controlados pela igreja. Peça primeiro à secretaria da sua igreja. Se não for atendido, envie o pedido abaixo e ajudamos a igreja a cumprir a solicitação, conforme a LGPD.</p>
+<h2>O que é excluído e o que fica</h2><ul><li><b>Excluído:</b> cadastro, fotos, arquivos enviados, histórico, escalas, inscrições e o acesso ao sistema.</li>
+<li><b>Guardado pelo prazo legal:</b> registros de assinatura e pagamento do Gestão do Reino (obrigação fiscal) e registros de acesso exigidos pelo Marco Civil da Internet (6 meses). Depois disso, também são apagados.</li>
+<li><b>Cópias de segurança:</b> são sobrescritas automaticamente em até 30 dias.</li></ul>
+<h2>Fazer o pedido</h2>
+<form id="f" style="display:grid;gap:12px;margin-top:10px">
+<label style="display:grid;gap:6px;font-weight:600">Tipo de pedido<select name="t" style="font:inherit;padding:10px;border-radius:10px;border:1px solid #E2E7F0"><option>Excluir a conta da igreja</option><option>Excluir o meu usuário</option><option>Excluir meus dados de membro</option></select></label>
+<label style="display:grid;gap:6px;font-weight:600">Seu nome<input name="n" required maxlength="120" style="font:inherit;padding:10px;border-radius:10px;border:1px solid #E2E7F0"></label>
+<label style="display:grid;gap:6px;font-weight:600">E-mail de cadastro<input name="e" type="email" required maxlength="160" style="font:inherit;padding:10px;border-radius:10px;border:1px solid #E2E7F0"></label>
+<label style="display:grid;gap:6px;font-weight:600">Nome da igreja<input name="i" maxlength="120" style="font:inherit;padding:10px;border-radius:10px;border:1px solid #E2E7F0"></label>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button type="submit" data-via="wa" style="font:inherit;font-weight:650;padding:12px 18px;border-radius:10px;border:0;background:#1FA855;color:#fff;cursor:pointer">Enviar pelo WhatsApp</button>
+<button type="submit" data-via="mail" style="font:inherit;font-weight:650;padding:12px 18px;border-radius:10px;border:1px solid #E2E7F0;background:#fff;cursor:pointer">Enviar por e-mail</button></div>
+<p class="muted">Respondemos em até 2 dias úteis. Para sua segurança, podemos pedir uma confirmação pelo e-mail cadastrado.</p></form>
+<script>
+var via='wa';document.querySelectorAll('[data-via]').forEach(function(b){b.onclick=function(){via=b.dataset.via;};});
+document.getElementById('f').onsubmit=function(e){e.preventDefault();var f=e.target;if(!f.n.value.trim()||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.e.value)){alert('Preencha seu nome e um e-mail válido.');return;}
+var t='Pedido de exclusão — Gestão do Reino\nTipo: '+f.t.value+'\nNome: '+f.n.value+'\nE-mail: '+f.e.value+'\nIgreja: '+(f.i.value||'-');
+if(via==='wa')window.open('https://wa.me/5533997305310?text='+encodeURIComponent(t),'_blank');else location.href='mailto:contato@gestaodoreino.com.br?subject='+encodeURIComponent('Pedido de exclusão de dados')+'&body='+encodeURIComponent(t);};
+</script></article>
+<nav><a href="index.html">Início</a><a href="termos.html">Termos de Uso</a><a href="privacidade.html">Política de Privacidade</a><a href="exclusao-de-dados.html">Exclusão de dados</a><a href="app.html">Entrar</a></nav></div></body></html>

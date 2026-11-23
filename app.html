@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Painel — Gestão do Reino</title>
-<meta name="theme-color" content="#0B1F3A">
+<meta name="theme-color" content="#0B1533">
 <meta name="robots" content="noindex">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230B1F3A'/%3E%3Cpath d='M16 42h32v5H16zM18 40l4-16 7 8 3-12 3 12 7-8 4 16z' fill='%23C9A24B'/%3E%3C/svg%3E">
 <link rel="manifest" href="manifest.webmanifest">
@@ -13,14 +13,14 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#0B1F3A;--royal:#2453D6;--royal-2:#1C43B3;--gold:#C9A24B;--green:#15935B;--red:#D2453B;--amber:#B7791F;
 --bg:#F4F6FA;--surface:#fff;--surface-2:#F8FAFD;--text:#14213A;--muted:#5B6782;--line:#E2E7F0;--shadow:0 10px 30px -14px rgba(11,31,58,.25)}
 [data-theme="dark"]{--bg:#0A1424;--surface:#111E33;--surface-2:#0E1A2D;--text:#E8EDF6;--muted:#9AA8C2;--line:#22324D;--shadow:0 10px 30px -14px rgba(0,0,0,.6)}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-font-smoothing:antialiased}
-h1,h2,h3{font-family:Fraunces,Georgia,serif;letter-spacing:-.01em;line-height:1.2}
+h1,h2,h3{font-family:var(--display);letter-spacing:-.01em;line-height:1.2}
 a{color:var(--royal)}
 button,input,select,textarea{font:inherit;color:inherit}
 :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
@@ -46,7 +46,7 @@ input[type=checkbox]{width:18px;height:18px;min-height:0;accent-color:var(--roya
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .stack{display:grid;gap:14px}
 .muted{color:var(--muted)}
-.brand{display:flex;align-items:center;gap:10px;font-family:Fraunces,serif;font-weight:700;font-size:1.15rem;color:inherit;text-decoration:none}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:1.15rem;color:inherit;text-decoration:none}
 .mark{width:36px;height:36px;border-radius:10px;background:var(--navy);display:grid;place-items:center;flex:none}
 [data-theme="dark"] .mark{background:#1A3460}
 
@@ -98,7 +98,7 @@ main.content{padding:28px;max-width:1240px;width:100%}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
 .kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
 .kpi small{display:block;color:var(--muted);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
-.kpi strong{display:block;font-size:1.8rem;font-family:Fraunces,serif;margin-top:6px;font-variant-numeric:tabular-nums}
+.kpi strong{display:block;font-size:1.8rem;font-family:var(--display);margin-top:6px;font-variant-numeric:tabular-nums}
 .kpi em{font-style:normal;font-size:.82rem;color:var(--muted)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:22px}
 .card h3{font-size:1.15rem;margin-bottom:4px}
@@ -129,7 +129,7 @@ tr:last-child td{border-bottom:0}
 .rel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;position:relative}
 .rel.current{border-color:color-mix(in srgb,var(--gold) 70%,var(--line))}
 .rel header{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.rel .v{font-family:Fraunces,serif;font-size:1.3rem;font-weight:700}
+.rel .v{font-family:var(--display);font-size:1.3rem;font-weight:700}
 .rel ul{padding-left:20px;display:grid;gap:5px;color:var(--text)}
 .rel ul li::marker{color:var(--gold)}
 /* Modal & toast */
@@ -169,6 +169,117 @@ tr.canceled td{opacity:.6}
 .bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#e0b85a);border-radius:99px}
 .small{font-size:.84rem}.map-count{background:transparent;border:0;box-shadow:none;color:#0B1F3A;font-weight:800}.map-count::before{display:none}
 .photo-prev{width:84px;height:104px;border-radius:10px;border:1px solid var(--line);object-fit:cover;background:var(--surface-2);display:grid;place-items:center;color:var(--muted);font-size:.8rem;text-align:center}
+
+/* ===== Visual 0.7 — moderno ===== */
+:root{--display:"Plus Jakarta Sans",Inter,system-ui,sans-serif;--royal:#3355F0;--royal-2:#2442CF;--violet:#7048E8;--grad:linear-gradient(135deg,#3355F0 0%,#6A4BEF 100%);--gold:#E2B13C;--gold-2:#F5CF6B;
+  --bg:#F3F5FB;--line:#E4E8F2;--shadow:0 1px 2px rgba(16,24,48,.04),0 8px 24px -12px rgba(16,24,48,.14);--shadow-lg:0 24px 48px -20px rgba(30,40,110,.35);--r:18px}
+[data-theme="dark"]{--bg:#070E1D;--surface:#0F1A2E;--surface-2:#0B1526;--line:#1D2B45;--shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px -14px rgba(0,0,0,.6)}
+body{background:var(--bg)}
+h1,h2,h3{font-weight:800;letter-spacing:-.02em}
+.shell>div:last-child{background:radial-gradient(1200px 380px at 70% -120px,color-mix(in srgb,var(--royal) 13%,transparent),transparent 70%),radial-gradient(700px 300px at 0 -80px,color-mix(in srgb,var(--violet) 9%,transparent),transparent 70%)}
+/* Botões */
+.btn{background:var(--grad);box-shadow:0 6px 16px -8px rgba(51,85,240,.65),inset 0 1px 0 rgba(255,255,255,.18);transition:transform .12s,box-shadow .2s,filter .2s;border-radius:12px}
+.btn:hover{background:var(--grad);filter:brightness(1.07);transform:translateY(-1px);box-shadow:0 10px 22px -10px rgba(51,85,240,.75)}
+.btn:active{transform:none}
+.btn.ghost{background:var(--surface);box-shadow:0 1px 2px rgba(16,24,48,.05);border-color:var(--line)}
+.btn.ghost:hover{background:var(--surface);filter:none;border-color:color-mix(in srgb,var(--royal) 55%,var(--line));color:var(--royal)}
+.btn.gold{background:linear-gradient(135deg,var(--gold-2),var(--gold));color:#2A1E05;box-shadow:0 8px 18px -8px rgba(226,177,60,.8)}
+.btn.danger{background:linear-gradient(135deg,#F0645A,#D2453B);box-shadow:0 6px 16px -8px rgba(210,69,59,.7)}
+.btn.wa{background:linear-gradient(135deg,#2BCB6A,#16A34A);box-shadow:0 6px 16px -8px rgba(22,163,74,.7)}
+.btn.sm{border-radius:10px}
+input,select,textarea{border-radius:12px;background:var(--surface);transition:border-color .15s,box-shadow .15s}
+input:hover,select:hover,textarea:hover{border-color:color-mix(in srgb,var(--royal) 30%,var(--line))}
+/* Lateral */
+.side{background:linear-gradient(180deg,#0B1533 0%,#101A45 55%,#18154A 100%);border-right:1px solid rgba(255,255,255,.04)}
+.side .brand{font-family:var(--display);font-weight:800;letter-spacing:-.02em}
+.side .mark{background:linear-gradient(135deg,#2A3B8F,#4B3BB8);box-shadow:0 6px 16px -6px rgba(106,75,239,.8)}
+.side .sec{color:#7C8BC0;font-weight:700}
+.side a.nav{position:relative;transition:background .15s,color .15s}
+.side a.nav.on{background:linear-gradient(135deg,rgba(51,85,240,.95),rgba(106,75,239,.95));box-shadow:0 10px 24px -10px rgba(91,80,245,.9),inset 0 1px 0 rgba(255,255,255,.15)}
+.side a.nav.on::before{content:"";position:absolute;left:-14px;top:10px;bottom:10px;width:4px;border-radius:0 4px 4px 0;background:var(--gold-2)}
+/* Topo */
+.top{background:color-mix(in srgb,var(--surface) 78%,transparent);backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px)}
+.top h1{font-family:var(--display);font-weight:800;letter-spacing:-.02em}
+.icon-btn,.user-btn{background:var(--surface);transition:border-color .15s}
+.icon-btn:hover,.user-btn:hover{border-color:color-mix(in srgb,var(--royal) 45%,var(--line))}
+.avatar{background:linear-gradient(135deg,var(--gold-2),var(--gold));color:#2A1E05;border-radius:10px}
+/* Cartões */
+.card,.kpi,.rel,.plan-card{border-radius:var(--r);box-shadow:var(--shadow);border-color:var(--line)}
+.card h3{font-family:var(--display);font-weight:800;letter-spacing:-.015em}
+.kpi{position:relative;overflow:hidden;transition:transform .15s,box-shadow .2s}
+.kpi:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+.kpi::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:var(--grad)}
+.kpis>.kpi:nth-child(4n+2)::before{background:linear-gradient(90deg,#16A34A,#4ADE80)}
+.kpis>.kpi:nth-child(4n+3)::before{background:linear-gradient(90deg,var(--gold),var(--gold-2))}
+.kpis>.kpi:nth-child(4n+4)::before{background:linear-gradient(90deg,#E5484D,#F97066)}
+.kpi::after{content:"";position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--royal) 12%,transparent),transparent 70%)}
+.kpi small{font-size:.72rem;letter-spacing:.08em}
+.kpi strong{font-weight:800;letter-spacing:-.03em;font-size:2rem}
+.kpi strong.mk{font-size:1.5rem}
+/* Aviso */
+.banner{border-radius:16px;box-shadow:var(--shadow);padding:14px 16px 14px 20px;position:relative;overflow:hidden}
+.banner::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--grad)}
+.banner.warn::before{background:linear-gradient(180deg,var(--gold-2),var(--amber))}
+.banner.err::before{background:linear-gradient(180deg,#F97066,var(--red))}
+.banner-act{display:flex;gap:8px;flex-wrap:wrap}
+/* Tabelas e etiquetas */
+th{font-size:.7rem;letter-spacing:.08em}
+tbody tr{transition:background .12s}
+tbody tr:hover td{background:color-mix(in srgb,var(--royal) 4%,transparent)}
+.pill{border-radius:99px;font-weight:700;letter-spacing:.01em}
+.tabs{gap:6px;border:0;background:var(--surface);padding:5px;border-radius:14px;box-shadow:var(--shadow);border:1px solid var(--line);width:fit-content;max-width:100%}
+.tabs a{border:0;border-radius:10px;padding:8px 14px;margin:0}
+.tabs a.on{background:var(--grad);color:#fff;box-shadow:0 6px 14px -8px rgba(51,85,240,.8)}
+.bar span{background:var(--grad)}
+.modal{border-radius:22px;box-shadow:0 40px 80px -30px rgba(10,16,50,.6)}
+.modal header h3{font-family:var(--display);font-weight:800}
+.overlay{background:rgba(8,12,32,.5);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.toast{border-radius:14px;font-weight:500}
+.toast.info{background:linear-gradient(135deg,#1E2A5E,#3B2E8F)}
+.empty{padding:48px 16px}
+.empty::before{content:"";display:block;width:56px;height:56px;margin:0 auto 14px;border-radius:18px;background:var(--grad);opacity:.14}
+.sched-card{border-radius:16px;background:var(--surface);box-shadow:var(--shadow)}
+/* Entrada (login/cadastro) */
+.auth-side{background:radial-gradient(700px 420px at 100% 0,rgba(106,75,239,.55),transparent 60%),radial-gradient(600px 400px at 0 100%,rgba(51,85,240,.45),transparent 60%),linear-gradient(160deg,#0A1230,#151A4D);position:relative;overflow:hidden}
+.auth-side h1{font-size:2.7rem;font-weight:800;line-height:1.08;letter-spacing:-.03em}
+.auth-side h1::after{content:"";display:block;width:64px;height:5px;border-radius:9px;margin-top:20px;background:linear-gradient(90deg,var(--gold-2),var(--gold))}
+.auth-card h2{font-family:var(--display);font-weight:800;font-size:1.9rem;letter-spacing:-.03em}
+.auth-main{background:radial-gradient(600px 300px at 50% 0,color-mix(in srgb,var(--royal) 8%,transparent),transparent 70%)}
+/* Assinatura e planos */
+.sub-plan{display:grid;gap:2px;margin:4px 0 12px}.sub-plan span{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.sub-plan b{font-family:var(--display);font-size:1.6rem;font-weight:800;letter-spacing:-.02em;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;width:fit-content}
+.sub-plan em{font-style:normal;color:var(--muted)}
+.meter{height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin-bottom:6px}.meter i{display:block;height:100%;background:var(--grad);border-radius:9px}
+.cyc{display:inline-flex;gap:4px;padding:4px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);margin-bottom:14px}
+.cyc button{border:0;background:transparent;padding:8px 14px;border-radius:9px;font-weight:700;cursor:pointer;display:flex;gap:8px;align-items:center}
+.cyc button.on{background:var(--surface);box-shadow:var(--shadow);color:var(--royal)}
+.plans-pick{display:grid;gap:10px}
+.pick{position:relative;display:grid;grid-template-columns:auto 1fr auto;gap:4px 12px;align-items:center;padding:16px;border:1.5px solid var(--line);border-radius:16px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+.pick input{width:18px;height:18px;min-height:0;grid-row:span 2;accent-color:var(--royal)}
+.pick b{font-family:var(--display);font-size:1.1rem}.pick .pr{font-weight:800;font-variant-numeric:tabular-nums}.pick small{grid-column:2/-1;color:var(--muted)}
+.pick:has(input:checked){border-color:var(--royal);box-shadow:0 0 0 4px color-mix(in srgb,var(--royal) 14%,transparent)}
+.pick .tag{position:absolute;top:-10px;right:14px;background:linear-gradient(135deg,var(--gold-2),var(--gold));color:#2A1E05;font-size:.7rem;font-weight:800;padding:3px 10px;border-radius:99px}
+td.act{white-space:nowrap;text-align:right}td.act .btn+.btn{margin-left:6px}
+/* Celular: tabelas viram cartões */
+@media (max-width:640px){
+  .table-wrap{overflow:visible}
+  .table-wrap table,.table-wrap tbody,.table-wrap tr,.table-wrap td{display:block;width:100%}
+  .table-wrap thead{display:none}
+  .table-wrap tr{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+  .table-wrap tbody tr:hover td{background:transparent}
+  .table-wrap td{border:0;padding:3px 0;text-align:left}
+  .table-wrap td.num{text-align:left}
+  .table-wrap td[data-l]:not(:first-child):not(:empty)::before{content:attr(data-l);display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+  .table-wrap td:first-child{font-size:1rem}
+  .table-wrap td:has(.btn){padding-top:10px}
+  .table-wrap td:has(.btn)::before{display:none!important}
+  .table-wrap .row-actions,.table-wrap td.act{justify-content:flex-start;text-align:left;white-space:normal;display:flex;flex-wrap:wrap;gap:6px}
+  .table-wrap td.act .btn+.btn{margin-left:0}
+  .table-wrap td.hide-sm{display:none}
+  .tabs{width:100%}
+  .kpi strong{font-size:1.6rem}
+  .toolbar>.btn{flex:1 1 auto}
+}
 @media (max-width:1000px){.kpis{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){
   .auth{grid-template-columns:1fr}.auth-side{display:none}
@@ -195,12 +306,19 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* ===== Conexão com o banco (chave pública; a segurança fica nas políticas RLS) ===== */
 const SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd';
-const APP_VERSION = '0.6.0';
+const APP_VERSION = '0.7.0';
+const WHATSAPP_SUPORTE = '5533997305310'; // WhatsApp de vendas e suporte (DDI + DDD + número)
+const waSuporte = msg => `https://wa.me/${WHATSAPP_SUPORTE}?text=${encodeURIComponent(msg)}`;
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
 /* ===== Utilidades ===== */
 const $ = (s, el = document) => el.querySelector(s);
 const root = $('#root');
+const labelTables = () => root.querySelectorAll('.table-wrap table').forEach(t => {
+  const hs = [...t.querySelectorAll('thead th')].map(h => h.textContent.trim());
+  t.querySelectorAll('tbody tr').forEach(r => [...r.children].forEach((td, i) => { if (hs[i] && !td.dataset.l) td.dataset.l = hs[i]; }));
+});
+let _lt = 0; new MutationObserver(() => { cancelAnimationFrame(_lt); _lt = requestAnimationFrame(labelTables); }).observe(root, { childList: true, subtree: true });
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const brl = n => Number(n || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 const dateBR = d => d ? new Date(d.length === 10 ? d + 'T12:00:00' : d).toLocaleDateString('pt-BR') : '—';
@@ -341,7 +459,7 @@ async function viewSignup(params) {
       <div class="field"><label for="pl">Plano para testar</label><select id="pl" name="plan">${plans.map(p => `<option value="${esc(p.code)}" ${p.code === pre ? 'selected' : ''}>${esc(p.name)} — ${brl(p.price_monthly)}/mês após o teste</option>`).join('') || '<option value="profissional">Profissional</option>'}</select></div>
       <div class="field"><label for="e">E-mail</label><input id="e" name="email" type="email" autocomplete="email" value="${esc(params.get('email') || '')}" required></div>
       <div class="field"><label for="p">Senha</label><input id="p" name="password" type="password" autocomplete="new-password" minlength="8" required><small>Mínimo de 8 caracteres.</small></div>
-      <label class="check"><input type="checkbox" name="ok" required> <span>Li e aceito os termos de uso e a política de privacidade.</span></label>
+      <label class="check"><input type="checkbox" name="ok" required> <span>Li e aceito os <a href="termos.html" target="_blank">termos de uso</a> e a <a href="privacidade.html" target="_blank">política de privacidade</a>.</span></label>
       <div class="form-err" data-err></div>
       <button class="btn block gold" type="submit">Criar conta e começar o teste</button>
     </form>
@@ -362,6 +480,41 @@ async function viewSignup(params) {
       authLayout(`<h2>Confirme seu e-mail</h2><p class="muted" style="margin:10px 0 20px">Enviamos um link de confirmação para <b>${esc(email)}</b>. Abra o e-mail e clique no link para ativar a conta. Depois, entre com seu e-mail e senha: a igreja será criada automaticamente.</p>
         <p class="muted" style="font-size:.88rem">Não chegou? Verifique a caixa de spam.</p><a class="btn ghost block" href="#entrar" style="margin-top:20px">Ir para o login</a>`);
     }
+  });
+}
+async function viewInvite(params) {
+  const tok = params.get('t') || '';
+  if (!/^[0-9a-f-]{36}$/i.test(tok)) return go(S.session ? 'painel' : 'entrar');
+  if (S.session) {
+    const { error } = await sb.rpc('invite_accept', { p_token: tok });
+    if (error) { toast(errMsg(error), 'err'); return go(S.org ? 'painel' : 'criar-igreja'); }
+    toast('Convite aceito! Bem-vindo(a) à equipe.'); await loadContext(); return go('painel');
+  }
+  try { localStorage.setItem('gr-convite', tok); } catch {}
+  const { data: iv } = await sb.rpc('invite_get', { p_token: tok });
+  if (!iv || iv.aceito) { authLayout(`<h2>Convite indisponível</h2><p class="muted" style="margin:10px 0 20px">Este convite já foi usado ou foi cancelado. Peça um novo link ao administrador da igreja.</p><a class="btn ghost block" href="#entrar">Ir para o login</a>`); return; }
+  authLayout(`<a class="brand mobile-only" href="index.html" style="margin-bottom:24px"><span class="mark">${markSvg}</span>Gestão do Reino</a>
+    <span class="pill blue" style="margin-bottom:10px">Convite</span><h2>${esc(iv.igreja)}</h2>
+    <p class="muted">Você foi convidado(a) como <b>${roleName(iv.perfil)}</b>. Crie sua senha com o e-mail <b>${esc(iv.email)}</b>.</p>
+    <form class="stack" novalidate>
+      <div class="field"><label for="n">Seu nome</label><input id="n" name="name" autocomplete="name" required></div>
+      <div class="field"><label for="e">E-mail convidado</label><input id="e" name="email" type="email" autocomplete="email" required></div>
+      <div class="field"><label for="p">Crie uma senha</label><input id="p" name="password" type="password" autocomplete="new-password" minlength="8" required><small>Mínimo de 8 caracteres.</small></div>
+      <label class="check"><input type="checkbox" name="ok" required> <span>Li e aceito os <a href="termos.html" target="_blank">termos de uso</a> e a <a href="privacidade.html" target="_blank">política de privacidade</a>.</span></label>
+      <div class="form-err" data-err></div>
+      <button class="btn block" type="submit">Criar acesso e entrar</button>
+    </form>
+    <div class="auth-links"><span class="muted">Já tem conta com esse e-mail?</span><a href="#entrar">Entrar</a></div>`);
+  bindAuthForm(async fd => {
+    const name = fd.get('name').trim(), email = fd.get('email').trim(), pw = fd.get('password');
+    if (name.length < 3) throw new Error('Informe seu nome.');
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error('Informe um e-mail válido.');
+    if (pw.length < 8) throw new Error('A senha precisa ter pelo menos 8 caracteres.');
+    if (!fd.get('ok')) throw new Error('Aceite os termos para continuar.');
+    const { data, error } = await sb.auth.signUp({ email, password: pw, options: { data: { full_name: name, invite: tok }, emailRedirectTo: location.origin + location.pathname } });
+    if (error) throw error;
+    if (data.user && data.user.identities && data.user.identities.length === 0) throw new Error('Já existe uma conta com este e-mail. Use "Entrar".');
+    if (!data.session) authLayout(`<h2>Confirme seu e-mail</h2><p class="muted" style="margin:10px 0 20px">Enviamos um link de confirmação para <b>${esc(email)}</b>. Depois de confirmar, entre com seu e-mail e senha: você já cai direto na igreja.</p><a class="btn ghost block" href="#entrar">Ir para o login</a>`);
   });
 }
 function viewRecover() {
@@ -400,6 +553,13 @@ async function loadContext() {
   S.isAdmin = !!adm.data; S.profile = prof.data;
   const m = mem.data?.[0];
   S.org = m?.organizations || null; S.role = m?.role || null; S.sub = null; S.plan = null;
+  if (!S.org && !S._inviteTried) {
+    S._inviteTried = true; let tok = null; try { tok = localStorage.getItem('gr-convite'); } catch {}
+    const r = tok ? await sb.rpc('invite_accept', { p_token: tok }) : await sb.rpc('invite_accept_mine');
+    try { localStorage.removeItem('gr-convite'); } catch {}
+    if (r.error && tok) S.inviteError = errMsg(r.error);
+    if (!r.error && r.data) { toast('Convite aceito! Bem-vindo(a) à equipe.'); return loadContext(); }
+  }
   if (!S.org && !S.isAdmin && S.user.user_metadata?.church_name && !S._autoTried) {
     S._autoTried = true;
     const { error } = await sb.rpc('create_my_organization', { p_name: S.user.user_metadata.church_name, p_plan_code: S.user.user_metadata.plan || 'profissional' });
@@ -481,13 +641,15 @@ function userAction(a) {
 function statusBanner() {
   if (!S.org || !S.sub) return '';
   if (S.org.is_internal) return `<div class="banner info"><div><b>Igreja do proprietário</b> — acesso vitalício, sem cobrança e fora das métricas comerciais.</div></div>`;
-  if (S.org.status === 'suspended') return `<div class="banner err"><div><b>Acesso suspenso.</b> Os dados continuam guardados, mas novos lançamentos estão bloqueados. Fale com o suporte.</div></div>`;
+  const cta = (t = 'Contratar plano') => `<a class="btn sm ${t === 'Contratar plano' ? 'gold' : ''}" href="#igreja?assinar=1">${t}</a>`;
+  const sup = `<a class="btn sm ghost" href="${waSuporte(`Olá! Sou da igreja ${S.org.name} e preciso de ajuda com o Gestão do Reino.`)}" target="_blank" rel="noopener">Falar com o suporte</a>`;
+  if (S.org.status === 'suspended') return `<div class="banner err"><div><b>Acesso suspenso.</b> Os dados continuam guardados, mas novos lançamentos estão bloqueados.</div><div class="banner-act">${sup}</div></div>`;
   if (S.sub.status === 'trialing') {
     const d = daysLeft(S.sub.trial_ends_at);
-    if (d <= 0) return `<div class="banner err"><div><b>Seu teste grátis terminou.</b> Você ainda pode consultar os dados. Para voltar a cadastrar, contrate um plano.</div></div>`;
-    return `<div class="banner ${d <= 3 ? 'warn' : 'info'}"><div><b>Teste grátis — ${d} dia${d > 1 ? 's' : ''} restante${d > 1 ? 's' : ''}.</b> Plano ${esc(S.plan?.name)} até ${dateBR(S.sub.trial_ends_at)}.</div></div>`;
+    if (d <= 0) return `<div class="banner err"><div><b>Seu teste grátis terminou.</b> Seus dados estão guardados e você ainda pode consultá-los. Contrate um plano para voltar a cadastrar.</div><div class="banner-act">${cta()}</div></div>`;
+    return `<div class="banner ${d <= 3 ? 'warn' : 'info'}"><div><b>Teste grátis — ${d} dia${d > 1 ? 's' : ''} restante${d > 1 ? 's' : ''}.</b> Plano ${esc(S.plan?.name)} até ${dateBR(S.sub.trial_ends_at)}.</div><div class="banner-act">${cta(d <= 3 ? 'Contratar plano' : 'Ver planos')}</div></div>`;
   }
-  if (S.sub.status === 'past_due') return `<div class="banner warn"><div><b>Pagamento pendente.</b> Regularize para evitar a suspensão.</div></div>`;
+  if (S.sub.status === 'past_due') return `<div class="banner warn"><div><b>Pagamento pendente.</b> Regularize para evitar a suspensão.</div><div class="banner-act">${sup}</div></div>`;
   return '';
 }
 async function pagePainel() {
@@ -617,34 +779,96 @@ function memberForm(m, readOnly, reload) {
   if (m?.photo_path) sb.storage.from('anexos').createSignedUrl(m.photo_path, 600).then(({ data }) => data?.signedUrl && showPhoto(data.signedUrl));
   o.querySelector('[name=photo]')?.addEventListener('change', e => { const f = e.target.files[0]; if (f) showPhoto(URL.createObjectURL(f)); });
 }
-async function pageIgreja() {
-  const { data: team } = await sb.from('organization_members').select('user_id,role,status,created_at').eq('organization_id', S.org.id);
+async function pageIgreja(params = new URLSearchParams()) {
+  const isAdm = S.role === 'admin';
+  const [{ data: team }, { data: invs }] = await Promise.all([
+    sb.from('organization_members').select('user_id,role,status,created_at').eq('organization_id', S.org.id),
+    isAdm ? sb.from('org_invites').select('id,email,role,token,created_at').eq('organization_id', S.org.id).is('accepted_at', null).order('created_at') : Promise.resolve({ data: [] })]);
   const ids = (team || []).map(t => t.user_id);
   const { data: profs } = ids.length ? await sb.from('profiles').select('id,full_name').in('id', ids) : { data: [] };
   const pn = id => profs?.find(p => p.id === id)?.full_name || '—';
   const subLabel = S.org.is_internal ? ['Vitalício', 'green'] : { trialing: ['Teste grátis', 'blue'], active: ['Ativa', 'green'], past_due: ['Pagamento pendente', 'amber'], suspended: ['Suspensa', 'red'], canceled: ['Cancelada', 'red'] }[S.sub?.status] || ['—', ''];
+  const active = (team || []).filter(t => t.status === 'active').length, max = S.plan?.max_users;
+  const used = active + (invs || []).length;
+  const cycle = S.sub?.billing_cycle === 'yearly' ? 'ano' : 'mês';
+  const trialDays = S.sub?.status === 'trialing' ? daysLeft(S.sub.trial_ends_at) : null;
   shell('igreja', `${statusBanner()}<div class="grid2">
-    <div class="card"><div class="card-head"><h3>Dados da igreja</h3>${S.role === 'admin' ? '<button class="btn sm ghost" id="ren">Editar</button>' : ''}</div>
+    <div class="card"><div class="card-head"><h3>Dados da igreja</h3>${isAdm ? '<button class="btn sm ghost" id="ren">Editar</button>' : ''}</div>
       <p><b>${esc(S.org.name)}</b></p><p class="muted">Cadastrada em ${dateBR(S.org.created_at)}</p><p class="muted">Seu perfil: ${roleName(S.role)}</p></div>
-    <div class="card"><div class="card-head"><h3>Assinatura</h3><span class="pill ${subLabel[1]}">${subLabel[0]}</span></div>
-      <p>Plano <b>${esc(S.plan?.name || '—')}</b> — ${brl(S.sub?.price)}/mês</p>
-      ${S.sub?.status === 'trialing' ? `<p class="muted">Teste até ${dateBR(S.sub.trial_ends_at)}</p>` : ''}
-      <p class="muted" style="margin-top:8px;font-size:.88rem">A contratação online por Pix, boleto ou cartão será liberada em breve. Para contratar agora, fale com a equipe do Gestão do Reino.</p></div></div>
-    <div class="card" style="margin-top:14px"><div class="card-head"><h3>Usuários da igreja</h3></div>
-      <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Perfil</th><th>Desde</th></tr></thead><tbody>
-      ${(team || []).map(t => `<tr><td>${esc(pn(t.user_id))}${t.user_id === S.user.id ? ' <span class="pill">você</span>' : ''}</td><td>${roleName(t.role)}</td><td class="muted">${dateBR(t.created_at)}</td></tr>`).join('')}
-      </tbody></table></div><p class="muted" style="font-size:.85rem;margin-top:10px">O convite de novos usuários chega na próxima versão.</p></div>
+    <div class="card sub-card"><div class="card-head"><h3>Assinatura</h3><span class="pill ${subLabel[1]}">${subLabel[0]}</span></div>
+      <div class="sub-plan"><span>Plano</span><b>${esc(S.plan?.name || '—')}</b><em>${S.org.is_internal ? 'sem cobrança' : `${brl(S.sub?.price)}/${cycle}`}</em></div>
+      ${trialDays !== null ? `<div class="meter"><i style="width:${Math.max(4, Math.min(100, (trialDays / 14) * 100))}%"></i></div><p class="muted" style="font-size:.88rem">${trialDays > 0 ? `${trialDays} dia(s) de teste — até ${dateBR(S.sub.trial_ends_at)}` : 'Teste encerrado'}</p>` : ''}
+      <p class="muted" style="font-size:.88rem;margin-top:6px">Usuários: <b>${active}</b> de ${max ?? 'ilimitados'}</p>
+      ${S.org.is_internal ? '' : `<div class="row-actions" style="margin-top:14px">${['admin', 'pastor', 'tesoureiro'].includes(S.role) ? `<button class="btn ${S.sub?.status === 'active' ? 'ghost' : 'gold'}" id="buy">${S.sub?.status === 'active' ? 'Mudar de plano' : 'Contratar plano'}</button>` : ''}
+        <a class="btn ghost" target="_blank" rel="noopener" href="${waSuporte(`Olá! Sou da igreja ${S.org.name} e tenho uma dúvida sobre a assinatura do Gestão do Reino.`)}">Tirar dúvidas</a></div>`}</div></div>
+    <div class="card" style="margin-top:14px"><div class="card-head"><h3>Usuários da igreja</h3>${isAdm ? `<button class="btn sm" id="inv">+ Convidar usuário</button>` : ''}</div>
+      <p class="muted" style="font-size:.88rem;margin:-4px 0 12px">Cada pessoa entra com o próprio e-mail e senha e vê só o que o perfil dela permite.${max ? ` Seu plano permite ${max} usuários (${used} em uso, contando convites).` : ''}</p>
+      <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Perfil</th><th class="hide-sm">Desde</th>${isAdm ? '<th></th>' : ''}</tr></thead><tbody>
+      ${(team || []).map(t => `<tr><td><b>${esc(pn(t.user_id))}</b>${t.user_id === S.user.id ? ' <span class="pill">você</span>' : ''}${t.status === 'blocked' ? ' <span class="pill red">bloqueado</span>' : ''}</td><td>${roleName(t.role)}</td><td class="muted hide-sm">${dateBR(t.created_at)}</td>${isAdm ? `<td class="act">${t.user_id !== S.user.id ? `<button class="btn sm ghost" data-mu="${t.user_id}">Alterar</button>` : ''}</td>` : ''}</tr>`).join('')}
+      ${(invs || []).map(i => `<tr><td><span class="muted">${esc(i.email)}</span> <span class="pill amber">convite pendente</span></td><td>${roleName(i.role)}</td><td class="muted hide-sm">${dateBR(i.created_at)}</td><td class="act"><button class="btn sm ghost" data-il="${i.token}" data-ie="${esc(i.email)}">Link</button><button class="btn sm ghost" data-ix="${i.id}">Cancelar</button></td></tr>`).join('')}
+      </tbody></table></div></div>
     <div id="ident"></div>
     <p class="muted small" style="margin-top:18px">Para excluir a conta da igreja ou pedir a exclusão de dados pessoais, veja <a href="exclusao-de-dados.html" target="_blank" rel="noopener">exclusão de conta e de dados</a>.</p>`);
+  if ($('#buy')) $('#buy').onclick = openPlans;
+  if (params.get('assinar') && $('#buy')) openPlans();
+  const ROLE_OPTS = ['admin', 'pastor', 'tesoureiro', 'secretario', 'lider', 'visualizador'];
+  if ($('#inv')) $('#inv').onclick = () => modal('Convidar usuário', `<p class="muted" style="margin-bottom:12px">A pessoa recebe um link, cria a senha dela e já entra na igreja com o perfil escolhido.</p>
+    <div class="field"><label for="ie">E-mail da pessoa *</label><input id="ie" name="email" type="email" required placeholder="nome@email.com"></div>
+    <div class="field"><label for="ir">Perfil</label><select id="ir" name="role">${ROLE_OPTS.map(r => `<option value="${r}" ${r === 'secretario' ? 'selected' : ''}>${roleName(r)}</option>`).join('')}</select>
+    <small>Administrador: tudo, inclusive usuários e assinatura · Pastor: tudo menos usuários · Tesoureiro: financeiro · Secretário: pessoas e agenda · Líder: o próprio departamento · Visualizador: só consulta.</small></div>`,
+    { submitLabel: 'Gerar convite', busyLabel: 'Gerando…', onSubmit: async fd => {
+      const email = String(fd.get('email') || '').trim().toLowerCase();
+      if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Error('Informe um e-mail válido.');
+      const { data, error } = await sb.rpc('org_invite_create', { p_org: S.org.id, p_email: email, p_role: fd.get('role') }); if (error) throw error;
+      inviteLink(data, email); pageIgreja(); } });
+  root.querySelectorAll('[data-il]').forEach(b => b.onclick = () => inviteLink(b.dataset.il, b.dataset.ie));
+  root.querySelectorAll('[data-ix]').forEach(b => b.onclick = async () => {
+    if (!await confirmBox('Cancelar convite', 'O link enviado deixa de funcionar.', 'Cancelar convite', true)) return;
+    const { error } = await sb.from('org_invites').delete().eq('id', b.dataset.ix); if (error) return toast(errMsg(error), 'err'); toast('Convite cancelado.'); pageIgreja(); });
+  root.querySelectorAll('[data-mu]').forEach(b => b.onclick = () => { const t = team.find(x => x.user_id === b.dataset.mu);
+    modal(`Alterar acesso — ${pn(t.user_id)}`, `<div class="field"><label>Perfil</label><select name="role">${ROLE_OPTS.map(r => `<option value="${r}" ${r === t.role ? 'selected' : ''}>${roleName(r)}</option>`).join('')}</select></div>
+      <div class="field"><label>Acesso</label><select name="status"><option value="active" ${t.status === 'active' ? 'selected' : ''}>Liberado</option><option value="blocked" ${t.status === 'blocked' ? 'selected' : ''}>Bloqueado (não consegue entrar)</option></select></div>`,
+      { submitLabel: 'Salvar', onSubmit: async fd => { const { error } = await sb.rpc('org_member_update', { p_org: S.org.id, p_user: t.user_id, p_role: fd.get('role'), p_status: fd.get('status') }); if (error) throw error; toast('Acesso atualizado.'); pageIgreja(); } }); });
   identityCard($('#ident'));
   if ($('#ren')) $('#ren').onclick = () => modal('Editar dados da igreja', `<div class="field"><label>Nome da igreja</label><input name="name" value="${esc(S.org.name)}" required maxlength="120"></div>`,
     { onSubmit: async fd => { const name = fd.get('name').trim(); if (name.length < 3) throw new Error('Nome muito curto.');
       const { error } = await sb.from('organizations').update({ name }).eq('id', S.org.id); if (error) throw error; toast('Dados atualizados.'); await loadContext(); render(); } });
 }
+function inviteLink(token, email) {
+  const url = `${location.origin}${location.pathname}#convite?t=${token}`;
+  const msg = `Olá! Você foi convidado(a) para usar o sistema da ${S.org.name} no Gestão do Reino. Crie sua senha pelo link (use o e-mail ${email}): ${url}`;
+  const o = modal('Convite pronto', `<p class="muted">Envie este link para <b>${esc(email)}</b>. Ele funciona uma vez e só para esse e-mail.</p>
+    <div class="field" style="margin-top:12px"><input readonly value="${esc(url)}" id="ilnk" onclick="this.select()"></div>`,
+    { submitLabel: 'Enviar pelo WhatsApp', onSubmit: async () => { window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank'); } });
+  const c = document.createElement('button'); c.type = 'button'; c.className = 'btn ghost'; c.textContent = 'Copiar link';
+  c.onclick = async () => { try { await navigator.clipboard.writeText(url); toast('Link copiado.'); } catch { o.querySelector('#ilnk').select(); } };
+  o.querySelector('[type=submit]').before(c);
+}
+async function openPlans() {
+  const { data: plans, error } = await sb.from('plans').select('code,name,description,price_monthly,price_yearly,max_users,is_featured').eq('is_active', true).order('sort_order');
+  if (error) return toast(errMsg(error), 'err');
+  let cyc = 'mensal';
+  const o = modal('Escolha o plano da sua igreja', `<div class="cyc" role="tablist"><button type="button" class="on" data-c="mensal">Mensal</button><button type="button" data-c="anual">Anual <span class="pill green">2 meses grátis</span></button></div>
+    <div class="plans-pick">${plans.map(p => `<label class="pick ${p.is_featured ? 'feat' : ''}"><input type="radio" name="plan" value="${esc(p.code)}" ${(S.plan?.code || 'profissional') === p.code ? 'checked' : ''}>
+      ${p.is_featured ? '<span class="tag">Mais escolhido</span>' : ''}<b>${esc(p.name)}</b><span class="pr" data-m="${brl(p.price_monthly)}/mês" data-a="${brl(p.price_yearly ?? p.price_monthly * 10)}/ano">${brl(p.price_monthly)}/mês</span>
+      <small>${p.max_users ? `Até ${p.max_users} usuários` : 'Usuários ilimitados'}${p.description ? ' · ' + esc(p.description) : ''}</small></label>`).join('')}</div>
+    <p class="muted" style="font-size:.86rem;margin-top:12px">Ao continuar, abrimos o WhatsApp da nossa equipe com o pedido pronto. Você recebe o Pix, boleto ou link de cartão e a assinatura é ativada assim que o pagamento é confirmado. Seus dados do teste continuam todos lá.</p>`,
+    { submitLabel: 'Continuar no WhatsApp', busyLabel: 'Abrindo…', onSubmit: async fd => {
+      const p = plans.find(x => x.code === fd.get('plan')); if (!p) throw new Error('Escolha um plano.');
+      const val = cyc === 'anual' ? brl(p.price_yearly ?? p.price_monthly * 10) + ' por ano' : brl(p.price_monthly) + ' por mês';
+      await sb.rpc('request_plan', { p_org: S.org.id, p_plan_code: p.code, p_cycle: cyc });
+      window.open(waSuporte(`Olá! Quero contratar o Gestão do Reino.\nIgreja: ${S.org.name}\nPlano: ${p.name} (${cyc}) — ${val}\nResponsável: ${S.profile?.full_name || ''}\nE-mail: ${S.user.email}`), '_blank');
+      toast('Pedido enviado! Nossa equipe responde pelo WhatsApp.'); } });
+  o.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { cyc = b.dataset.c; o.querySelectorAll('[data-c]').forEach(x => x.classList.toggle('on', x === b));
+    o.querySelectorAll('.pr').forEach(x => x.textContent = cyc === 'anual' ? x.dataset.a : x.dataset.m); });
+}
 function pageCriarIgreja() {
+  const ie = S.inviteError; S.inviteError = null;
   shell('criar-igreja', `<div class="card" style="max-width:560px"><h3>Cadastre sua igreja</h3><p class="muted" style="margin:6px 0 18px">Sua conta ainda não está vinculada a uma igreja. Cadastre agora para começar o teste grátis.</p>
     <form class="stack" id="f" novalidate><div class="field"><label>Nome da igreja</label><input name="name" value="${esc(S.user.user_metadata?.church_name || '')}" required></div>
-    <div class="form-err" data-err></div><button class="btn" type="submit">Cadastrar e começar o teste</button></form></div>`);
+    <div class="form-err" data-err></div><button class="btn" type="submit">Cadastrar e começar o teste</button></form>
+    <p class="muted" style="margin-top:18px;font-size:.88rem">Foi convidado por uma igreja que já usa o sistema? Abra o link do convite que o administrador enviou, ou peça um novo.</p></div>`);
+  if (ie) toast(ie, 'err');
   $('#f').onsubmit = async e => { e.preventDefault(); const err = $('[data-err]', e.target);
     const { error } = await sb.rpc('create_my_organization', { p_name: new FormData(e.target).get('name').trim(), p_plan_code: S.user.user_metadata?.plan || 'profissional' });
     if (error) { err.textContent = errMsg(error); return; } toast('Igreja criada! Seu teste grátis começou.'); await loadContext(); go('painel'); };
@@ -2365,7 +2589,7 @@ async function pageCampanhas() {
   const { data: tx } = await sb.from('finance_transactions').select('campaign_id,amount,type,status').eq('organization_id', S.org.id).not('campaign_id', 'is', null).eq('status', 'confirmado').limit(20000);
   const raised = {}; (tx || []).forEach(t => raised[t.campaign_id] = (raised[t.campaign_id] || 0) + (t.type === 'entrada' ? Number(t.amount) : 0));
   $('#main').innerHTML = `${statusBanner()}${finTabs('campanhas')}${readOnlyNote()}
-    <div class="toolbar" style="margin-bottom:14px"><span class="muted" style="flex:1">Campanhas com meta (construção, missões, retiro). Nas entradas do caixa, escolha a campanha e o progresso aparece aqui.</span>${ed ? '<button class="btn" id="add">+ Nova campanha</button>' : ''}</div>
+    <div class="toolbar" style="margin-bottom:14px;align-items:center"><span class="muted" style="flex:1 1 260px">Campanhas com meta (construção, missões, retiro). Nas entradas do caixa, escolha a campanha e o progresso aparece aqui.</span>${ed ? '<button class="btn" id="add">+ Nova campanha</button>' : ''}</div>
     ${CAMPS.length ? `<div class="sched">${CAMPS.map(c => { const r = raised[c.id] || 0, pct = c.goal ? Math.min(100, Math.round(r / c.goal * 100)) : null;
       return `<article class="sched-card"><header><div><b>${esc(c.name)}</b><div class="muted small">${c.starts_on ? dateBR(c.starts_on) : ''}${c.ends_on ? ' a ' + dateBR(c.ends_on) : ''}</div></div>${c.is_active ? '<span class="pill green">Ativa</span>' : '<span class="pill">Encerrada</span>'}</header>
         <div style="margin:14px 0 6px;font-size:1.35rem;font-weight:700">${brl(r)}${c.goal ? `<span class="muted" style="font-size:.9rem;font-weight:500"> de ${brl(c.goal)}</span>` : ''}</div>
@@ -2440,10 +2664,18 @@ async function pageAdmin() {
     <div class="kpi"><small>Em teste grátis</small><strong>${st.em_teste}</strong><em>${st.teste_expirado} com teste expirado</em></div>
     <div class="kpi"><small>Assinaturas ativas</small><strong>${st.ativas}</strong><em>${st.inadimplentes} inadimplentes · ${st.suspensas} suspensas</em></div>
     <div class="kpi"><small>Receita recorrente (MRR)</small><strong style="font-size:1.4rem">${brl(mrr)}</strong><em>Assinaturas marcadas como ativas</em></div></div>
+    <div id="reqs"></div>
     <div class="grid2"><div class="card"><h3>Igrejas por plano</h3><div class="stack" style="margin-top:14px">${byPlan.map(b => `<div><div style="display:flex;justify-content:space-between;font-size:.92rem"><span>${esc(b.name)}</span><b>${b.n}</b></div>
       <div style="height:8px;background:var(--line);border-radius:99px;margin-top:6px"><div style="height:100%;width:${b.n / maxN * 100}%;background:var(--royal);border-radius:99px"></div></div></div>`).join('')}</div></div>
     <div class="card"><h3>Atalhos</h3><div class="stack" style="margin-top:14px"><a class="btn ghost" href="#admin-financeiro">Financeiro e previsões</a><a class="btn ghost" href="#admin-igrejas">Gerenciar igrejas clientes</a><a class="btn ghost" href="#admin-planos">Editar planos e preços</a><a class="btn ghost" href="#versoes">Registrar uma nova versão</a></div>
       <p class="muted" style="font-size:.82rem;margin-top:14px">Total de usuários na plataforma: ${st.usuarios}. Por privacidade, o painel do proprietário não mostra os dados pessoais dos membros das igrejas.</p></div></div>`;
+  const { data: reqs } = await sb.from('subscription_events').select('organization_id,data,created_at').eq('event_type', 'contratacao_solicitada').order('created_at', { ascending: false }).limit(8);
+  if (reqs?.length) {
+    const { data: orgs } = await sb.rpc('admin_list_organizations');
+    const on = id => (orgs || []).find(o => (o.id || o.organization_id) === id)?.name || 'Igreja';
+    $('#reqs').innerHTML = `<div class="card" style="margin-bottom:14px"><div class="card-head"><h3>Pedidos de contratação</h3><a class="btn sm ghost" href="#admin-igrejas">Ativar assinaturas</a></div>
+      <div class="table-wrap"><table><thead><tr><th>Igreja</th><th>Plano</th><th>Quando</th></tr></thead><tbody>${reqs.map(r => `<tr><td><b>${esc(on(r.organization_id))}</b></td><td>${esc(r.data?.plano || '')} · ${esc(r.data?.ciclo || '')}</td><td class="muted">${new Date(r.created_at).toLocaleString('pt-BR')}</td></tr>`).join('')}</tbody></table></div></div>`;
+  }
 }
 async function pageAdminIgrejas() {
   shell('admin-igrejas', `<div class="card"><div class="toolbar"><input id="q" type="search" placeholder="Pesquisar igreja"><select id="fs"><option value="">Todas</option><option value="trial">Em teste</option><option value="active">Ativas</option><option value="suspended">Suspensas</option><option value="canceled">Canceladas</option></select></div><div id="list"><div class="loading" style="min-height:200px"><div class="spinner"></div></div></div></div>`);
@@ -2617,6 +2849,7 @@ function planCard(p) {
 async function render() {
   const { route, params } = hashParams();
   if (S.recovering) return viewNewPassword();
+  if (route === 'convite') return viewInvite(params);
   if (!S.session) {
     if (route === 'cadastro') return viewSignup(params);
     if (route === 'recuperar') return viewRecover();
@@ -2634,7 +2867,7 @@ async function render() {
     if (route === 'versoes') return S.isAdmin ? pageVersoes() : go(S.org ? 'painel' : 'criar-igreja');
     if (!S.org) return S.isAdmin && route !== 'criar-igreja' ? go('admin') : pageCriarIgreja();
     if (route === 'membros') return pageMembros(params);
-    if (route === 'igreja') return pageIgreja();
+    if (route === 'igreja') return pageIgreja(params);
     const MODS = { familias: pageFamilias, grupos: pageGrupos, ministerios: pageMinisterios, escalas: () => pageEscalas(params), eventos: pageEventos, ensino: pageEnsino, estudos: pageEstudos,
       discipulado: pageDiscipulado, patrimonio: pagePatrimonio, visitantes: pageVisitantes, visitas: () => canVisit() ? pageVisitas(params) : go('painel'), mapa: pageMapa, certificados: pageCertificados, relatorios: pageRelatorios, site: pageSite, historico: () => canAudit() ? pageHistorico() : go('painel') };
     if (MODS[route]) return await MODS[route]();

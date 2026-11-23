@@ -166,6 +166,9 @@ tr.canceled td{opacity:.6}tr.canceled .v-in,tr.canceled .v-out{text-decoration:l
 .btn.wa{background:#1FA855;color:#fff}.btn.wa:hover{background:#178A45}
 .timeline-mini{display:grid;gap:12px;max-height:320px;overflow:auto;padding-left:14px;border-left:2px solid var(--line)}
 tr.canceled td{opacity:.6}
+.bar{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#e0b85a);border-radius:99px}
+.small{font-size:.84rem}.map-count{background:transparent;border:0;box-shadow:none;color:#0B1F3A;font-weight:800}.map-count::before{display:none}
+.photo-prev{width:84px;height:104px;border-radius:10px;border:1px solid var(--line);object-fit:cover;background:var(--surface-2);display:grid;place-items:center;color:var(--muted);font-size:.8rem;text-align:center}
 @media (max-width:1000px){.kpis{grid-template-columns:1fr 1fr}.grid3{grid-template-columns:1fr 1fr}}
 @media (max-width:860px){
   .auth{grid-template-columns:1fr}.auth-side{display:none}
@@ -192,7 +195,7 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* ===== Conexão com o banco (chave pública; a segurança fica nas políticas RLS) ===== */
 const SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd';
-const APP_VERSION = '0.5.0';
+const APP_VERSION = '0.6.0';
 const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 
 /* ===== Utilidades ===== */
@@ -272,6 +275,11 @@ const I = {
   hist: icon('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3 2"/>'),
   globe: icon('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'),
   phone: icon('<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/>'),
+  id: icon('<rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="8" cy="12" r="2.5"/><path d="M14 10h5M14 14h3"/>'),
+  award: icon('<circle cx="12" cy="9" r="6"/><path d="M8.5 14L7 22l5-3 5 3-1.5-8"/>'),
+  visit: icon('<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/><path d="M12 11v.01"/>'),
+  hand: icon('<path d="M18 11V6a2 2 0 0 0-4 0v5M14 10V4a2 2 0 0 0-4 0v6M10 10.5V6a2 2 0 0 0-4 0v8a8 8 0 0 0 16 0v-3a2 2 0 0 0-4 0"/>'),
+  map: icon('<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'),
   moon: icon('<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>'),
 };
 const markSvg = '<svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><path d="M8 50h48v6H8zM11 46l6-26 11 13 4-19 4 19 11-13 6 26z" fill="#C9A24B"/></svg>';
@@ -407,7 +415,7 @@ const orgOperational = () => S.org && ['trial', 'active'].includes(S.org.status)
 const roleName = r => ({ admin: 'Administrador', pastor: 'Pastor', tesoureiro: 'Tesoureiro', secretario: 'Secretário', lider: 'Líder de departamento', visualizador: 'Visualizador' }[r] || r);
 
 /* ===== Layout interno ===== */
-const TITLES = { painel: 'Painel', membros: 'Membros', igreja: 'Minha igreja', versoes: 'Versões e atualizações', admin: 'Visão geral da plataforma', 'admin-igrejas': 'Igrejas clientes', 'admin-planos': 'Planos e preços', 'admin-financeiro': 'Financeiro da plataforma', 'criar-igreja': 'Cadastrar igreja', caixa: 'Financeiro — Caixa', contas: 'Financeiro — Contas a pagar e a receber', 'fin-config': 'Financeiro — Caixas e categorias', familias: 'Famílias', grupos: 'Grupos e células', ministerios: 'Ministérios', escalas: 'Escalas', eventos: 'Eventos', ensino: 'Ensino — Escola bíblica', estudos: 'Ensino — Estudos e materiais', discipulado: 'Ensino — Discipulado', patrimonio: 'Patrimônio', relatorios: 'Relatórios', historico: 'Histórico de alterações', site: 'Site da igreja' };
+const TITLES = { painel: 'Painel', membros: 'Membros', igreja: 'Minha igreja', versoes: 'Versões e atualizações', admin: 'Visão geral da plataforma', 'admin-igrejas': 'Igrejas clientes', 'admin-planos': 'Planos e preços', 'admin-financeiro': 'Financeiro da plataforma', 'criar-igreja': 'Cadastrar igreja', caixa: 'Financeiro — Caixa', contas: 'Financeiro — Contas a pagar e a receber', 'fin-config': 'Financeiro — Caixas e categorias', familias: 'Famílias', grupos: 'Grupos e células', ministerios: 'Ministérios', escalas: 'Escalas', eventos: 'Eventos', ensino: 'Ensino — Escola bíblica', estudos: 'Ensino — Estudos e materiais', discipulado: 'Ensino — Discipulado', patrimonio: 'Patrimônio', relatorios: 'Relatórios', historico: 'Histórico de alterações', site: 'Site da igreja', visitantes: 'Visitantes', visitas: 'Visitas pastorais', mapa: 'Mapa de membros', certificados: 'Certificados', campanhas: 'Financeiro — Campanhas' };
 function shell(route, inner) {
   const nav = (r, ic, label) => `<a class="nav ${route === r ? 'on' : ''}" href="#${r}">${ic}<span>${label}</span></a>`;
   const name = S.profile?.full_name || S.user.email;
@@ -415,9 +423,9 @@ function shell(route, inner) {
     <aside class="side" id="side">
       <a class="brand" href="#painel"><span class="mark">${markSvg}</span>Gestão do Reino</a>
       ${S.org ? `<div class="sec">${esc(S.org.name)}</div>${nav('painel', I.home, 'Painel')}
-        <div class="sec">Pessoas</div>${nav('membros', I.users, 'Membros')}${nav('familias', I.family, 'Famílias')}${nav('grupos', I.group, 'Grupos e células')}
+        <div class="sec">Pessoas</div>${nav('membros', I.users, 'Membros')}${nav('visitantes', I.hand, 'Visitantes')}${canVisit() ? nav('visitas', I.visit, 'Visitas pastorais') : ''}${nav('familias', I.family, 'Famílias')}${nav('grupos', I.group, 'Grupos e células')}${nav('mapa', I.map, 'Mapa de membros')}
         <div class="sec">Ministérios</div>${nav('ministerios', I.music, 'Ministérios')}${nav('escalas', I.check, 'Escalas')}${nav('eventos', I.cal, 'Eventos')}
-        <div class="sec">Ensino</div>${nav('ensino', I.book, 'Escola bíblica')}
+        <div class="sec">Ensino</div>${nav('ensino', I.book, 'Escola bíblica')}${nav('certificados', I.award, 'Certificados')}
         ${canSeeFin() ? `<div class="sec">Financeiro</div>${nav('caixa', I.cash, 'Caixa')}${nav('contas', I.bill, 'Contas a pagar e receber')}` : ''}
         <div class="sec">Administração</div>${nav('patrimonio', I.box, 'Patrimônio')}${nav('relatorios', I.report, 'Relatórios')}${nav('site', I.globe, 'Site da igreja')}${canAudit() ? nav('historico', I.hist, 'Histórico de alterações') : ''}${nav('igreja', I.church, 'Minha igreja')}`
         : (!S.isAdmin ? nav('criar-igreja', I.church, 'Cadastrar igreja') : '')}
@@ -435,6 +443,7 @@ function shell(route, inner) {
               <button data-a="perfil">Meu perfil</button>
               <button data-a="senha">Alterar senha</button>
               ${isStandalone() ? '' : '<button data-a="instalar">Instalar o app no celular</button>'}
+              <button data-a="excluir">Excluir conta ou dados</button>
               <button data-a="sair">Sair</button></div></div>
         </div>
       </div>
@@ -451,6 +460,7 @@ function shell(route, inner) {
 function userAction(a) {
   if (a === 'sair') return sb.auth.signOut();
   if (a === 'instalar') return installApp();
+  if (a === 'excluir') return window.open('exclusao-de-dados.html', '_blank');
   if (a === 'perfil') return modal('Meu perfil', `<div class="stack">
       <div class="field"><label>Nome completo</label><input name="full_name" value="${esc(S.profile?.full_name)}" required></div>
       <div class="field"><label>Telefone</label><input name="phone" value="${esc(S.profile?.phone)}" inputmode="tel"></div></div>`,
@@ -507,7 +517,8 @@ async function pagePainel() {
         ${bdays.length ? `<table><tbody>${bdays.map(b => `<tr><td>${esc(b.full_name)}</td><td class="muted" style="text-align:right">dia ${b.birth_date.slice(8)}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">Nenhum aniversariante neste mês.</div>'}</div>
     </div>
     <div id="finCard"></div>
-    <div class="grid2" style="margin-top:14px" id="agenda"></div>`;
+    <div class="grid2" style="margin-top:14px" id="agenda"></div><div id="bdays"></div>`;
+  birthdayCard($('#bdays')).catch(() => {});
   {
     const nowIso = new Date(Date.now() - 6 * 3600e3).toISOString();
     const [{ data: evs }, { data: scs }] = await Promise.all([
@@ -538,6 +549,8 @@ async function pageMembros(params) {
   shell('membros', `${statusBanner()}<div class="card">
     <div class="toolbar"><input id="q" type="search" placeholder="Pesquisar por nome ou telefone" aria-label="Pesquisar">
       <select id="fs" aria-label="Situação"><option value="">Todas as situações</option><option value="ativo">Ativos</option><option value="visitante">Visitantes</option><option value="inativo">Inativos</option><option value="transferido">Transferidos</option></select>
+      ${canEditMembers() && orgOperational() ? '<button class="btn ghost" id="imp">Importar planilha</button>' : ''}
+      ${canPeople() ? '<button class="btn ghost" id="cards">Carteirinhas</button>' : ''}
       ${canEditMembers() ? `<button class="btn" id="add" ${orgOperational() ? '' : 'disabled title="Indisponível: teste encerrado ou acesso suspenso"'}>+ Novo membro</button>` : ''}
     </div><div id="list"><div class="loading" style="min-height:200px"><div class="spinner"></div></div></div></div>`);
   let timer;
@@ -551,15 +564,18 @@ async function pageMembros(params) {
     $('#list').innerHTML = data.length ? `<div class="table-wrap"><table><thead><tr><th>Nome</th><th class="hide-sm">Telefone / WhatsApp</th><th class="hide-sm">Cargo ou função</th><th>Situação</th><th></th></tr></thead><tbody>
       ${data.map(r => `<tr><td><b>${esc(r.full_name)}</b>${r.email ? `<div class="muted" style="font-size:.82rem">${esc(r.email)}</div>` : ''}</td>
         <td class="hide-sm">${esc(r.whatsapp || r.phone || '—')}</td><td class="hide-sm">${esc(r.role_title || '—')}</td><td>${statusPill(r.status)}</td>
-        <td><div class="row-actions"><button class="btn sm ghost" data-hist="${r.id}">Histórico</button>${canEditMembers() && orgOperational() ? `<button class="btn sm ghost" data-edit="${r.id}">Editar</button>` : `<button class="btn sm ghost" data-view="${r.id}">Ver</button>`}</div></td></tr>`).join('')}
+        <td><div class="row-actions">${canPeople() ? `<button class="btn sm ghost" data-card="${r.id}">Carteirinha</button>` : ''}${canVisit() && orgOperational() ? `<a class="btn sm ghost" href="#visitas?membro=${r.id}">Visita</a>` : ''}<button class="btn sm ghost" data-hist="${r.id}">Histórico</button>${canEditMembers() && orgOperational() ? `<button class="btn sm ghost" data-edit="${r.id}">Editar</button>` : `<button class="btn sm ghost" data-view="${r.id}">Ver</button>`}</div></td></tr>`).join('')}
       </tbody></table></div><p class="muted" style="font-size:.82rem;margin-top:10px">${data.length} registro${data.length > 1 ? 's' : ''}</p>`
       : `<div class="empty">Nenhum membro encontrado.</div>`;
     $('#list').querySelectorAll('[data-edit],[data-view]').forEach(b => b.onclick = () => memberForm(data.find(x => x.id === (b.dataset.edit || b.dataset.view)), !!b.dataset.view, load));
     $('#list').querySelectorAll('[data-hist]').forEach(b => b.onclick = () => memberHistory(data.find(x => x.id === b.dataset.hist)));
+    $('#list').querySelectorAll('[data-card]').forEach(b => b.onclick = async () => { b.disabled = true; try { await memberCardsPdf([data.find(x => x.id === b.dataset.card)]); toast('Carteirinha gerada.'); } catch (e) { toast(errMsg(e), 'err'); } b.disabled = false; });
   };
   $('#q').oninput = () => { clearTimeout(timer); timer = setTimeout(load, 250); };
   $('#fs').onchange = load;
   if ($('#add')) $('#add').onclick = () => memberForm(null, false, load);
+  if ($('#imp')) $('#imp').onclick = () => importMembers(load);
+  if ($('#cards')) $('#cards').onclick = () => cardsModal();
   await load();
   if (params.get('novo') && canEditMembers() && orgOperational()) memberForm(null, false, load);
 }
@@ -568,6 +584,8 @@ function memberForm(m, readOnly, reload) {
   const sel = (k, opts) => opts.map(([val, lab]) => `<option value="${val}" ${(m?.[k] ?? '') === val ? 'selected' : ''}>${lab}</option>`).join('');
   const dis = readOnly ? 'disabled' : '';
   const o = modal(m ? (readOnly ? 'Ficha do membro' : 'Editar membro') : 'Novo membro', `<fieldset ${dis} style="border:0" class="stack">
+    <div style="display:flex;gap:14px;align-items:flex-end"><div class="photo-prev" id="mph">${m?.photo_path ? '' : 'sem foto'}</div>
+      ${readOnly ? '' : '<div class="field" style="flex:1"><label>Foto (para a carteirinha)</label><input type="file" name="photo" accept="image/*"><small>Foto de rosto, de frente. JPG ou PNG.</small></div>'}</div>
     <div class="field"><label>Nome completo *</label><input name="full_name" value="${v('full_name')}" required maxlength="120"></div>
     <div class="grid2"><div class="field"><label>Data de nascimento</label><input type="date" name="birth_date" value="${v('birth_date')}" max="${new Date().toISOString().slice(0, 10)}"></div>
       <div class="field"><label>Estado civil</label><select name="marital_status">${sel('marital_status', [['', 'Não informado'], ['solteiro', 'Solteiro(a)'], ['casado', 'Casado(a)'], ['uniao_estavel', 'União estável'], ['divorciado', 'Divorciado(a)'], ['viuvo', 'Viúvo(a)']])}</select></div></div>
@@ -586,14 +604,18 @@ function memberForm(m, readOnly, reload) {
     <div class="field"><label>Situação</label><select name="status">${sel('status', [['ativo', 'Ativo'], ['visitante', 'Visitante'], ['inativo', 'Inativo'], ['transferido', 'Transferido']])}</select></div>
     <div class="field"><label>Observações</label><textarea name="notes" maxlength="2000">${v('notes')}</textarea></div>
     ${m ? `<p class="muted" style="font-size:.8rem">Cadastrado em ${dateBR(m.created_at)} · atualizado em ${dateBR(m.updated_at)}</p>` : ''}</fieldset>`,
-    { submitLabel: m ? 'Salvar alterações' : 'Cadastrar', onSubmit: async fd => {
+    { submitLabel: m ? 'Salvar alterações' : 'Cadastrar', onSubmit: async (fd, form) => {
       const row = {}; for (const k of ['full_name', 'birth_date', 'marital_status', 'phone', 'whatsapp', 'email', 'address', 'joined_at', 'role_title', 'status', 'notes', 'gender', 'family_id', 'family_role', 'converted_at', 'baptized_at']) { const x = (fd.get(k) || '').trim(); row[k] = x || null; }
       if (!row.full_name || row.full_name.length < 3) throw new Error('Informe o nome completo (mínimo 3 letras).');
       if (row.email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(row.email)) throw new Error('E-mail inválido.');
       row.status = row.status || 'ativo';
+      const pf = form.elements.photo?.files?.[0]; if (pf) row.photo_path = await uploadFile(await blobToJpeg(pf, 600, 0.86, 4 / 5), 'membros');
       const r = m ? await sb.from('members').update(row).eq('id', m.id) : await sb.from('members').insert({ ...row, organization_id: S.org.id, created_by: S.user.id });
       if (r.error) throw r.error; toast(m ? 'Membro atualizado.' : 'Membro cadastrado.'); reload(); } });
   if (readOnly) o.querySelector('[type=submit]').remove();
+  const showPhoto = url => { const b = o.querySelector('#mph'); if (b) b.outerHTML = `<img class="photo-prev" id="mph" src="${esc(url)}" alt="Foto">`; };
+  if (m?.photo_path) sb.storage.from('anexos').createSignedUrl(m.photo_path, 600).then(({ data }) => data?.signedUrl && showPhoto(data.signedUrl));
+  o.querySelector('[name=photo]')?.addEventListener('change', e => { const f = e.target.files[0]; if (f) showPhoto(URL.createObjectURL(f)); });
 }
 async function pageIgreja() {
   const { data: team } = await sb.from('organization_members').select('user_id,role,status,created_at').eq('organization_id', S.org.id);
@@ -611,7 +633,10 @@ async function pageIgreja() {
     <div class="card" style="margin-top:14px"><div class="card-head"><h3>Usuários da igreja</h3></div>
       <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Perfil</th><th>Desde</th></tr></thead><tbody>
       ${(team || []).map(t => `<tr><td>${esc(pn(t.user_id))}${t.user_id === S.user.id ? ' <span class="pill">você</span>' : ''}</td><td>${roleName(t.role)}</td><td class="muted">${dateBR(t.created_at)}</td></tr>`).join('')}
-      </tbody></table></div><p class="muted" style="font-size:.85rem;margin-top:10px">O convite de novos usuários chega na próxima versão.</p></div>`);
+      </tbody></table></div><p class="muted" style="font-size:.85rem;margin-top:10px">O convite de novos usuários chega na próxima versão.</p></div>
+    <div id="ident"></div>
+    <p class="muted small" style="margin-top:18px">Para excluir a conta da igreja ou pedir a exclusão de dados pessoais, veja <a href="exclusao-de-dados.html" target="_blank" rel="noopener">exclusão de conta e de dados</a>.</p>`);
+  identityCard($('#ident'));
   if ($('#ren')) $('#ren').onclick = () => modal('Editar dados da igreja', `<div class="field"><label>Nome da igreja</label><input name="name" value="${esc(S.org.name)}" required maxlength="120"></div>`,
     { onSubmit: async fd => { const name = fd.get('name').trim(); if (name.length < 3) throw new Error('Nome muito curto.');
       const { error } = await sb.from('organizations').update({ name }).eq('id', S.org.id); if (error) throw error; toast('Dados atualizados.'); await loadContext(); render(); } });
@@ -655,14 +680,14 @@ async function loadFinMeta() {
 }
 const accName = id => FIN.accounts.find(a => a.id === id)?.name || '—';
 const catName = id => FIN.categories.find(c => c.id === id)?.name || '—';
-const finTabs = route => `<nav class="tabs" aria-label="Financeiro">${[['caixa', 'Caixa'], ['contas', 'Contas a pagar e a receber'], ['fin-config', 'Caixas e categorias']]
+const finTabs = route => `<nav class="tabs" aria-label="Financeiro">${[['caixa', 'Caixa'], ['contas', 'Contas a pagar e a receber'], ['campanhas', 'Campanhas'], ['fin-config', 'Caixas e categorias']]
   .map(([r, l]) => `<a href="#${r}" class="${r === route ? 'on' : ''}">${l}</a>`).join('')}</nav>`;
 const readOnlyNote = () => !canEditFin() ? `<p class="muted" style="font-size:.85rem;margin-bottom:12px">${['admin', 'pastor', 'tesoureiro'].includes(S.role) ? 'Lançamentos bloqueados: teste encerrado ou acesso suspenso. Você ainda pode consultar e exportar.' : 'Seu perfil permite apenas consultar e exportar o financeiro.'}</p>` : '';
 
 /* --- Caixa (entradas e saídas) --- */
 async function pageCaixa(params) {
   shell('caixa', spin);
-  await loadFinMeta();
+  await Promise.all([loadFinMeta(), loadCampaigns().catch(() => {})]);
   const [d1, d2] = monthRange();
   $('#main').innerHTML = `${statusBanner()}${finTabs('caixa')}${readOnlyNote()}
     <div class="kpis" id="k"></div>
@@ -705,7 +730,7 @@ async function pageCaixa(params) {
       ${rows.map(x => `<tr class="${x.status === 'cancelado' ? 'canceled' : ''}">
         <td style="white-space:nowrap">${dateBR(x.occurred_on)}</td>
         <td><b>${esc(x.description || catName(x.category_id))}</b>
-          <div class="muted" style="font-size:.82rem">${esc(catName(x.category_id))}${x.member_id ? ' · ' + esc(mem[x.member_id] || 'Membro') : ''}${x.document ? ' · Doc. ' + esc(x.document) : ''}${x.payable_id ? ' · baixa de conta' : ''}${x.attachment_path ? ` · <a href="#" data-file="${esc(x.attachment_path)}">comprovante</a>` : ''}</div>
+          <div class="muted" style="font-size:.82rem">${esc(catName(x.category_id))}${x.member_id ? ' · ' + esc(mem[x.member_id] || 'Membro') : ''}${x.document ? ' · Doc. ' + esc(x.document) : ''}${x.payable_id ? ' · baixa de conta' : ''}${x.campaign_id ? ' · campanha ' + esc(CAMPS.find(c => c.id === x.campaign_id)?.name || '') : ''}${x.attachment_path ? ` · <a href="#" data-file="${esc(x.attachment_path)}">comprovante</a>` : ''}</div>
           ${x.status === 'cancelado' ? `<div style="font-size:.8rem;margin-top:3px"><span class="pill red">Cancelado</span> <span class="muted">${esc(x.cancel_reason || '')}</span></div>` : ''}</td>
         <td class="hide-sm">${esc(accName(x.account_id))}</td><td class="hide-sm">${esc(payName(x.payment_method))}</td>
         <td class="num"><span class="${x.type === 'entrada' ? 'v-in' : 'v-out'}">${x.type === 'entrada' ? '+' : '−'} ${brl(x.amount)}</span></td>
@@ -733,6 +758,7 @@ async function txForm(type, done) {
   if (!accs.length) return toast('Cadastre um caixa ativo em "Caixas e categorias".', 'err');
   if (!cats.length) return toast(`Cadastre uma categoria de ${type} em "Caixas e categorias".`, 'err');
   let mem = [];
+  if (type === 'entrada') await loadCampaigns().catch(() => {});
   if (type === 'entrada') {
     const { data } = await sb.from('members').select('id,full_name').eq('organization_id', S.org.id).neq('status', 'inativo').order('full_name').limit(1000);
     mem = data || [];
@@ -745,6 +771,7 @@ async function txForm(type, done) {
     <div class="field"><label for="tfile">Comprovante (foto ou PDF)</label><input id="tfile" type="file" name="attachment" accept="image/*,application/pdf"><small>Opcional, até 10 MB.</small></div>
     <div class="grid2"><div class="field"><label for="tf">Forma de pagamento</label><select id="tf" name="payment_method">${opts(PAY_METHODS, '')}</select></div>
       <div class="field"><label for="tn">Documento / recibo</label><input id="tn" name="document" maxlength="60" placeholder="Nº do recibo ou nota"></div></div>
+    ${type === 'entrada' && CAMPS.some(c => c.is_active) ? `<div class="field"><label for="tcp">Campanha</label><select id="tcp" name="campaign_id"><option value="">Nenhuma</option>${CAMPS.filter(c => c.is_active).map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div>` : ''}
     ${type === 'entrada' && mem.length ? `<div class="field"><label for="tm">Membro (dízimo ou oferta identificada)</label><select id="tm" name="member_id"><option value="">Não identificado</option>${mem.map(m => `<option value="${m.id}">${esc(m.full_name)}</option>`).join('')}</select></div>` : ''}
     <div class="field"><label for="tx">Descrição</label><input id="tx" name="description" maxlength="200" placeholder="${type === 'entrada' ? 'Ex.: Dízimos do culto de domingo' : 'Ex.: Conta de luz de novembro'}"></div></div>`,
   { submitLabel: 'Lançar', onSubmit: async (fd, form) => {
@@ -754,7 +781,7 @@ async function txForm(type, done) {
     if (!fd.get('occurred_on')) throw new Error('Informe a data.');
     const row = { organization_id: S.org.id, created_by: S.user.id, type, amount, occurred_on: fd.get('occurred_on'),
       category_id: fd.get('category_id'), account_id: fd.get('account_id'), payment_method: fd.get('payment_method') || null,
-      document: (fd.get('document') || '').trim() || null, description: (fd.get('description') || '').trim() || null, member_id: fd.get('member_id') || null };
+      document: (fd.get('document') || '').trim() || null, description: (fd.get('description') || '').trim() || null, member_id: fd.get('member_id') || null, campaign_id: fd.get('campaign_id') || null };
     const file = form.elements.attachment?.files?.[0]; if (file) row.attachment_path = await uploadFile(file, 'financeiro');
     const { error } = await sb.from('finance_transactions').insert(row); if (error) throw error;
     toast(type === 'entrada' ? 'Entrada lançada.' : 'Saída lançada.'); done();
@@ -1076,7 +1103,7 @@ async function copyText(t, msg = 'Copiado.') { try { await navigator.clipboard.w
 
 let MEM = [];
 async function loadMembers() {
-  const { data, error } = await sb.from('members').select('id,full_name,whatsapp,phone,status,birth_date,gender,created_at,family_id,family_role,baptized_at').eq('organization_id', S.org.id).order('full_name').limit(5000);
+  const { data, error } = await sb.from('members').select('id,full_name,whatsapp,phone,status,birth_date,gender,created_at,family_id,family_role,baptized_at,address,role_title,joined_at,photo_path,card_code,lat,lng,geocoded_address').eq('organization_id', S.org.id).order('full_name').limit(5000);
   if (error) throw error; MEM = data || []; return MEM;
 }
 const memName = id => MEM.find(m => m.id === id)?.full_name || '—';
@@ -1312,10 +1339,13 @@ async function familyMembers(f) {
     o.remove(); familyMembers(f);
   });
 }
-const EV_KINDS = [['conversao', 'Conversão'], ['batismo', 'Batismo'], ['cargo', 'Cargo ou função'], ['transferencia_entrada', 'Chegou transferido'], ['transferencia_saida', 'Saiu transferido'], ['visita', 'Visita pastoral'], ['aconselhamento', 'Aconselhamento'], ['observacao', 'Observação']];
+const EV_KINDS = [['contato', 'Contato'], ['conversao', 'Conversão'], ['batismo', 'Batismo'], ['cargo', 'Cargo ou função'], ['transferencia_entrada', 'Chegou transferido'], ['transferencia_saida', 'Saiu transferido'], ['visita', 'Visita pastoral'], ['aconselhamento', 'Aconselhamento'], ['observacao', 'Observação']];
 async function memberHistory(m) {
   const { data, error } = await sb.from('member_events').select('*').eq('organization_id', S.org.id).eq('member_id', m.id).order('happened_on', { ascending: false });
   if (error) return toast(errMsg(error), 'err');
+  if (canVisit()) { const { data: pv } = await sb.from('pastoral_visits').select('*').eq('organization_id', S.org.id).eq('member_id', m.id).eq('status', 'realizada');
+    (pv || []).forEach(v => data.push({ happened_on: v.visited_on, kind: 'visita', is_private: true, description: [v.responsible ? 'Por ' + v.responsible : '', v.notes].filter(Boolean).join(' — ') }));
+    data.sort((a, b) => b.happened_on.localeCompare(a.happened_on)); }
   const ed = canPeople(), pastoral = hasRole('admin', 'pastor');
   const o = modal(`Histórico — ${m.full_name}`, `<div class="stack">
     ${(data || []).length ? `<div class="timeline-mini">${data.map(e => `<div><b>${dateBR(e.happened_on)} · ${esc(EV_KINDS.find(k => k[0] === e.kind)?.[1] || e.kind)}</b>${e.is_private ? ' <span class="pill amber">Pastoral</span>' : ''}<div class="muted">${esc(e.description || '')}</div></div>`).join('')}</div>` : '<div class="empty" style="padding:16px">Nenhum registro no histórico.</div>'}
@@ -1722,6 +1752,651 @@ async function installApp() {
 }
 if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
 
+/* ===== QR Code (modo byte, correção M, versões 1 a 10) ===== */
+const QR = (() => {
+  const EC = [null, [10, 1, 16, 0, 0], [16, 1, 28, 0, 0], [26, 1, 44, 0, 0], [18, 2, 32, 0, 0], [24, 2, 43, 0, 0], [16, 4, 27, 0, 0], [18, 4, 31, 0, 0], [22, 2, 38, 2, 39], [22, 3, 36, 2, 37], [26, 4, 43, 1, 44]];
+  const ALIGN = [null, [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34], [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50]];
+  const EXP = new Array(512), LOG = new Array(256);
+  for (let i = 0, x = 1; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 256) x ^= 0x11d; }
+  for (let i = 255; i < 512; i++) EXP[i] = EXP[i - 255];
+  const mul = (a, b) => a && b ? EXP[LOG[a] + LOG[b]] : 0;
+  const rsGen = n => { let g = [1]; for (let i = 0; i < n; i++) { const ng = new Array(g.length + 1).fill(0); g.forEach((c, j) => { ng[j] ^= c; ng[j + 1] ^= mul(c, EXP[i]); }); g = ng; } return g; };
+  const rsEc = (data, n) => { const g = rsGen(n), r = [...data, ...new Array(n).fill(0)]; for (let i = 0; i < data.length; i++) { const c = r[i]; if (c) for (let j = 0; j < g.length; j++) r[i + j] ^= mul(g[j], c); } return r.slice(data.length); };
+  const bch = (v, poly, bits) => { let x = v << bits; const deg = Math.floor(Math.log2(poly)); while (Math.floor(Math.log2(x || 1)) >= deg && x) x ^= poly << (Math.floor(Math.log2(x)) - deg); return (v << bits) | x; };
+  const MASKS = [(r, c) => (r + c) % 2 === 0, r => r % 2 === 0, (r, c) => c % 3 === 0, (r, c) => (r + c) % 3 === 0, (r, c) => (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0,
+    (r, c) => (r * c) % 2 + (r * c) % 3 === 0, (r, c) => ((r * c) % 2 + (r * c) % 3) % 2 === 0, (r, c) => ((r + c) % 2 + (r * c) % 3) % 2 === 0];
+
+  function encode(text) {
+    const bytes = [...new TextEncoder().encode(text)];
+    let ver = 0;
+    for (let v = 1; v <= 10; v++) { const [, b1, d1, b2, d2] = EC[v]; const cap = b1 * d1 + b2 * d2; if (4 + (v < 10 ? 8 : 16) + bytes.length * 8 <= cap * 8) { ver = v; break; } }
+    if (!ver) throw new Error('Texto longo demais para o QR Code.');
+    const [ecn, b1, d1, b2, d2] = EC[ver], dataCw = b1 * d1 + b2 * d2;
+    const bits = []; const put = (v, n) => { for (let i = n - 1; i >= 0; i--) bits.push((v >> i) & 1); };
+    put(4, 4); put(bytes.length, ver < 10 ? 8 : 16); bytes.forEach(b => put(b, 8));
+    put(0, Math.min(4, dataCw * 8 - bits.length)); while (bits.length % 8) bits.push(0);
+    const data = []; for (let i = 0; i < bits.length; i += 8) data.push(parseInt(bits.slice(i, i + 8).join(''), 2));
+    for (let p = 0; data.length < dataCw; p++) data.push(p % 2 ? 0x11 : 0xec);
+    const blocks = []; let k = 0;
+    for (let i = 0; i < b1; i++) { blocks.push(data.slice(k, k + d1)); k += d1; }
+    for (let i = 0; i < b2; i++) { blocks.push(data.slice(k, k + d2)); k += d2; }
+    const ecs = blocks.map(b => rsEc(b, ecn)), out = [];
+    for (let i = 0; i < Math.max(d1, d2); i++) blocks.forEach(b => { if (i < b.length) out.push(b[i]); });
+    for (let i = 0; i < ecn; i++) ecs.forEach(e => out.push(e[i]));
+    const size = ver * 4 + 17, M = [...Array(size)].map(() => new Array(size).fill(null)), F = [...Array(size)].map(() => new Array(size).fill(false));
+    const set = (r, c, v) => { M[r][c] = v; F[r][c] = true; };
+    const finder = (r, c) => { for (let i = -1; i <= 7; i++) for (let j = -1; j <= 7; j++) { const rr = r + i, cc = c + j; if (rr < 0 || cc < 0 || rr >= size || cc >= size) continue;
+      set(rr, cc, i >= 0 && i <= 6 && j >= 0 && j <= 6 && (i === 0 || i === 6 || j === 0 || j === 6 || (i >= 2 && i <= 4 && j >= 2 && j <= 4))); } };
+    finder(0, 0); finder(0, size - 7); finder(size - 7, 0);
+    for (let i = 8; i < size - 8; i++) { set(6, i, i % 2 === 0); set(i, 6, i % 2 === 0); }
+    const al = ALIGN[ver];
+    const last = al[al.length - 1];
+    al.forEach(r => al.forEach(c => { if ((r === 6 && c === 6) || (r === 6 && c === last) || (r === last && c === 6)) return; for (let i = -2; i <= 2; i++) for (let j = -2; j <= 2; j++) set(r + i, c + j, Math.max(Math.abs(i), Math.abs(j)) !== 1); }));
+    set(size - 8, 8, true);
+    for (let i = 0; i < 9; i++) { F[8][i] = F[i][8] = true; } for (let i = 0; i < 8; i++) { F[8][size - 1 - i] = F[size - 1 - i][8] = true; }
+    if (ver >= 7) for (let i = 0; i < 6; i++) for (let j = 0; j < 3; j++) { F[i][size - 11 + j] = F[size - 11 + j][i] = true; }
+    const dbits = []; out.forEach(b => { for (let i = 7; i >= 0; i--) dbits.push((b >> i) & 1); });
+    let idx = 0;
+    for (let c = size - 1; c > 0; c -= 2) { if (c === 6) c--; for (let n = 0; n < size; n++) { const up = ((size - 1 - c) >> 1) % 2 === 0, r = up ? size - 1 - n : n;
+      for (let j = 0; j < 2; j++) { const cc = c - j; if (!F[r][cc]) { M[r][cc] = idx < dbits.length ? !!dbits[idx] : false; idx++; } } } }
+    const place = (m, mask) => {
+      const X = M.map((row, r) => row.map((v, c) => F[r][c] ? v : (MASKS[mask](r, c) ? !v : v)));
+      const fmt = bch((0 << 3) | mask, 0x537, 10) ^ 0x5412;
+      for (let i = 0; i < 15; i++) { const b = !!((fmt >> i) & 1);
+        if (i < 6) X[i][8] = b; else if (i === 6) X[7][8] = b; else if (i === 7) X[8][8] = b; else if (i === 8) X[8][7] = b; else X[8][14 - i] = b;
+        if (i < 8) X[8][size - 1 - i] = b; else X[size - 15 + i][8] = b; }
+      X[size - 8][8] = true;
+      if (ver >= 7) { const vi = bch(ver, 0x1f25, 12); for (let i = 0; i < 18; i++) { const b = !!((vi >> i) & 1); X[Math.floor(i / 3)][size - 11 + i % 3] = b; X[size - 11 + i % 3][Math.floor(i / 3)] = b; } }
+      return X;
+    };
+    const penalty = X => { let p = 0; const n = size;
+      for (let r = 0; r < n; r++) for (const line of [X[r], X.map(row => row[r])]) { let run = 1; for (let i = 1; i < n; i++) { if (line[i] === line[i - 1]) { run++; if (run === 5) p += 3; else if (run > 5) p++; } else run = 1; }
+        const s = line.map(v => v ? 1 : 0).join(''); p += 40 * ((s.match(/(?=10111010000)/g) || []).length + (s.match(/(?=00001011101)/g) || []).length); }
+      for (let r = 0; r < n - 1; r++) for (let c = 0; c < n - 1; c++) { const v = X[r][c]; if (v === X[r + 1][c] && v === X[r][c + 1] && v === X[r + 1][c + 1]) p += 3; }
+      const dark = X.flat().filter(Boolean).length; p += Math.floor(Math.abs(dark * 100 / (n * n) - 50) / 5) * 10; return p; };
+    let best = null, bp = Infinity;
+    for (let m = 0; m < 8; m++) { const X = place(M, m), p = penalty(X); if (p < bp) { bp = p; best = X; } }
+    return best;
+  }
+  function svg(text, px = 4, margin = 4) {
+    const m = encode(text), n = m.length + margin * 2; let d = '';
+    m.forEach((row, r) => row.forEach((v, c) => { if (v) d += `M${c + margin},${r + margin}h1v1h-1z`; }));
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n} ${n}" width="${n * px}" height="${n * px}" shape-rendering="crispEdges"><rect width="${n}" height="${n}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
+  }
+  return { encode, svg };
+})();
+
+/* ===== Leitura de planilhas (CSV e Excel .xlsx) sem bibliotecas externas ===== */
+function parseCSV(text) {
+  text = text.replace(/^﻿/, '');
+  const first = text.split(/\r?\n/)[0] || '';
+  const sep = [';', ',', '\t'].map(s => [s, first.split(s).length]).sort((a, b) => b[1] - a[1])[0][0];
+  const rows = []; let row = [], cur = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; } else cur += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === sep) { row.push(cur); cur = ''; }
+    else if (ch === '\n' || ch === '\r') { if (ch === '\r' && text[i + 1] === '\n') i++; row.push(cur); rows.push(row); row = []; cur = ''; }
+    else cur += ch;
+  }
+  if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
+  return rows.filter(r => r.some(c => String(c).trim() !== ''));
+}
+async function unzip(buf) {
+  const dv = new DataView(buf), u8 = new Uint8Array(buf), files = {};
+  let eocd = -1; for (let i = u8.length - 22; i >= Math.max(0, u8.length - 65557); i--) if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; }
+  if (eocd < 0) throw new Error('Arquivo Excel inválido ou corrompido.');
+  let p = dv.getUint32(eocd + 16, true); const n = dv.getUint16(eocd + 10, true);
+  for (let k = 0; k < n; k++) {
+    const method = dv.getUint16(p + 10, true), csize = dv.getUint32(p + 20, true), nl = dv.getUint16(p + 28, true), el = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true), lo = dv.getUint32(p + 42, true);
+    const name = new TextDecoder().decode(u8.subarray(p + 46, p + 46 + nl));
+    const start = lo + 30 + dv.getUint16(lo + 26, true) + dv.getUint16(lo + 28, true), raw = u8.subarray(start, start + csize);
+    files[name] = { method, raw }; p += 46 + nl + el + cl;
+  }
+  const read = async name => { const f = files[name]; if (!f) return null; if (f.method === 0) return new TextDecoder().decode(f.raw);
+    const s = new Blob([f.raw]).stream().pipeThrough(new DecompressionStream('deflate-raw')); return await new Response(s).text(); };
+  return { names: Object.keys(files), read };
+}
+async function parseXLSX(buf) {
+  const z = await unzip(buf), dom = t => new DOMParser().parseFromString(t, 'application/xml');
+  let sheetPath = 'xl/worksheets/sheet1.xml';
+  try {
+    const wb = dom(await z.read('xl/workbook.xml')), rels = dom(await z.read('xl/_rels/workbook.xml.rels'));
+    const first = wb.getElementsByTagName('sheet')[0], rid = first?.getAttribute('r:id') || first?.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'id');
+    const rel = [...rels.getElementsByTagName('Relationship')].find(r => r.getAttribute('Id') === rid);
+    if (rel) { const t = rel.getAttribute('Target').replace(/^\//, ''); sheetPath = t.startsWith('xl/') ? t : 'xl/' + t; }
+  } catch {}
+  const ssTxt = await z.read('xl/sharedStrings.xml');
+  const ss = ssTxt ? [...dom(ssTxt).getElementsByTagName('si')].map(si => [...si.getElementsByTagName('t')].map(t => t.textContent).join('')) : [];
+  const sheetTxt = await z.read(sheetPath); if (!sheetTxt) throw new Error('Não encontrei a primeira aba da planilha.');
+  const colNum = ref => { let n = 0; for (const ch of ref.replace(/\d+/g, '')) n = n * 26 + ch.charCodeAt(0) - 64; return n - 1; };
+  const rows = [];
+  for (const r of dom(sheetTxt).getElementsByTagName('row')) {
+    const row = [];
+    for (const c of r.getElementsByTagName('c')) {
+      const t = c.getAttribute('t'), v = c.getElementsByTagName('v')[0]?.textContent ?? '';
+      let val = t === 's' ? ss[Number(v)] ?? '' : t === 'inlineStr' ? [...c.getElementsByTagName('t')].map(x => x.textContent).join('') : t === 'b' ? (v === '1' ? 'SIM' : 'NÃO') : v;
+      if (!t || t === 'n') { const st = Number(c.getAttribute('s') || 0); if (v !== '' && st) val = { num: Number(v), style: st }; }
+      row[colNum(c.getAttribute('r') || 'A1')] = val;
+    }
+    rows.push([...row].map(x => x ?? ''));
+  }
+  return rows.filter(r => r.some(c => String(typeof c === 'object' ? c.num : c).trim() !== ''));
+}
+async function readSheetFile(file) {
+  if (/\.xlsx$/i.test(file.name)) return await parseXLSX(await file.arrayBuffer());
+  if (/\.xls$/i.test(file.name)) throw new Error('Formato .xls antigo: abra no Excel e salve como .xlsx ou .csv.');
+  const buf = await file.arrayBuffer();
+  let text = new TextDecoder('utf-8').decode(buf);
+  if (text.includes('�')) text = new TextDecoder('windows-1252').decode(buf);
+  return parseCSV(text);
+}
+/* Datas: 31/12/1990, 31-12-90, 1990-12-31 ou número de série do Excel */
+function parseDateBR(v) {
+  if (v == null || v === '') return null;
+  if (typeof v === 'object' && v.num != null) v = v.num;
+  if (typeof v === 'number' || /^\d{4,5}(\.\d+)?$/.test(String(v).trim())) { const n = Number(v); if (n > 59 && n < 80000) { const d = new Date(Date.UTC(1899, 11, 30) + Math.floor(n) * 864e5); return d.toISOString().slice(0, 10); } return null; }
+  const s = String(v).trim(); let m;
+  if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) return valid(+m[1], +m[2], +m[3]);
+  if ((m = s.match(/^(\d{1,2})[\/.\-](\d{1,2})[\/.\-](\d{2,4})$/))) { let y = +m[3]; if (y < 100) y += y > (new Date().getFullYear() % 100) ? 1900 : 2000; return valid(y, +m[2], +m[1]); }
+  return null;
+  function valid(y, mo, d) { const dt = new Date(Date.UTC(y, mo - 1, d)); return dt.getUTCMonth() === mo - 1 && dt.getUTCDate() === d && y >= 1900 ? dt.toISOString().slice(0, 10) : null; }
+}
+const cellText = v => typeof v === 'object' && v ? String(v.num) : String(v ?? '').trim();
+
+/* ===== v0.6: importação, foto, carteirinha, certificados, visitas, visitantes, aniversários, mapa, campanhas ===== */
+const canVisit = () => hasRole('admin', 'pastor', 'secretario', 'lider');
+let ORGSET = null;
+async function loadOrgSettings() {
+  const { data } = await sb.from('org_settings').select('*').eq('organization_id', S.org.id).maybeSingle();
+  ORGSET = data || {}; return ORGSET;
+}
+const DEF_BDAY = 'Feliz aniversário, {nome}! A {igreja} agradece a Deus pela sua vida. Que o Senhor te abençoe e te guarde neste novo ano!';
+const DEF_WELCOME = 'Olá, {nome}! Foi uma alegria ter você conosco na {igreja}. Conte com a gente para o que precisar. Que Deus te abençoe!';
+const fillMsg = (t, m) => String(t || '').replaceAll('{nome}', (m.full_name || '').split(' ')[0]).replaceAll('{igreja}', S.org.name);
+async function blobToJpeg(file, max = 640, q = 0.85, aspect = 0) {
+  let bmp; try { bmp = await createImageBitmap(file); } catch { throw new Error('Formato de imagem não suportado. Use foto JPG ou PNG.'); }
+  let sx = 0, sy = 0, sw = bmp.width, sh = bmp.height;
+  if (aspect) { if (sw / sh > aspect) { sw = Math.round(sh * aspect); sx = Math.round((bmp.width - sw) / 2); } else { sh = Math.round(sw / aspect); sy = Math.round((bmp.height - sh) * 0.3); } }
+  const k = Math.min(1, max / Math.max(sw, sh)), c = document.createElement('canvas');
+  c.width = Math.round(sw * k); c.height = Math.round(sh * k);
+  const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(bmp, sx, sy, sw, sh, 0, 0, c.width, c.height);
+  const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', q));
+  return new File([blob], 'foto.jpg', { type: 'image/jpeg' });
+}
+async function fileBytes(path) {
+  if (!path) return null;
+  const { data, error } = await sb.storage.from('anexos').download(path);
+  if (error || !data) return null;
+  return new Uint8Array(await data.arrayBuffer());
+}
+async function loadPdfLib() { try { return await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm'); } catch { throw new Error('Não foi possível carregar o gerador de PDF. Verifique sua conexão.'); } }
+const pdfClean = s => String(s ?? '').normalize('NFC').replace(/[  ]/g, ' ').replace(/[^\x20-\x7E\xA0-\xFF–—‘’“”•…]/g, '');
+const pdfFit = (s, f, z, w) => { s = pdfClean(s); if (f.widthOfTextAtSize(s, z) <= w) return s; while (s.length && f.widthOfTextAtSize(s + '…', z) > w) s = s.slice(0, -1); return s + '…'; };
+const pdfWrap = (s, f, z, w) => { const words = pdfClean(s).split(/\s+/), lines = []; let cur = ''; for (const wd of words) { const t = cur ? cur + ' ' + wd : wd; if (f.widthOfTextAtSize(t, z) > w && cur) { lines.push(cur); cur = wd; } else cur = t; } if (cur) lines.push(cur); return lines; };
+
+/* --- Importar membros por planilha --- */
+const IMPORT_FIELDS = [['full_name', 'Nome *', /^(nome|nome completo|membro|name)$/], ['birth_date', 'Nascimento', /nasc|aniver/], ['whatsapp', 'WhatsApp', /whats|zap|celular/],
+  ['phone', 'Telefone', /^(telefone|fone|tel|telefone fixo)/], ['email', 'E-mail', /e-?mail/], ['address', 'Endereço', /ender|rua|logradouro/], ['gender', 'Sexo', /sexo|g[eê]nero/],
+  ['marital_status', 'Estado civil', /civil/], ['status', 'Situação', /situa|status/], ['role_title', 'Cargo ou função', /cargo|fun[cç][aã]o/], ['joined_at', 'Membro desde', /ingresso|desde|entrada|admiss/],
+  ['baptized_at', 'Batismo', /batism/], ['notes', 'Observações', /obs/]];
+const normTxt = s => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+function importMembers(done) {
+  const o = modal('Importar membros de uma planilha', `<div class="stack">
+    <p class="muted">Envie uma planilha do Excel (.xlsx) ou CSV com uma linha por pessoa. A primeira linha precisa ter os títulos das colunas (Nome, Nascimento, WhatsApp…).</p>
+    <div class="field"><label for="impf">Planilha *</label><input id="impf" type="file" name="file" accept=".xlsx,.csv,.txt"></div>
+    <p class="small muted"><a href="#" data-tpl>Baixar modelo de planilha</a></p><div id="impPrev"></div></div>`,
+  { submitLabel: 'Importar', busyLabel: 'Importando…', onSubmit: async (fd, form) => {
+    const st = form._imp; if (!st) throw new Error('Escolha a planilha primeiro.');
+    const map = {}; IMPORT_FIELDS.forEach(([k]) => { const v = form.elements['map_' + k]?.value; if (v !== '' && v != null) map[k] = Number(v); });
+    if (map.full_name == null) throw new Error('Indique qual coluna tem o nome.');
+    await loadMembers(); const existing = new Set(MEM.map(m => normTxt(m.full_name)));
+    const rows = [], skipped = [];
+    st.rows.slice(1).forEach((r, i) => {
+      const get = k => map[k] != null ? r[map[k]] : '';
+      const name = cellText(get('full_name')).replace(/\s+/g, ' ');
+      if (name.length < 3) { skipped.push(`Linha ${i + 2}: nome vazio ou curto`); return; }
+      if (existing.has(normTxt(name))) { skipped.push(`Linha ${i + 2}: ${name} já está cadastrado`); return; }
+      existing.add(normTxt(name));
+      const t = k => cellText(get(k)) || null, n = k => normTxt(cellText(get(k)));
+      const email = t('email'); const ms = n('marital_status'), sts = n('status'), gd = n('gender');
+      rows.push({ organization_id: S.org.id, created_by: S.user.id, full_name: name.slice(0, 120), birth_date: parseDateBR(get('birth_date')), whatsapp: t('whatsapp')?.slice(0, 30) || null,
+        phone: t('phone')?.slice(0, 30) || null, email: email && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) ? email.toLowerCase() : null, address: t('address')?.slice(0, 300) || null,
+        gender: /^f|mulher/.test(gd) ? 'feminino' : /^m|homem/.test(gd) ? 'masculino' : null,
+        marital_status: /solt/.test(ms) ? 'solteiro' : /casad/.test(ms) ? 'casado' : /divor|separ/.test(ms) ? 'divorciado' : /viuv/.test(ms) ? 'viuvo' : /uniao|estavel/.test(ms) ? 'uniao_estavel' : null,
+        status: /visit/.test(sts) ? 'visitante' : /inativ|afast/.test(sts) ? 'inativo' : /transf/.test(sts) ? 'transferido' : 'ativo',
+        role_title: t('role_title')?.slice(0, 80) || null, joined_at: parseDateBR(get('joined_at')), baptized_at: parseDateBR(get('baptized_at')), notes: t('notes')?.slice(0, 2000) || null });
+      const today = ymd(new Date()); const last = rows[rows.length - 1]; ['birth_date', 'joined_at', 'baptized_at'].forEach(k => { if (last[k] && last[k] > today) last[k] = null; });
+    });
+    if (!rows.length) throw new Error('Nenhuma pessoa nova para importar. ' + (skipped[0] || ''));
+    for (let i = 0; i < rows.length; i += 200) { const { error } = await sb.from('members').insert(rows.slice(i, i + 200)); if (error) throw new Error(`Parou na linha ${i + 2}: ${errMsg(error)}`); }
+    toast(`${rows.length} pessoa${rows.length > 1 ? 's' : ''} importada${rows.length > 1 ? 's' : ''}.${skipped.length ? ` ${skipped.length} linha(s) puladas.` : ''}`);
+    if (skipped.length) setTimeout(() => modal('Linhas que não foram importadas', `<ul style="padding-left:18px">${skipped.slice(0, 200).map(s => `<li>${esc(s)}</li>`).join('')}</ul>`, { submitLabel: 'Fechar', onSubmit: async () => {} }), 300);
+    done && done();
+  } });
+  o.querySelector('[data-tpl]').onclick = e => { e.preventDefault(); downloadFile(new TextEncoder().encode('﻿Nome;Nascimento;WhatsApp;Telefone;E-mail;Endereço;Sexo;Estado civil;Situação;Cargo ou função;Membro desde;Batismo;Observações\nMaria da Silva;15/03/1985;(33) 99999-0000;;maria@email.com;Rua das Flores, 10 - Centro;Feminino;Casado;Ativo;Professora EBD;10/01/2010;20/06/2010;\n'), 'modelo-membros.csv', 'text/csv'); };
+  o.querySelector('[name=file]').onchange = async e => {
+    const form = e.target.form, f = e.target.files[0], box = $('#impPrev', form); form._imp = null; if (!f) return;
+    box.innerHTML = spin;
+    try {
+      const rows = await readSheetFile(f); if (rows.length < 2) throw new Error('A planilha não tem linhas de dados.');
+      const head = rows[0].map(cellText), cols = head.map((h, i) => [String(i), h || `Coluna ${i + 1}`]);
+      const guess = re => { const i = head.findIndex(h => re.test(normTxt(h))); return i < 0 ? '' : String(i); };
+      const used = new Set(); const pick = re => { const g = guess(re); if (g !== '' && !used.has(g)) { used.add(g); return g; } return ''; };
+      const auto = Object.fromEntries(IMPORT_FIELDS.map(([k, , re]) => [k, pick(re)]));
+      form._imp = { rows };
+      box.innerHTML = `<p><b>${rows.length - 1}</b> linha(s) encontradas. Confira de qual coluna vem cada informação:</p>
+        <div class="fgrid">${IMPORT_FIELDS.map(([k, l]) => `<div class="field"><label>${esc(l)}</label><select name="map_${k}"><option value="">— não importar —</option>${opts(cols, auto[k])}</select></div>`).join('')}</div>
+        <p class="muted small" style="margin-top:10px">Prévia das primeiras linhas:</p><div class="table-wrap"><table><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>
+        ${rows.slice(1, 6).map(r => `<tr>${head.map((_, i) => { const c = r[i]; const d = typeof c === 'object' && c ? parseDateBR(c) : null; return `<td>${esc(d ? dateBR(d) : cellText(c))}</td>`; }).join('')}</tr>`).join('')}</tbody></table></div>
+        <p class="muted small" style="margin-top:8px">Pessoas com o mesmo nome de alguém já cadastrado são puladas. Datas aceitas: 31/12/1990 ou datas do Excel.</p>`;
+    } catch (err) { box.innerHTML = `<div class="form-err">${esc(err.message || err)}</div>`; }
+  };
+}
+
+/* --- Carteirinha de membro com QR Code --- */
+const cardUrl = m => publicUrl('verificar.html?c=' + m.card_code);
+async function memberCardsPdf(list, format = 'a4') {
+  if (!list.length) throw new Error('Nenhum membro selecionado.');
+  const lib = await loadPdfLib(), { PDFDocument, StandardFonts, rgb } = lib;
+  if (!ORGSET) await loadOrgSettings();
+  const doc = await PDFDocument.create(); doc.setTitle(`Carteirinhas - ${pdfClean(S.org.name)}`); doc.setCreator('Gestão do Reino');
+  const F = await doc.embedFont(StandardFonts.Helvetica), B = await doc.embedFont(StandardFonts.HelveticaBold);
+  const navy = rgb(0.043, 0.122, 0.227), gold = rgb(0.79, 0.64, 0.29), muted = rgb(0.36, 0.4, 0.51), line = rgb(0.86, 0.88, 0.92), white = rgb(1, 1, 1);
+  const CW = 242.65, CH = 153.07;
+  let logo = null; const lb = await fileBytes(ORGSET.logo_path); if (lb) { try { logo = await doc.embedJpg(lb); } catch { try { logo = await doc.embedPng(lb); } catch {} } }
+  const drawCard = async (page, x, y, m) => {
+    page.drawRectangle({ x, y, width: CW, height: CH, color: white, borderColor: line, borderWidth: 0.6 });
+    page.drawRectangle({ x, y: y + CH - 34, width: CW, height: 34, color: navy });
+    page.drawRectangle({ x, y: y + CH - 36, width: CW, height: 2, color: gold });
+    let tx = x + 10; if (logo) { const s = 24 / logo.height; page.drawImage(logo, { x: x + 8, y: y + CH - 29, width: logo.width * s, height: 24 }); tx = x + 14 + logo.width * s; }
+    page.drawText(pdfFit(S.org.name, B, 9, x + CW - 10 - tx), { x: tx, y: y + CH - 17, size: 9, font: B, color: white });
+    page.drawText('CARTEIRA DE MEMBRO', { x: tx, y: y + CH - 28, size: 6.5, font: B, color: gold });
+    const px = x + 10, py = y + 28, pw = 54, ph = 68;
+    let photo = null; const pb = await fileBytes(m.photo_path); if (pb) { try { photo = await doc.embedJpg(pb); } catch { try { photo = await doc.embedPng(pb); } catch {} } }
+    if (photo) { page.drawRectangle({ x: px, y: py, width: pw, height: ph, color: rgb(0.93, 0.95, 0.98) }); const k = Math.min(pw / photo.width, ph / photo.height), w = photo.width * k, h = photo.height * k; page.drawImage(photo, { x: px + (pw - w) / 2, y: py + (ph - h) / 2, width: w, height: h }); }
+    else { page.drawRectangle({ x: px, y: py, width: pw, height: ph, color: rgb(0.93, 0.95, 0.98) }); const ini = pdfClean(m.full_name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('').toUpperCase()); page.drawText(ini, { x: px + pw / 2 - B.widthOfTextAtSize(ini, 20) / 2, y: py + ph / 2 - 7, size: 20, font: B, color: muted }); }
+    page.drawRectangle({ x: px, y: py, width: pw, height: ph, borderColor: line, borderWidth: 0.6 });
+    const ix = px + pw + 9, iw = CW - (ix - x) - 70;
+    const nameLines = pdfWrap(m.full_name, B, 8.5, iw).slice(0, 2);
+    nameLines.forEach((l, i) => page.drawText(l, { x: ix, y: y + CH - 50 - i * 10, size: 8.5, font: B, color: navy }));
+    let yy = y + CH - 52 - nameLines.length * 10;
+    const info = (k, v) => { if (!v) return; page.drawText(pdfClean(k), { x: ix, y: yy, size: 5.5, font: F, color: muted }); page.drawText(pdfFit(v, F, 7, iw), { x: ix, y: yy - 8, size: 7, font: F, color: navy }); yy -= 18; };
+    info('FUNÇÃO', m.role_title); info('MEMBRO DESDE', m.joined_at ? dateBR(m.joined_at) : ''); info('NASCIMENTO', m.birth_date ? dateBR(m.birth_date) : '');
+    const qm = QR.encode(cardUrl(m)), qs = 60, cell = qs / (qm.length + 8), qx = x + CW - qs - 6, qy = y + 9;
+    page.drawRectangle({ x: qx, y: qy, width: qs, height: qs, color: white });
+    qm.forEach((row, r) => row.forEach((v, c) => { if (v) page.drawRectangle({ x: qx + (c + 4) * cell, y: qy + qs - (r + 5) * cell, width: cell + 0.05, height: cell + 0.05, color: rgb(0, 0, 0) }); }));
+    page.drawText('Verifique pelo QR', { x: qx + qs / 2 - F.widthOfTextAtSize('Verifique pelo QR', 4.5) / 2, y: qy - 3, size: 4.5, font: F, color: muted });
+    page.drawText(pdfClean('Nº ' + m.card_code.toUpperCase()), { x: px, y: y + 10, size: 6, font: B, color: muted });
+  };
+  if (format === 'cartao') { for (const m of list) { const p = doc.addPage([CW, CH]); await drawCard(p, 0, 0, m); } }
+  else {
+    const W = 595.28, H = 841.89, gx = (W - 2 * CW) / 3, gy = (H - 5 * CH) / 6;
+    for (let i = 0; i < list.length; i += 10) { const p = doc.addPage([W, H]);
+      for (let j = 0; j < 10 && i + j < list.length; j++) await drawCard(p, gx + (j % 2) * (CW + gx), H - gy - (Math.floor(j / 2) + 1) * (CH + gy) + gy, list[i + j]); }
+  }
+  downloadFile(await doc.save(), `carteirinhas-${slug(S.org.name)}-${ymd(new Date())}.pdf`, 'application/pdf');
+}
+async function cardsModal(preselected) {
+  await loadMembers();
+  const people = MEM.filter(m => m.status === 'ativo' || preselected?.includes(m.id));
+  const o = modal('Carteirinhas de membro', `<div class="stack">
+    <p class="muted">Cada carteirinha tem foto, função, data de ingresso e um QR Code. Quem ler o QR vê na hora se o cadastro está ativo.</p>
+    <div class="fgrid"><div class="field"><label>Formato</label><select name="fmt"><option value="a4">Folha A4 para recortar (10 por folha)</option><option value="cartao">Tamanho do cartão (gráfica ou impressora de PVC)</option></select></div>
+      <div class="field"><label>Pesquisar</label><input name="q" placeholder="Nome"></div></div>
+    <div class="field"><label>Membros (${people.length} ativos) · <a href="#" data-all>marcar todos</a> · <a href="#" data-none>desmarcar</a></label>
+      <div class="checklist">${people.map(m => `<label class="check" data-n="${esc(normTxt(m.full_name))}"><input type="checkbox" name="m" value="${m.id}" ${!preselected || preselected.includes(m.id) ? 'checked' : ''}> ${esc(m.full_name)}${m.photo_path ? '' : ' <span class="muted small">(sem foto)</span>'}</label>`).join('')}</div></div></div>`,
+  { submitLabel: 'Gerar PDF', busyLabel: 'Gerando…', onSubmit: async fd => { const ids = fd.getAll('m'); await memberCardsPdf(MEM.filter(m => ids.includes(m.id)), fd.get('fmt')); toast(`PDF com ${ids.length} carteirinha(s) gerado.`); } });
+  o.querySelector('[name=q]').oninput = e => { const t = normTxt(e.target.value); o.querySelectorAll('[data-n]').forEach(l => l.style.display = l.dataset.n.includes(t) ? '' : 'none'); };
+  o.querySelector('[data-all]').onclick = e => { e.preventDefault(); o.querySelectorAll('[name=m]').forEach(c => { if (c.closest('label').style.display !== 'none') c.checked = true; }); };
+  o.querySelector('[data-none]').onclick = e => { e.preventDefault(); o.querySelectorAll('[name=m]').forEach(c => c.checked = false); };
+}
+
+/* --- Certificados --- */
+const CERT_TYPES = {
+  batismo: ['Certificado de Batismo', 'Certificamos que {nome} foi batizado(a) nas águas, em obediência à Palavra de Deus, no dia {data}, nesta igreja.'],
+  curso: ['Certificado de Conclusão', 'Certificamos que {nome} concluiu com êxito o curso {evento}, promovido por esta igreja, em {data}.'],
+  evento: ['Certificado de Participação', 'Certificamos que {nome} participou do {evento}, realizado em {data}.'],
+  apresentacao: ['Certificado de Apresentação', 'Certificamos que {nome} foi apresentado(a) ao Senhor nesta igreja no dia {data}, conforme o exemplo de Lucas 2.22.'],
+  personalizado: ['Certificado', '{nome}'] };
+async function pageCertificados() {
+  shell('certificados', spin);
+  await loadMembers();
+  const [{ data: cls }, { data: evs }] = await Promise.all([sb.from('classes').select('id,name').eq('organization_id', S.org.id).order('name'), sb.from('events').select('id,title,starts_at').eq('organization_id', S.org.id).order('starts_at', { ascending: false }).limit(50)]);
+  $('#main').innerHTML = `${statusBanner()}<div class="grid2" style="align-items:start"><form class="card stack" id="cf" novalidate>
+    <h3>Gerar certificados</h3>
+    <div class="fgrid"><div class="field"><label>Tipo</label><select name="tipo">${opts([['batismo', 'Batismo'], ['curso', 'Conclusão de curso'], ['evento', 'Participação em evento ou congresso'], ['apresentacao', 'Apresentação de criança'], ['personalizado', 'Personalizado']], 'batismo')}</select></div>
+      <div class="field"><label>Estilo</label><select name="estilo">${opts([['classico', 'Clássico (bordas douradas)'], ['moderno', 'Moderno'], ['kids', 'Kids (colorido)']], 'classico')}</select></div>
+      <div class="field full"><label>Título</label><input name="titulo" maxlength="80"></div>
+      <div class="field full" data-ev><label>Nome do curso ou evento</label><input name="evento" maxlength="120" placeholder="Ex.: Escola Bíblica — Fundamentos da Fé"></div>
+      <div class="field full"><label>Texto</label><textarea name="texto" maxlength="600"></textarea><small>Use {nome}, {data} e {evento}: eles são trocados automaticamente.</small></div>
+      <div class="field"><label>Data</label><input type="date" name="data" value="${ymd(new Date())}"></div><div class="field"><label>Cidade</label><input name="cidade" maxlength="80" placeholder="Ex.: Teófilo Otoni/MG"></div>
+      <div class="field"><label>Assinatura 1</label><input name="a1" maxlength="60" placeholder="Nome"><input name="c1" maxlength="60" placeholder="Cargo (ex.: Pastor presidente)" style="margin-top:6px"></div>
+      <div class="field"><label>Assinatura 2</label><input name="a2" maxlength="60" placeholder="Nome"><input name="c2" maxlength="60" placeholder="Cargo (ex.: Secretário)" style="margin-top:6px"></div></div>
+    <div class="form-err" data-err></div><button class="btn" type="submit">Gerar PDF dos certificados</button></form>
+    <div class="card stack"><h3>Para quem</h3>
+      <div class="field"><label>Origem</label><select name="src" form="cf">${opts([['membros', 'Escolher membros'], ['batizados', 'Batizados no período'], ['turma', 'Alunos de uma turma'], ['evento', 'Presentes em um evento'], ['nomes', 'Digitar nomes (visitantes, crianças)']], 'membros')}</select></div>
+      <div id="srcBox"></div><p class="muted small" id="cnt"></p></div></div>`;
+  const f = $('#cf'), box = $('#srcBox');
+  const setType = () => { const [t, x] = CERT_TYPES[f.tipo.value]; f.titulo.value = t; f.texto.value = x; $('[data-ev]', f).style.display = ['curso', 'evento'].includes(f.tipo.value) ? '' : 'none';
+    if (f.tipo.value === 'apresentacao') f.estilo.value = 'kids'; };
+  f.tipo.onchange = setType; setType();
+  if (ORGSET === null) await loadOrgSettings(); const site = await sb.from('church_sites').select('city').eq('organization_id', S.org.id).maybeSingle(); f.cidade.value = site.data?.city || '';
+  const count = () => { $('#cnt').textContent = `${names().length} certificado(s) serão gerados.`; };
+  const checklist = list => `<div class="field"><label>Pessoas · <a href="#" data-all>marcar todos</a></label><input data-q placeholder="Pesquisar" style="margin-bottom:6px"><div class="checklist">${list.map(m => `<label class="check" data-n="${esc(normTxt(m.full_name))}"><input type="checkbox" name="p" value="${esc(m.full_name)}"> ${esc(m.full_name)}</label>`).join('')}</div></div>`;
+  const names = () => { const src = $('[name=src]').value; if (src === 'nomes') return ($('[name=lista]')?.value || '').split('\n').map(s => s.trim()).filter(s => s.length >= 3); return [...box.querySelectorAll('[name=p]:checked')].map(c => c.value); };
+  const renderSrc = async () => {
+    const src = $('[name=src]').value;
+    if (src === 'membros') box.innerHTML = checklist(MEM.filter(m => m.status !== 'inativo'));
+    else if (src === 'batizados') box.innerHTML = `<div class="fgrid"><div class="field"><label>De</label><input type="date" data-b1 value="${new Date().getFullYear()}-01-01"></div><div class="field"><label>Até</label><input type="date" data-b2 value="${ymd(new Date())}"></div></div><div data-list></div>`;
+    else if (src === 'turma') box.innerHTML = `<div class="field"><label>Turma</label><select data-cls><option value="">Escolha</option>${(cls || []).map(c => `<option value="${c.id}">${esc(c.name)}</option>`).join('')}</select></div><div data-list></div>`;
+    else if (src === 'evento') box.innerHTML = `<div class="field"><label>Evento</label><select data-ev2><option value="">Escolha</option>${(evs || []).map(e => `<option value="${e.id}">${esc(e.title)} (${dateBR(e.starts_at.slice(0, 10))})</option>`).join('')}</select></div><div data-list></div>`;
+    else box.innerHTML = `<div class="field"><label>Um nome por linha</label><textarea name="lista" rows="8" placeholder="Ana Clara Souza&#10;Pedro Henrique Lima"></textarea></div>`;
+    const sub = async () => {
+      const L = $('[data-list]', box); if (!L) return;
+      let list = [];
+      if (src === 'batizados') { const a = $('[data-b1]', box).value, b = $('[data-b2]', box).value; list = MEM.filter(m => m.baptized_at && m.baptized_at >= a && m.baptized_at <= b); }
+      if (src === 'turma' && $('[data-cls]', box).value) { const { data } = await sb.from('class_students').select('member_id').eq('organization_id', S.org.id).eq('class_id', $('[data-cls]', box).value); list = MEM.filter(m => (data || []).some(x => x.member_id === m.id)); }
+      if (src === 'evento' && $('[data-ev2]', box).value) { const { data } = await sb.from('event_registrations').select('name,status').eq('organization_id', S.org.id).eq('event_id', $('[data-ev2]', box).value).eq('status', 'presente'); list = (data || []).map(r => ({ full_name: r.name })); if (!list.length) { L.innerHTML = '<p class="muted small">Nenhuma pessoa marcada como presente neste evento.</p>'; count(); return; } }
+      L.innerHTML = list.length ? checklist(list) : '<p class="muted small">Ninguém encontrado.</p>';
+      L.querySelectorAll('[name=p]').forEach(c => c.checked = true); bindList(); count();
+    };
+    box.querySelectorAll('[data-b1],[data-b2],[data-cls],[data-ev2]').forEach(x => x.onchange = sub);
+    if (src === 'batizados') await sub();
+    bindList(); count();
+  };
+  const bindList = () => {
+    box.querySelectorAll('[name=p],[name=lista]').forEach(x => x.oninput = count);
+    box.querySelectorAll('[data-all]').forEach(a => a.onclick = e => { e.preventDefault(); box.querySelectorAll('[name=p]').forEach(c => { if (c.closest('label').style.display !== 'none') c.checked = true; }); count(); });
+    box.querySelectorAll('[data-q]').forEach(q => q.oninput = () => { const t = normTxt(q.value); box.querySelectorAll('[data-n]').forEach(l => l.style.display = l.dataset.n.includes(t) ? '' : 'none'); });
+  };
+  $('[name=src]').onchange = renderSrc; await renderSrc();
+  f.onsubmit = async e => {
+    e.preventDefault(); const err = $('[data-err]', f), btn = $('[type=submit]', f); err.textContent = '';
+    const list = names(); if (!list.length) { err.textContent = 'Escolha pelo menos uma pessoa.'; return; }
+    if (['curso', 'evento'].includes(f.tipo.value) && !f.evento.value.trim()) { err.textContent = 'Informe o nome do curso ou evento.'; return; }
+    btn.disabled = true; btn.textContent = 'Gerando…';
+    try { await certificatesPdf(list, Object.fromEntries(new FormData(f))); toast(`${list.length} certificado(s) gerado(s).`); }
+    catch (x) { err.textContent = errMsg(x); } finally { btn.disabled = false; btn.textContent = 'Gerar PDF dos certificados'; }
+  };
+}
+async function certificatesPdf(names, o) {
+  const { PDFDocument, StandardFonts, rgb } = await loadPdfLib();
+  const doc = await PDFDocument.create(); doc.setTitle(pdfClean(o.titulo)); doc.setCreator('Gestão do Reino');
+  const serif = o.estilo === 'classico';
+  const R = await doc.embedFont(serif ? StandardFonts.TimesRoman : StandardFonts.Helvetica), Bd = await doc.embedFont(serif ? StandardFonts.TimesRomanBold : StandardFonts.HelveticaBold), It = await doc.embedFont(serif ? StandardFonts.TimesRomanBoldItalic : StandardFonts.HelveticaBold);
+  const W = 841.89, H = 595.28, navy = rgb(0.043, 0.122, 0.227), gold = rgb(0.79, 0.64, 0.29), muted = rgb(0.36, 0.4, 0.51);
+  if (!ORGSET) await loadOrgSettings();
+  let logo = null; const lb = await fileBytes(ORGSET.logo_path); if (lb) { try { logo = await doc.embedJpg(lb); } catch { try { logo = await doc.embedPng(lb); } catch {} } }
+  const dataTxt = o.data ? new Date(o.data + 'T12:00').toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  const center = (p, s, y, f, z, c) => { s = pdfClean(s); p.drawText(s, { x: W / 2 - f.widthOfTextAtSize(s, z) / 2, y, size: z, font: f, color: c }); };
+  for (const nome of names) {
+    const p = doc.addPage([W, H]);
+    let tc = navy, accent = gold;
+    if (o.estilo === 'classico') {
+      p.drawRectangle({ x: 0, y: 0, width: W, height: H, color: rgb(0.995, 0.99, 0.975) });
+      p.drawRectangle({ x: 22, y: 22, width: W - 44, height: H - 44, borderColor: gold, borderWidth: 3 });
+      p.drawRectangle({ x: 32, y: 32, width: W - 64, height: H - 64, borderColor: gold, borderWidth: 0.8 });
+      [[32, 32], [W - 32, 32], [32, H - 32], [W - 32, H - 32]].forEach(([x, y]) => { p.drawCircle({ x, y, size: 9, color: gold }); p.drawCircle({ x, y, size: 4, color: rgb(0.995, 0.99, 0.975) }); });
+    } else if (o.estilo === 'moderno') {
+      p.drawRectangle({ x: 0, y: 0, width: 96, height: H, color: navy }); p.drawRectangle({ x: 96, y: 0, width: 6, height: H, color: gold });
+      p.drawRectangle({ x: 130, y: 40, width: W - 170, height: 1, color: rgb(0.86, 0.88, 0.92) });
+    } else {
+      const cols = [rgb(0.98, 0.45, 0.45), rgb(0.99, 0.75, 0.2), rgb(0.35, 0.75, 0.45), rgb(0.3, 0.6, 0.95), rgb(0.7, 0.45, 0.9)];
+      p.drawRectangle({ x: 0, y: 0, width: W, height: H, color: rgb(1, 0.985, 0.94) });
+      for (let i = 0; i < 26; i++) { const t = i / 26; p.drawCircle({ x: 30 + (W - 60) * t, y: H - 26, size: 11, color: cols[i % 5] }); p.drawCircle({ x: 30 + (W - 60) * t, y: 26, size: 11, color: cols[(i + 2) % 5] }); }
+      for (let i = 0; i < 8; i++) { const t = (i + 0.5) / 8; p.drawCircle({ x: 26, y: 60 + (H - 120) * t, size: 9, color: cols[(i + 1) % 5] }); p.drawCircle({ x: W - 26, y: 60 + (H - 120) * t, size: 9, color: cols[(i + 3) % 5] }); }
+      tc = rgb(0.2, 0.25, 0.45); accent = rgb(0.95, 0.45, 0.3);
+    }
+    const cx = o.estilo === 'moderno' ? (W + 102) / 2 : W / 2;
+    const ctr = (s, y, f, z, c) => { s = pdfClean(s); p.drawText(s, { x: cx - f.widthOfTextAtSize(s, z) / 2, y, size: z, font: f, color: c }); };
+    if (logo) { const h = 46, w = logo.width * h / logo.height; p.drawImage(logo, { x: cx - w / 2, y: H - 112, width: w, height: h }); }
+    ctr(S.org.name.toUpperCase(), H - (logo ? 132 : 96), Bd, 12, muted);
+    ctr(o.titulo || 'Certificado', H - 182, Bd, o.estilo === 'kids' ? 38 : 34, tc);
+    p.drawRectangle({ x: cx - 40, y: H - 198, width: 80, height: 2.5, color: accent });
+    const nameSize = Math.min(32, 520 / Math.max(1, It.widthOfTextAtSize(pdfClean(nome), 1)));
+    ctr(nome, H - 262, It, nameSize, accent === gold ? rgb(0.55, 0.42, 0.12) : accent);
+    const body = (o.texto || '').replaceAll('{nome}', nome).replaceAll('{data}', dataTxt).replaceAll('{evento}', o.evento || '');
+    const showBody = body.trim() && body.trim() !== nome;
+    if (showBody) pdfWrap(body, R, 14, o.estilo === 'moderno' ? 560 : 600).slice(0, 5).forEach((l, i) => ctr(l, H - 310 - i * 21, R, 14, rgb(0.17, 0.22, 0.32)));
+    if (o.cidade || dataTxt) ctr([o.cidade, dataTxt].filter(Boolean).join(', '), 150, R, 11.5, muted);
+    const sigs = [[o.a1, o.c1], [o.a2, o.c2]].filter(([a]) => a && a.trim());
+    const sw = 200, gap = 70, total = sigs.length * sw + (sigs.length - 1) * gap;
+    sigs.forEach(([a, c], i) => { const x = cx - total / 2 + i * (sw + gap); p.drawLine({ start: { x, y: 98 }, end: { x: x + sw, y: 98 }, thickness: 0.8, color: tc });
+      const na = pdfClean(a), ca = pdfClean(c || ''); p.drawText(na, { x: x + sw / 2 - Bd.widthOfTextAtSize(na, 10.5) / 2, y: 84, size: 10.5, font: Bd, color: tc });
+      if (ca) p.drawText(ca, { x: x + sw / 2 - R.widthOfTextAtSize(ca, 9.5) / 2, y: 71, size: 9.5, font: R, color: muted }); });
+  }
+  downloadFile(await doc.save(), `certificados-${slug(o.titulo)}-${ymd(new Date())}.pdf`, 'application/pdf');
+}
+
+/* --- Visitas pastorais --- */
+async function pageVisitas(params) {
+  shell('visitas', spin);
+  await loadMembers();
+  const ed = canVisit() && orgOperational(), today = ymd(new Date());
+  $('#main').innerHTML = `${statusBanner()}<p class="muted" style="margin-bottom:14px">Registre cada visita com data, responsável, anotações e foto, e já marque a próxima. As anotações ficam visíveis só para a liderança.</p>
+    <div class="kpis" id="k"></div><div class="card"><div class="toolbar">
+      <select id="fv" aria-label="Mostrar"><option value="agendada">A fazer (agendadas)</option><option value="realizada">Realizadas</option><option value="">Todas</option></select>
+      ${ed ? '<button class="btn" id="add">+ Registrar visita</button><button class="btn ghost" id="sch">+ Agendar visita</button>' : ''}</div><div id="list">${spin}</div></div>`;
+  const load = async () => {
+    const [{ data: all }, { data, error }] = await Promise.all([
+      sb.from('pastoral_visits').select('status,scheduled_for,visited_on').eq('organization_id', S.org.id).neq('status', 'cancelada').limit(5000),
+      (() => { let q = sb.from('pastoral_visits').select('*').eq('organization_id', S.org.id).neq('status', 'cancelada').limit(500); const v = $('#fv').value;
+        if (v) q = q.eq('status', v); return v === 'agendada' ? q.order('scheduled_for', { ascending: true }) : q.order('visited_on', { ascending: false }); })()]);
+    if (error) { $('#list').innerHTML = `<div class="empty">${esc(errMsg(error))}</div>`; return; }
+    const A = all || [], ag = A.filter(v => v.status === 'agendada'), late = ag.filter(v => v.scheduled_for && v.scheduled_for < today), mon = today.slice(0, 7);
+    $('#k').innerHTML = `<div class="kpi"><small>Agendadas</small><strong class="mk">${ag.length}</strong></div><div class="kpi"><small>Atrasadas</small><strong class="mk ${late.length ? 'neg' : ''}">${late.length}</strong></div>
+      <div class="kpi"><small>Realizadas no mês</small><strong class="mk">${A.filter(v => v.status === 'realizada' && (v.visited_on || '').startsWith(mon)).length}</strong></div>
+      <div class="kpi"><small>Membros sem visita há 1 ano</small><strong class="mk">${MEM.filter(m => m.status === 'ativo').length - new Set((await sb.from('pastoral_visits').select('member_id').eq('organization_id', S.org.id).eq('status', 'realizada').gte('visited_on', ymd(new Date(Date.now() - 365 * 864e5)))).data?.map(x => x.member_id)).size}</strong></div>`;
+    const rows = data || [];
+    $('#list').innerHTML = rows.length ? `<div class="table-wrap"><table><thead><tr><th>Data</th><th>Membro</th><th class="hide-sm">Responsável</th><th>Anotações</th><th></th></tr></thead><tbody>${rows.map(v => {
+      const d = v.status === 'agendada' ? v.scheduled_for : v.visited_on, isLate = v.status === 'agendada' && d && d < today;
+      return `<tr><td style="white-space:nowrap">${d ? dateBR(d) : '—'}${v.status === 'agendada' ? `<div><span class="pill ${isLate ? 'red' : 'amber'}">${isLate ? 'Atrasada' : 'Agendada'}</span></div>` : ''}</td>
+        <td><b>${esc(memName(v.member_id))}</b></td><td class="hide-sm">${esc(v.responsible || '—')}</td>
+        <td class="muted" style="font-size:.88rem">${esc((v.notes || '').slice(0, 140))}${(v.notes || '').length > 140 ? '…' : ''}${v.photo_path ? ` · <a href="#" data-file="${esc(v.photo_path)}">foto</a>` : ''}</td>
+        <td><div class="row-actions">${ed && v.status === 'agendada' ? `<button class="btn sm" data-done="${v.id}">Registrar</button><button class="btn sm ghost" data-cx="${v.id}">Cancelar</button>` : ''}${(() => { const m = MEM.find(x => x.id === v.member_id); return m && (m.whatsapp || m.phone) ? `<a class="btn sm wa" target="_blank" rel="noopener" href="${esc(waLink(m.whatsapp || m.phone, `Olá, ${m.full_name.split(' ')[0]}! Aqui é da ${S.org.name}.`))}">WhatsApp</a>` : ''; })()}</div></td></tr>`; }).join('')}</tbody></table></div>`
+      : `<div class="empty">${$('#fv').value === 'agendada' ? 'Nenhuma visita agendada.' : 'Nenhuma visita registrada.'}</div>`;
+    $('#list').querySelectorAll('[data-done]').forEach(b => b.onclick = () => visitForm(rows.find(v => v.id === b.dataset.done), load));
+    $('#list').querySelectorAll('[data-cx]').forEach(b => b.onclick = async () => { const { error } = await sb.from('pastoral_visits').update({ status: 'cancelada' }).eq('id', b.dataset.cx); if (error) return toast(errMsg(error), 'err'); toast('Visita cancelada.'); load(); });
+  };
+  $('#fv').onchange = load;
+  if ($('#add')) $('#add').onclick = () => visitForm(null, load, params.get('membro'));
+  if ($('#sch')) $('#sch').onclick = () => scheduleVisit(null, load);
+  await load();
+  if (params.get('membro') && ed) visitForm(null, load, params.get('membro'));
+}
+function scheduleVisit(memberId, done) {
+  modal('Agendar visita', `<div class="stack"><div class="fgrid"><div class="field full"><label>Membro *</label>${memberSelect('member_id', memberId || '')}</div>
+    <div class="field"><label>Data *</label><input type="date" name="d" value="${ymd(new Date(Date.now() + 7 * 864e5))}"></div><div class="field"><label>Responsável</label><input name="r" maxlength="80" value="${esc(S.profile?.full_name || '')}"></div></div></div>`,
+  { submitLabel: 'Agendar', onSubmit: async fd => {
+    if (!fd.get('member_id')) throw new Error('Escolha o membro.'); if (!fd.get('d')) throw new Error('Informe a data.');
+    const { error } = await sb.from('pastoral_visits').insert({ organization_id: S.org.id, member_id: fd.get('member_id'), status: 'agendada', scheduled_for: fd.get('d'), responsible: (fd.get('r') || '').trim() || null }); if (error) throw error;
+    toast('Visita agendada.'); done && done();
+  } });
+}
+function visitForm(v, done, memberId) {
+  modal(v ? `Registrar visita — ${memName(v.member_id)}` : 'Registrar visita', `<div class="stack"><div class="fgrid">
+    ${v ? '' : `<div class="field full"><label>Membro *</label>${memberSelect('member_id', memberId || '')}</div>`}
+    <div class="field"><label>Data da visita *</label><input type="date" name="d" value="${ymd(new Date())}"></div><div class="field"><label>Responsável</label><input name="r" maxlength="80" value="${esc(v?.responsible || S.profile?.full_name || '')}"></div>
+    <div class="field full"><label>Anotações</label><textarea name="n" maxlength="3000" placeholder="Como a família está, pedidos de oração, encaminhamentos"></textarea></div>
+    <div class="field"><label>Foto</label><input type="file" name="photo" accept="image/*"></div><div class="field"><label>Próxima visita</label><input type="date" name="next"><small>Opcional: já deixa agendada.</small></div></div></div>`,
+  { submitLabel: 'Salvar visita', onSubmit: async (fd, form) => {
+    const member_id = v?.member_id || fd.get('member_id'); if (!member_id) throw new Error('Escolha o membro.'); if (!fd.get('d')) throw new Error('Informe a data.');
+    const file = form.elements.photo.files[0]; const photo_path = file ? await uploadFile(await blobToJpeg(file, 1280, 0.82), 'visitas') : (v?.photo_path || null);
+    const row = { status: 'realizada', visited_on: fd.get('d'), responsible: (fd.get('r') || '').trim() || null, notes: (fd.get('n') || '').trim() || null, photo_path };
+    const r = v ? await sb.from('pastoral_visits').update(row).eq('id', v.id) : await sb.from('pastoral_visits').insert({ ...row, organization_id: S.org.id, member_id }); if (r.error) throw r.error;
+    if (fd.get('next')) { const { error } = await sb.from('pastoral_visits').insert({ organization_id: S.org.id, member_id, status: 'agendada', scheduled_for: fd.get('next'), responsible: row.responsible }); if (error) throw error; }
+    toast('Visita registrada.' + (fd.get('next') ? ' Próxima visita agendada.' : '')); done && done();
+  } });
+}
+
+/* --- Visitantes --- */
+async function pageVisitantes() {
+  shell('visitantes', spin);
+  await Promise.all([loadMembers(), loadOrgSettings()]);
+  const ed = canPeople();
+  $('#main').innerHTML = `${statusBanner()}<p class="muted" style="margin-bottom:14px">Quem visitou a igreja e ainda não é membro. Mande boas-vindas pelo WhatsApp, registre cada contato e acompanhe até virar membro.</p>
+    <div class="kpis" id="k"></div><div class="card"><div class="toolbar"><input id="q" type="search" placeholder="Pesquisar visitante">
+      ${ed ? '<button class="btn" id="add">+ Novo visitante</button><button class="btn ghost" id="msg">Mensagem de boas-vindas</button>' : ''}</div><div id="list">${spin}</div></div>`;
+  const load = async () => {
+    await loadMembers();
+    const vis = MEM.filter(m => m.status === 'visitante'), ids = vis.map(v => v.id);
+    const { data: evs } = ids.length ? await sb.from('member_events').select('member_id,kind,happened_on,description').eq('organization_id', S.org.id).in('member_id', ids).in('kind', ['contato', 'visita']).order('happened_on', { ascending: false }) : { data: [] };
+    const last = {}; (evs || []).forEach(e => { if (!last[e.member_id]) last[e.member_id] = e; });
+    const days = d => Math.floor((Date.now() - new Date(d).getTime()) / 864e5), t = normTxt($('#q').value), mon = ymd(new Date()).slice(0, 7);
+    const noContact = vis.filter(v => { const l = last[v.id]; return !l || days(l.happened_on + 'T12:00') > 7; });
+    $('#k').innerHTML = `<div class="kpi"><small>Visitantes</small><strong class="mk">${vis.length}</strong></div><div class="kpi"><small>Chegaram este mês</small><strong class="mk">${vis.filter(v => (v.created_at || '').startsWith(mon)).length}</strong></div>
+      <div class="kpi"><small>Sem contato há 7+ dias</small><strong class="mk ${noContact.length ? 'neg' : ''}">${noContact.length}</strong></div><div class="kpi"><small>Viraram membros (12 meses)</small><strong class="mk" id="conv">—</strong></div>`;
+    const list = vis.filter(v => normTxt(v.full_name).includes(t)).sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+    $('#list').innerHTML = list.length ? `<div class="table-wrap"><table><thead><tr><th>Visitante</th><th>Chegou</th><th>Último contato</th><th></th></tr></thead><tbody>${list.map(v => { const l = last[v.id];
+      return `<tr><td><b>${esc(v.full_name)}</b><div class="muted small">${esc(v.whatsapp || v.phone || 'sem telefone')}</div></td><td style="white-space:nowrap">${v.created_at ? `há ${days(v.created_at)} dia(s)` : '—'}</td>
+        <td>${l ? `${dateBR(l.happened_on)}<div class="muted small">${esc((l.description || '').slice(0, 60))}</div>` : '<span class="pill red">Nenhum</span>'}</td>
+        <td><div class="row-actions">${v.whatsapp || v.phone ? `<a class="btn sm wa" target="_blank" rel="noopener" data-wa="${v.id}" href="${esc(waLink(v.whatsapp || v.phone, fillMsg(ORGSET.welcome_message || DEF_WELCOME, v)))}">Boas-vindas</a>` : ''}
+          ${ed ? `<button class="btn sm ghost" data-c="${v.id}">Registrar contato</button><button class="btn sm ghost" data-m="${v.id}">Virou membro</button>` : ''}</div></td></tr>`; }).join('')}</tbody></table></div>`
+      : '<div class="empty">Nenhum visitante no momento.</div>';
+    $('#list').querySelectorAll('[data-c]').forEach(b => b.onclick = () => contactForm(MEM.find(m => m.id === b.dataset.c), load));
+    $('#list').querySelectorAll('[data-m]').forEach(b => b.onclick = async () => { const m = MEM.find(x => x.id === b.dataset.m);
+      if (!await confirmBox('Virou membro', `${m.full_name} passa a ser membro ativo a partir de hoje.`, 'Confirmar')) return;
+      const { error } = await sb.from('members').update({ status: 'ativo', joined_at: ymd(new Date()) }).eq('id', m.id); if (error) return toast(errMsg(error), 'err');
+      await sb.from('member_events').insert({ organization_id: S.org.id, member_id: m.id, kind: 'observacao', happened_on: ymd(new Date()), description: 'Passou de visitante a membro.' });
+      toast(`${m.full_name.split(' ')[0]} agora é membro.`); load(); });
+    if (ed) $('#list').querySelectorAll('[data-wa]').forEach(a => a.addEventListener('click', () => sb.from('member_events').insert({ organization_id: S.org.id, member_id: a.dataset.wa, kind: 'contato', happened_on: ymd(new Date()), description: 'Mensagem de boas-vindas pelo WhatsApp' }).then(() => setTimeout(load, 300))));
+    const { count } = await sb.from('member_events').select('id', { count: 'exact', head: true }).eq('organization_id', S.org.id).eq('kind', 'observacao').eq('description', 'Passou de visitante a membro.').gte('happened_on', ymd(new Date(Date.now() - 365 * 864e5)));
+    if ($('#conv')) $('#conv').textContent = count ?? 0;
+  };
+  $('#q').oninput = load;
+  if ($('#add')) $('#add').onclick = () => modal('Novo visitante', `<div class="stack"><div class="fgrid"><div class="field full"><label>Nome *</label><input name="n" maxlength="120"></div>
+    <div class="field"><label>WhatsApp</label><input name="w" maxlength="30" inputmode="tel" placeholder="(00) 00000-0000"></div><div class="field"><label>Data da visita</label><input type="date" name="d" value="${ymd(new Date())}"></div>
+    <div class="field full"><label>Como conheceu a igreja / observações</label><input name="o" maxlength="300" placeholder="Ex.: convidado pela Ana"></div></div></div>`,
+  { submitLabel: 'Cadastrar visitante', onSubmit: async fd => { const n = (fd.get('n') || '').trim(); if (n.length < 3) throw new Error('Informe o nome.');
+    const { error } = await sb.from('members').insert({ organization_id: S.org.id, created_by: S.user.id, full_name: n, whatsapp: (fd.get('w') || '').trim() || null, status: 'visitante', notes: (fd.get('o') || '').trim() || null }); if (error) throw error;
+    toast('Visitante cadastrado.'); load(); } });
+  if ($('#msg')) $('#msg').onclick = () => messageTemplate('welcome_message', 'Mensagem de boas-vindas', DEF_WELCOME, load);
+  await load();
+}
+function contactForm(m, done) {
+  modal(`Contato com ${m.full_name}`, `<div class="stack"><div class="fgrid"><div class="field"><label>Data</label><input type="date" name="d" value="${ymd(new Date())}"></div>
+    <div class="field full"><label>Como foi</label><input name="t" maxlength="300" placeholder="Ex.: Liguei, vai voltar no domingo"></div></div></div>`,
+  { submitLabel: 'Registrar', onSubmit: async fd => { const { error } = await sb.from('member_events').insert({ organization_id: S.org.id, member_id: m.id, kind: 'contato', happened_on: fd.get('d') || ymd(new Date()), description: (fd.get('t') || '').trim() || 'Contato feito' }); if (error) throw error; toast('Contato registrado.'); done && done(); } });
+}
+function messageTemplate(key, title, def, done) {
+  modal(title, `<div class="stack"><div class="field"><label>Mensagem</label><textarea name="t" rows="5" maxlength="700">${esc(ORGSET?.[key] || def)}</textarea><small>{nome} vira o primeiro nome da pessoa e {igreja} o nome da igreja.</small></div></div>`,
+  { submitLabel: 'Salvar mensagem', onSubmit: async fd => { const t = (fd.get('t') || '').trim(); if (t.length < 5) throw new Error('Escreva a mensagem.');
+    const { error } = await sb.from('org_settings').upsert({ organization_id: S.org.id, [key]: t }, { onConflict: 'organization_id' }); if (error) throw error;
+    ORGSET = { ...ORGSET, [key]: t }; toast('Mensagem salva.'); done && done(); } });
+}
+
+/* --- Aniversariantes da semana (painel) --- */
+async function birthdayCard(el) {
+  if (!el) return;
+  await Promise.all([loadMembers(), loadOrgSettings()]);
+  const now = new Date(); now.setHours(0, 0, 0, 0);
+  const next = MEM.filter(m => m.status !== 'inativo' && m.birth_date).map(m => { const [, mo, d] = m.birth_date.split('-').map(Number); let b = new Date(now.getFullYear(), mo - 1, d); if (b < now) b = new Date(now.getFullYear() + 1, mo - 1, d); return { m, b, dd: Math.round((b - now) / 864e5) }; })
+    .filter(x => x.dd <= 7).sort((a, b) => a.dd - b.dd);
+  el.innerHTML = `<div class="card" style="margin-top:14px"><div class="card-head"><h3>Aniversariantes dos próximos 7 dias</h3>${canPeople() ? '<button class="btn sm ghost" data-bm>Editar mensagem</button>' : ''}</div>
+    ${next.length ? `<table><tbody>${next.map(({ m, b, dd }) => `<tr><td><b>${esc(m.full_name)}</b><div class="muted small">${dd === 0 ? '<span class="pill green">Hoje</span>' : dd === 1 ? 'Amanhã' : b.toLocaleDateString('pt-BR', { weekday: 'long', day: '2-digit', month: '2-digit' })}</div></td>
+      <td><div class="row-actions">${m.whatsapp || m.phone ? `<a class="btn sm wa" target="_blank" rel="noopener" href="${esc(waLink(m.whatsapp || m.phone, fillMsg(ORGSET.birthday_message || DEF_BDAY, m)))}">Parabéns no WhatsApp</a>` : '<span class="muted small">sem telefone</span>'}</div></td></tr>`).join('')}</tbody></table>`
+      : '<div class="empty">Nenhum aniversário nos próximos 7 dias.</div>'}</div>`;
+  el.querySelector('[data-bm]')?.addEventListener('click', () => messageTemplate('birthday_message', 'Mensagem de aniversário', DEF_BDAY, () => birthdayCard(el)));
+}
+
+/* --- Mapa de membros --- */
+let leafletP = null;
+function loadLeaflet() {
+  if (window.L) return Promise.resolve(window.L);
+  if (!leafletP) leafletP = new Promise((res, rej) => {
+    const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(css);
+    const s = document.createElement('script'); s.src = 'https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js'; s.onload = () => res(window.L); s.onerror = () => { leafletP = null; rej(new Error('Não foi possível carregar o mapa. Verifique sua conexão.')); }; document.head.appendChild(s);
+  });
+  return leafletP;
+}
+async function geocode(q) {
+  const r = await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=br&q=' + encodeURIComponent(q), { headers: { 'Accept-Language': 'pt-BR' } });
+  if (!r.ok) return null; const j = await r.json(); return j[0] ? { lat: Number(j[0].lat), lng: Number(j[0].lon) } : null;
+}
+async function pageMapa() {
+  shell('mapa', spin);
+  await loadMembers();
+  const { data: site } = await sb.from('church_sites').select('address,city').eq('organization_id', S.org.id).maybeSingle();
+  const city = site?.city || '';
+  $('#main').innerHTML = `${statusBanner()}<div class="card"><div class="toolbar"><select id="fs" aria-label="Quem mostrar"><option value="ativo">Membros ativos</option><option value="visitante">Visitantes</option><option value="">Todos</option></select>
+      <span class="muted small" id="geo"></span></div>
+    <div id="map" style="height:min(64vh,560px);border-radius:12px;border:1px solid var(--line);background:var(--surface-2)"></div>
+    <p class="muted small" style="margin-top:10px">Posições aproximadas, a partir do endereço cadastrado${city ? ` (cidade usada como referência: ${esc(city)})` : '. Dica: informe a cidade em “Site da igreja” para localizar melhor'}. Mapa © colaboradores do OpenStreetMap.</p></div>`;
+  let L; try { L = await loadLeaflet(); } catch (e) { $('#map').innerHTML = `<div class="empty">${esc(e.message)}</div>`; return; }
+  const map = L.map('map'); L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
+  map.setView([-14.2, -51.9], 4);
+  const layer = L.layerGroup().addTo(map);
+  const draw = () => {
+    layer.clearLayers(); const st = $('#fs').value, list = MEM.filter(m => m.lat != null && (!st || m.status === st)), groups = {};
+    list.forEach(m => { const k = m.lat.toFixed(4) + ',' + m.lng.toFixed(4); (groups[k] = groups[k] || []).push(m); });
+    const pts = Object.values(groups).map(g => { const mk = L.circleMarker([g[0].lat, g[0].lng], { radius: Math.min(8 + g.length * 2, 22), color: '#0B1F3A', weight: 2, fillColor: '#C9A24B', fillOpacity: .9 });
+      mk.bindPopup(`<b>${esc(g[0].address || '')}</b><br>${g.map(m => esc(m.full_name)).join('<br>')}`); if (g.length > 1) mk.bindTooltip(String(g.length), { permanent: true, direction: 'center', className: 'map-count' }); mk.addTo(layer); return [g[0].lat, g[0].lng]; });
+    if (pts.length) map.fitBounds(pts, { padding: [30, 30], maxZoom: 15 });
+    const noAddr = MEM.filter(m => (!st || m.status === st) && !m.address).length;
+    $('#geo').textContent = `${list.length} no mapa${noAddr ? ` · ${noAddr} sem endereço cadastrado` : ''}`;
+  };
+  $('#fs').onchange = draw; draw();
+  const todo = MEM.filter(m => m.address && m.status !== 'inativo' && (m.lat == null || m.geocoded_address !== m.address));
+  const cache = {}; MEM.forEach(m => { if (m.lat != null && m.geocoded_address) cache[normTxt(m.geocoded_address)] = { lat: m.lat, lng: m.lng }; });
+  for (let i = 0; i < todo.length; i++) {
+    if (!document.body.contains($('#map'))) return;
+    const m = todo[i]; $('#geo').textContent = `Localizando endereços: ${i + 1} de ${todo.length}…`;
+    try {
+      const key = normTxt(m.address), hit = cache[key];
+      const pos = hit || await geocode([m.address, city, 'Brasil'].filter(Boolean).join(', ')) || (city ? await geocode(m.address) : null);
+      if (pos) cache[key] = pos;
+      if (pos) { m.lat = pos.lat; m.lng = pos.lng; m.geocoded_address = m.address; if (canPeople()) await sb.from('members').update({ lat: pos.lat, lng: pos.lng, geocoded_address: m.address }).eq('id', m.id); }
+      if (hit) continue;
+    } catch {}
+    await new Promise(r => setTimeout(r, 1100));
+  }
+  draw();
+}
+
+/* --- Campanhas financeiras --- */
+let CAMPS = [];
+async function loadCampaigns() { const { data } = await sb.from('finance_campaigns').select('*').eq('organization_id', S.org.id).order('created_at', { ascending: false }); CAMPS = data || []; return CAMPS; }
+async function pageCampanhas() {
+  shell('campanhas', spin);
+  await Promise.all([loadFinMeta(), loadCampaigns()]);
+  const ed = canEditFin();
+  const { data: tx } = await sb.from('finance_transactions').select('campaign_id,amount,type,status').eq('organization_id', S.org.id).not('campaign_id', 'is', null).eq('status', 'confirmado').limit(20000);
+  const raised = {}; (tx || []).forEach(t => raised[t.campaign_id] = (raised[t.campaign_id] || 0) + (t.type === 'entrada' ? Number(t.amount) : 0));
+  $('#main').innerHTML = `${statusBanner()}${finTabs('campanhas')}${readOnlyNote()}
+    <div class="toolbar" style="margin-bottom:14px"><span class="muted" style="flex:1">Campanhas com meta (construção, missões, retiro). Nas entradas do caixa, escolha a campanha e o progresso aparece aqui.</span>${ed ? '<button class="btn" id="add">+ Nova campanha</button>' : ''}</div>
+    ${CAMPS.length ? `<div class="sched">${CAMPS.map(c => { const r = raised[c.id] || 0, pct = c.goal ? Math.min(100, Math.round(r / c.goal * 100)) : null;
+      return `<article class="sched-card"><header><div><b>${esc(c.name)}</b><div class="muted small">${c.starts_on ? dateBR(c.starts_on) : ''}${c.ends_on ? ' a ' + dateBR(c.ends_on) : ''}</div></div>${c.is_active ? '<span class="pill green">Ativa</span>' : '<span class="pill">Encerrada</span>'}</header>
+        <div style="margin:14px 0 6px;font-size:1.35rem;font-weight:700">${brl(r)}${c.goal ? `<span class="muted" style="font-size:.9rem;font-weight:500"> de ${brl(c.goal)}</span>` : ''}</div>
+        ${pct != null ? `<div class="bar"><span style="width:${pct}%"></span></div><p class="muted small" style="margin-top:6px">${pct}% da meta${c.goal > r ? ` · faltam ${brl(c.goal - r)}` : ' · meta alcançada!'}</p>` : ''}
+        ${c.description ? `<p class="muted small" style="margin-top:8px">${esc(c.description)}</p>` : ''}
+        <div class="row-actions" style="justify-content:flex-start;margin-top:10px"><a class="btn sm ghost" href="#caixa">Ver no caixa</a>${ed ? `<button class="btn sm ghost" data-e="${c.id}">Editar</button>` : ''}</div></article>`; }).join('')}</div>`
+      : '<div class="card"><div class="empty">Nenhuma campanha ainda.</div></div>'}`;
+  const form = c => recordForm({ title: c ? 'Editar campanha' : 'Nova campanha', table: 'finance_campaigns', rec: c, editable: ed, onSaved: pageCampanhas, extra: { created_by: S.user.id },
+    fields: [{ k: 'name', label: 'Nome da campanha', req: true, max: 120, full: true, ph: 'Ex.: Construção do novo templo' }, { k: 'goal', label: 'Meta', type: 'money' }, { k: 'starts_on', label: 'Início', type: 'date', def: ymd(new Date()) },
+      { k: 'ends_on', label: 'Término', type: 'date' }, { k: 'description', label: 'Descrição', type: 'textarea', max: 500, full: true }, ...(c ? [{ k: 'is_active', label: 'Campanha ativa (aparece nas novas entradas)', type: 'bool' }] : [])],
+    before: row => { if (row.ends_on && row.starts_on && row.ends_on < row.starts_on) throw new Error('O término precisa ser depois do início.'); } });
+  if ($('#add')) $('#add').onclick = () => form(null);
+  $('#main').querySelectorAll('[data-e]').forEach(b => b.onclick = () => form(CAMPS.find(c => c.id === b.dataset.e)));
+}
+
+/* --- Identidade da igreja (logo e mensagens) --- */
+async function identityCard(el) {
+  if (!el) return;
+  await loadOrgSettings();
+  const ed = hasRole('admin', 'pastor', 'secretario') && orgOperational();
+  el.innerHTML = `<div class="card" style="margin-top:14px"><h3>Logo e mensagens</h3><p class="muted small" style="margin:4px 0 12px">O logo aparece nas carteirinhas e nos certificados.</p>
+    <div class="grid2"><div><div style="display:flex;gap:14px;align-items:center"><div id="logoPrev" style="width:72px;height:72px;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;overflow:hidden;background:#fff">${ORGSET.logo_path ? '' : '<span class="muted small">sem logo</span>'}</div>
+      ${ed ? '<label class="btn ghost sm" style="cursor:pointer">Enviar logo<input type="file" accept="image/*" id="logoIn" hidden></label>' : ''}</div></div>
+    <div class="stack">${ed ? '<button class="btn ghost sm" data-k="birthday_message">Mensagem de aniversário</button><button class="btn ghost sm" data-k="welcome_message">Mensagem de boas-vindas aos visitantes</button>' : ''}</div></div></div>`;
+  if (ORGSET.logo_path) { const { data } = await sb.storage.from('anexos').createSignedUrl(ORGSET.logo_path, 600); if (data?.signedUrl) $('#logoPrev').innerHTML = `<img src="${esc(data.signedUrl)}" alt="Logo" style="max-width:100%;max-height:100%">`; }
+  $('#logoIn')?.addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return;
+    try { const path = await uploadFile(await blobToJpeg(f, 512, 0.9), 'logo'); const { error } = await sb.from('org_settings').upsert({ organization_id: S.org.id, logo_path: path }, { onConflict: 'organization_id' }); if (error) throw error; toast('Logo atualizado.'); identityCard(el); }
+    catch (x) { toast(errMsg(x), 'err'); } });
+  el.querySelectorAll('[data-k]').forEach(b => b.onclick = () => messageTemplate(b.dataset.k, b.textContent, b.dataset.k === 'birthday_message' ? DEF_BDAY : DEF_WELCOME));
+}
+
 /* ===== Versões ===== */
 async function pageVersoes() {
   shell('versoes', `<div class="loading"><div class="spinner"></div></div>`);
@@ -1961,12 +2636,13 @@ async function render() {
     if (route === 'membros') return pageMembros(params);
     if (route === 'igreja') return pageIgreja();
     const MODS = { familias: pageFamilias, grupos: pageGrupos, ministerios: pageMinisterios, escalas: () => pageEscalas(params), eventos: pageEventos, ensino: pageEnsino, estudos: pageEstudos,
-      discipulado: pageDiscipulado, patrimonio: pagePatrimonio, relatorios: pageRelatorios, site: pageSite, historico: () => canAudit() ? pageHistorico() : go('painel') };
+      discipulado: pageDiscipulado, patrimonio: pagePatrimonio, visitantes: pageVisitantes, visitas: () => canVisit() ? pageVisitas(params) : go('painel'), mapa: pageMapa, certificados: pageCertificados, relatorios: pageRelatorios, site: pageSite, historico: () => canAudit() ? pageHistorico() : go('painel') };
     if (MODS[route]) return await MODS[route]();
-    if (['caixa', 'contas', 'fin-config'].includes(route)) {
+    if (['caixa', 'contas', 'fin-config', 'campanhas'].includes(route)) {
       if (!canSeeFin()) { toast('Seu perfil não tem acesso ao financeiro.', 'err'); return go('painel'); }
       if (route === 'caixa') return await pageCaixa(params);
       if (route === 'contas') return await pageContas(params);
+      if (route === 'campanhas') return await pageCampanhas();
       return await pageFinConfig();
     }
     return pagePainel();

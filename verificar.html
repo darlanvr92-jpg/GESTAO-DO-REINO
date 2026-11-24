@@ -56,7 +56,10 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--royal);b
 </div>
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-const sb = createClient('https://ifttmkpmwcjsyoxofmry.supabase.co', 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd', { auth: { persistSession: false } });
+const _rf = async (input, init = {}) => { const m = (init.method || 'GET').toUpperCase(), safe = m === 'GET' || m === 'HEAD';
+  for (let i = 0; ; i++) { try { const r = await fetch(input, init); if (i < 3 && (r.status === 429 || r.status === 503 || (safe && (r.status === 502 || r.status === 504)))) { await new Promise(f => setTimeout(f, [400, 1200, 3000][i] * (0.75 + Math.random() / 2))); continue; } return r; }
+    catch (e) { if (!safe || i >= 3) throw e; await new Promise(f => setTimeout(f, [400, 1200, 3000][i])); } } };
+const sb = createClient('https://ifttmkpmwcjsyoxofmry.supabase.co', 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd', { auth: { persistSession: false }, global: { fetch: _rf } });
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const dt = v => v ? new Date(v).toLocaleString('pt-BR', { weekday: 'long', day: '2-digit', month: 'long', hour: '2-digit', minute: '2-digit' }) : '';

@@ -306,10 +306,28 @@ import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js
 /* ===== Conexão com o banco (chave pública; a segurança fica nas políticas RLS) ===== */
 const SUPABASE_URL = 'https://ifttmkpmwcjsyoxofmry.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_MIfamF2fKJOf_1WcoFPYOA_47DozgNd';
-const APP_VERSION = '0.7.0';
+const APP_VERSION = '0.7.1';
 const WHATSAPP_SUPORTE = '5533997305310'; // WhatsApp de vendas e suporte (DDI + DDD + número)
 const waSuporte = msg => `https://wa.me/${WHATSAPP_SUPORTE}?text=${encodeURIComponent(msg)}`;
-const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
+// Tenta de novo quando o servidor oscila (internet fraca, pico de acesso). Só repete o que é seguro repetir.
+const RETRY = [400, 1200, 3000];
+async function resilientFetch(input, init = {}) {
+  const method = (init.method || (input instanceof Request ? input.method : 'GET')).toUpperCase();
+  const safe = method === 'GET' || method === 'HEAD';
+  for (let i = 0; ; i++) {
+    try {
+      const r = await fetch(input, init);
+      if (i < RETRY.length && (r.status === 429 || r.status === 503 || (safe && (r.status === 502 || r.status === 504)))) {
+        const ra = Number(r.headers.get('retry-after')); await new Promise(f => setTimeout(f, ra > 0 ? Math.min(ra * 1000, 8000) : RETRY[i] * (0.75 + Math.random() / 2))); continue;
+      }
+      return r;
+    } catch (e) {
+      if (!safe || i >= RETRY.length || init.signal?.aborted) throw e;
+      await new Promise(f => setTimeout(f, RETRY[i] * (0.75 + Math.random() / 2)));
+    }
+  }
+}
+const sb = createClient(SUPABASE_URL, SUPABASE_KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }, global: { fetch: resilientFetch } });
 
 /* ===== Utilidades ===== */
 const $ = (s, el = document) => el.querySelector(s);
@@ -330,6 +348,12 @@ const errMsg = e => {
     'Email not confirmed': 'Confirme seu e-mail pelo link que enviamos antes de entrar.',
     'User already registered': 'Já existe uma conta com este e-mail. Use "Entrar".',
     'Password should be at least 6 characters': 'A senha precisa ter pelo menos 6 caracteres.',
+    'Failed to fetch': 'Sem conexão com o servidor. Verifique a internet e tente de novo.',
+    'NetworkError': 'Sem conexão com o servidor. Verifique a internet e tente de novo.',
+    'Load failed': 'Sem conexão com o servidor. Verifique a internet e tente de novo.',
+    'rate limit': 'Muitas tentativas em pouco tempo. Aguarde alguns minutos e tente de novo.',
+    'Too Many Requests': 'Muitos acessos ao mesmo tempo. Aguarde alguns segundos e tente de novo.',
+    'statement timeout': 'O servidor demorou para responder. Tente de novo em instantes.',
   };
   for (const k in map) if (m.includes(k)) return map[k];
   if (/duplicate key|23505/i.test(m)) return 'Já existe um registro com esse nome.';
@@ -550,6 +574,7 @@ async function loadContext() {
     sb.from('profiles').select('*').eq('id', S.user.id).maybeSingle(),
     sb.from('organization_members').select('role,status,organization_id,organizations(id,name,status,created_at,is_internal)').eq('user_id', S.user.id).eq('status', 'active').limit(1),
   ]);
+  if (mem.error || adm.error) throw new Error('Não foi possível carregar os dados da sua conta agora. ' + errMsg(mem.error || adm.error));
   S.isAdmin = !!adm.data; S.profile = prof.data;
   const m = mem.data?.[0];
   S.org = m?.organizations || null; S.role = m?.role || null; S.sub = null; S.plan = null;
@@ -2856,6 +2881,7 @@ async function render() {
     return viewLogin();
   }
   try {
+    if (S.ctxOk === false) { await loadContext(); S.ctxOk = true; }
     if (['entrar', 'cadastro', 'recuperar', ''].includes(route)) return go(S.org ? 'painel' : S.isAdmin ? 'admin' : 'criar-igreja');
     if (route.startsWith('admin')) {
       if (!S.isAdmin) return go('painel');
@@ -2879,8 +2905,16 @@ async function render() {
       return await pageFinConfig();
     }
     return pagePainel();
-  } catch (e) { toast(errMsg(e), 'err'); }
+  } catch (e) { showFail(e); }
 }
+function showFail(e) {
+  const box = `<div class="card fail-box" style="text-align:center;padding:40px 20px;max-width:520px;margin:30px auto"><h3>Não foi possível carregar esta tela</h3>
+    <p class="muted" style="margin:10px 0 20px">${esc(errMsg(e))}<br>Pode ser a internet oscilando ou o servidor ocupado. Seus dados estão seguros.</p><button class="btn" data-retry>Tentar de novo</button></div>`;
+  const main = $('#main');
+  if (main) main.innerHTML = box; else root.innerHTML = `<div style="padding:20px">${box}</div>`;
+  root.querySelector('[data-retry]').onclick = async () => { try { if (!S.ctxOk) { await loadContext(); S.ctxOk = true; } render(); } catch (err) { showFail(err); } };
+}
+window.addEventListener('unhandledrejection', ev => { const m = errMsg(ev.reason); if (m) toast(m, 'err'); });
 window.addEventListener('hashchange', render);
 
 let booted = false;
@@ -2891,7 +2925,7 @@ sb.auth.onAuthStateChange(async (event, session) => {
   S.session = session;
   if (!booted || changed || event === 'PASSWORD_RECOVERY') {
     booted = true;
-    setTimeout(async () => { try { await loadContext(); } catch (e) { toast(errMsg(e), 'err'); } if (!session) { S.org = null; S.isAdmin = false; } render(); }, 0);
+    setTimeout(async () => { try { await loadContext(); S.ctxOk = true; } catch (e) { S.ctxOk = false; if (session) return showFail(e); } if (!session) { S.org = null; S.isAdmin = false; } render(); }, 0);
   }
 });
 </script>
